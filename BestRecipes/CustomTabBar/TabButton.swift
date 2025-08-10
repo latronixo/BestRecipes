@@ -9,13 +9,13 @@ import SwiftUI
 
 struct TabButton: View {
         
-    let name: TabItem
+    let tab: TabEnum
     let isSelected: Bool
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            Image(name.name)
+            Image(tab.icon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)

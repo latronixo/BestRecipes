@@ -7,65 +7,37 @@
 
 import SwiftUI
 
-struct TabItem {
-    var name: String
-}
-
 struct CustomTabBar: View {
-    
-    @State private var selected: Int = 0
-    
-    let tabs = [
-        TabItem(name: "home"),
-        TabItem(name: "bookmark"),
-        TabItem(name: "plus"),
-        TabItem(name: "bell"),
-        TabItem(name: "person"),
-    ]
+    @State private var selectedTab: TabEnum = .home
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            TabView(selection: $selected) {
-                //Сюда ваши экраны
-                
-                //HomeView
-                Color.white
-                    .tag(0)
-                
-                //BookmarkView
-                Color.gray.opacity(0.3)
-                    .tag(1)
-                
-                //AddView
-                Color.gray.opacity(0.4)
-                    .tag(2)
-                
-                //BellView(Заглушка)
-                Color.gray.opacity(0.5)
-                    .tag(3)
-                
-                //PersonView
-                Color.gray.opacity(0.6)
-                    .tag(4)
-            }
-            .ignoresSafeArea()
-            .background(.clear)
+            // Основной контент
+            selectedTab.screen
+                .ignoresSafeArea()
+                .frame(maxHeight: .infinity)
+                .overlay(
+                    VStack {
+                        Spacer()
+                    }
+                ) // Добавляем отступ снизу для TabBar
             
+            // Кастомный TabBar
             HStack(spacing: 0) {
-                ForEach(0..<tabs.count, id: \.self) { index in
-                    if index == 2  {
-                        CentralButton(selected: $selected, index: index)
-                            .offset(y: -25)
+                ForEach(TabEnum.allCases, id: \.self) { tab in
+                    if tab == .add {
+                        CentralButton(selected: $selectedTab, index: tab)
+                            .offset(y: -20)
                     } else {
-                        TabButton(name: tabs[index], isSelected: selected == index) {
-                            selected = index
+                        TabButton(tab: tab, isSelected: selectedTab == tab) {
+                            selectedTab = tab
                         }
                         .frame(maxWidth: .infinity)
                     }
                 }
-        }
+            }
             .frame(height: 60)
-            .background(content: {
+            .background(
                 Color.white
                     .clipShape(RectangleTopShape())
                     .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -3)
@@ -73,7 +45,7 @@ struct CustomTabBar: View {
                         Rectangle()
                             .padding(.top, -20)
                     )
-            })
+            )
         }
     }
 }

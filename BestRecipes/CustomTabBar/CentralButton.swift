@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CentralButton: View {
-    @Binding var selected: Int
-    var index: Int
+    @Binding var selected: TabEnum
+    var index: TabEnum
     
     var body: some View {
         Button {
