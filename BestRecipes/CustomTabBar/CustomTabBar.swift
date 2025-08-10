@@ -24,33 +24,56 @@ struct CustomTabBar: View {
     ]
     
     var body: some View {
-        TabView(selection: $selected) {
-            //Сюда ваши экраны
-            Color.gray.opacity(0.2)
-                .tag(0)
-            
-            Color.gray.opacity(0.3)
-                .tag(1)
-            
-            Color.gray.opacity(0.4)
-                .tag(2)
-            
-            Color.gray.opacity(0.5)
-                .tag(3)
-            
-            Color.gray.opacity(0.6)
-                .tag(4)
-        }
-        .ignoresSafeArea()
-        
-        HStack(spacing: 0) {
-            ForEach(0..<tabs.count, id: \.self) { index in
-                if index == 2  {
-                    
-                } else {
-                    
-                }
+        ZStack(alignment: .bottom) {
+            TabView(selection: $selected) {
+                //Сюда ваши экраны
+                
+                //HomeView
+                Color.white
+                    .tag(0)
+                
+                //BookmarkView
+                Color.gray.opacity(0.3)
+                    .tag(1)
+                
+                //AddView
+                Color.gray.opacity(0.4)
+                    .tag(2)
+                
+                //BellView(Заглушка)
+                Color.gray.opacity(0.5)
+                    .tag(3)
+                
+                //PersonView
+                Color.gray.opacity(0.6)
+                    .tag(4)
             }
+            .ignoresSafeArea()
+            .background(.clear)
+            
+            HStack(spacing: 0) {
+                ForEach(0..<tabs.count, id: \.self) { index in
+                    if index == 2  {
+                        CentralButton(selected: $selected, index: index)
+                            .offset(y: -25)
+                    } else {
+                        TabButton(name: tabs[index], isSelected: selected == index) {
+                            selected = index
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+        }
+            .frame(height: 60)
+            .background(content: {
+                Color.white
+                    .clipShape(RectangleTopShape())
+                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -3)
+                    .mask(
+                        Rectangle()
+                            .padding(.top, -20)
+                    )
+            })
         }
     }
 }

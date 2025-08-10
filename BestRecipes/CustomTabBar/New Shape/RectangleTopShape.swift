@@ -8,21 +8,30 @@
 import SwiftUI
 
 struct RectangleTopShape: Shape {
-    
-    let radius: CGFloat
-    
-    nonisolated func path(in rect: CGRect) -> Path {
-        var path = Path()
-        
-        path.move(to: CGPoint(x: 0, y: radius))
-        path.addArc(center: CGPoint(x: radius, y: radius), radius: radius, startAngle: .degrees(180), endAngle: .degrees(270), clockwise: false)
-        path.addLine(to: CGPoint(x: rect.width - radius, y: 0))
-        path.addArc(center: CGPoint(x: rect.width - radius, y: radius), radius: radius, startAngle: .degrees(270), endAngle: .degrees(0), clockwise: false)
-        path.addLine(to: CGPoint(x: rect.width, y: rect.height))
-        path.addLine(to: CGPoint(x: 0, y: rect.height))
-        path.closeSubpath()
-        
-        return path
-    }
-    
+        func path(in rect: CGRect) -> Path {
+            return Path { path in
+                path.move(to: CGPoint(x: 0, y: 0))
+                path.addLine(to: CGPoint(x: rect.width, y: 0))
+                path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+                path.addLine(to: CGPoint(x: 0, y: rect.height))
+                
+                // MARK: = CURVE CENTER
+                
+                let mid = rect.width / 2
+                
+                path.move(to: CGPoint(x: mid - 60, y:0))
+                
+                let to1 = CGPoint(x: mid, y: 45)
+                let control1 = CGPoint(x: mid - 30, y: 0)
+                let control2 = CGPoint(x: mid - 30, y: 45)
+                
+                path.addCurve(to: to1, control1: control1, control2: control2)
+                
+                let to2 = CGPoint(x: mid + 60, y: 0)
+                let control3 = CGPoint(x: mid + 30, y: 45)
+                let control4 = CGPoint(x: mid + 30, y: 0)
+                
+                path.addCurve(to: to2, control1: control3, control2: control4)
+            }
+        }
 }

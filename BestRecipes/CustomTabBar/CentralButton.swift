@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct CentralButton: View {
-    
-    //var action: () -> Void
+    @Binding var selected: Int
+    var index: Int
     
     var body: some View {
         Button {
-         //   action()
+        selected = index
         } label: {
             ZStack {
                 Circle()
                     .fill(Color.red)
                     .frame(width: 44, height: 44)
-                    .shadow(color: Color.red.opacity(0.3), radius: 10, x: 0, y: 5)
+                  //  .shadow(color: Color.red.opacity(0.3), radius: 10, x: 0, y: 5)
                 
                 Image("plus")
                     .resizable()
@@ -30,8 +30,4 @@ struct CentralButton: View {
         }
 
     }
-}
-
-#Preview {
-    CentralButton()
 }
