@@ -12,7 +12,6 @@ struct CustomTabBar: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Основной контент
             selectedTab.screen
                 .ignoresSafeArea()
                 .frame(maxHeight: .infinity)
@@ -20,9 +19,8 @@ struct CustomTabBar: View {
                     VStack {
                         Spacer()
                     }
-                ) // Добавляем отступ снизу для TabBar
+                )
             
-            // Кастомный TabBar
             HStack(spacing: 0) {
                 ForEach(TabEnum.allCases, id: \.self) { tab in
                     if tab == .add {
