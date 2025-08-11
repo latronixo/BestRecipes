@@ -24,6 +24,7 @@ struct TabButton: View {
                         Color.red.opacity(0.2)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .frame(width: 22, height: 22)
+                        
                     }
                 }
         }
