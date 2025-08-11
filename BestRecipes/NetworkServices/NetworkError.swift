@@ -92,7 +92,6 @@ enum CuisineType: String, CaseIterable {
 
 // MARK: - API Configuration
 struct APIConfig {
-    static let apiKey = "a1df0d471f714100b58221af46a5cb2c"
     static let baseURL = "https://api.spoonacular.com"
     
     enum Endpoint {
@@ -113,7 +112,7 @@ struct APIConfig {
         }
         
         var queryItems: [URLQueryItem] {
-            var items = [URLQueryItem(name: "apiKey", value: APIConfig.apiKey)]
+            var items = [URLQueryItem(name: "apiKey", value: Secrets.apiKey)]
             
             switch self {
             case .recipeInformation(_, let includeNutrition):
