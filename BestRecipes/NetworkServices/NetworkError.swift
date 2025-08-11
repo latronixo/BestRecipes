@@ -37,6 +37,59 @@ enum NetworkError: LocalizedError {
     }
 }
 
+// MARK: - Cuisine Types
+enum CuisineType: String, CaseIterable {
+    case italian = "italian"
+    case european = "european"
+    case french = "french"
+    case spanish = "spanish"
+    case german = "german"
+    case greek = "greek"
+    case mediterranean = "mediterranean"
+    case asian = "asian"
+    case chinese = "chinese"
+    case japanese = "japanese"
+    case thai = "thai"
+    case indian = "indian"
+    case korean = "korean"
+    case vietnamese = "vietnamese"
+    case mexican = "mexican"
+    case american = "american"
+    case southern = "southern"
+    case cajun = "cajun"
+    case caribbean = "caribbean"
+    case african = "african"
+    case middleEastern = "middle eastern"
+    case jewish = "jewish"
+    
+    var displayName: String {
+        switch self {
+        case .italian: return "Итальянская"
+        case .european: return "Европейская"
+        case .french: return "Французская"
+        case .spanish: return "Испанская"
+        case .german: return "Немецкая"
+        case .greek: return "Греческая"
+        case .mediterranean: return "Средиземноморская"
+        case .asian: return "Азиатская"
+        case .chinese: return "Китайская"
+        case .japanese: return "Японская"
+        case .thai: return "Тайская"
+        case .indian: return "Индийская"
+        case .korean: return "Корейская"
+        case .vietnamese: return "Вьетнамская"
+        case .mexican: return "Мексиканская"
+        case .american: return "Американская"
+        case .southern: return "Южноамериканская"
+        case .cajun: return "Каджунская"
+        case .caribbean: return "Карибская"
+        case .african: return "Африканская"
+        case .middleEastern: return "Ближневосточная"
+        case .jewish: return "Еврейская"
+        }
+    }
+}
+
 // MARK: - API Configuration
 struct APIConfig {
     static let apiKey = "a1df0d471f714100b58221af46a5cb2c"
@@ -46,12 +99,13 @@ struct APIConfig {
         case recipeInformation(id: Int, includeNutrition: Bool = true)
         case searchRecipes(query: String, number: Int = 10)
         case randomRecipes(number: Int = 1)
+        case searchByCuisine(cuisine: CuisineType, number: Int = 10)
         
         var path: String {
             switch self {
             case .recipeInformation(let id, _):
                 return "/recipes/\(id)/information"
-            case .searchRecipes:
+            case .searchRecipes, .searchByCuisine:
                 return "/recipes/complexSearch"
             case .randomRecipes:
                 return "/recipes/random"
@@ -64,12 +118,21 @@ struct APIConfig {
             switch self {
             case .recipeInformation(_, let includeNutrition):
                 items.append(URLQueryItem(name: "includeNutrition", value: "\(includeNutrition)"))
+                
             case .searchRecipes(let query, let number):
                 items.append(contentsOf: [
                     URLQueryItem(name: "query", value: query),
                     URLQueryItem(name: "number", value: "\(number)"),
                     URLQueryItem(name: "addRecipeInformation", value: "true")
                 ])
+                
+            case .searchByCuisine(let cuisine, let number):
+                items.append(contentsOf: [
+                    URLQueryItem(name: "cuisine", value: cuisine.rawValue),
+                    URLQueryItem(name: "number", value: "\(number)"),
+                    URLQueryItem(name: "addRecipeInformation", value: "true")
+                ])
+                
             case .randomRecipes(let number):
                 items.append(URLQueryItem(name: "number", value: "\(number)"))
             }
