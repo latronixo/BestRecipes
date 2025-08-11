@@ -19,7 +19,13 @@ struct TabButton: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
-                .foregroundStyle(isSelected ? Color.red : Color.clear)
+                .background {
+                    if isSelected {
+                        Color.red.opacity(0.2)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .frame(width: 22, height: 22)
+                    }
+                }
         }
     }
 }
