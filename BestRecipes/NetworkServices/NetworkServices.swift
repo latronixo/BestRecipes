@@ -57,6 +57,27 @@ final class NetworkServices {
         }
     }
     
+    // MARK: - Cuisine Search
+    /// Поиск рецептов по типу кухни
+    /// - Parameters:
+    ///   - cuisine: Тип кухни (итальянская, французская, азиатская и т.д.)
+    ///   - numberOfResults: Количество результатов (по умолчанию 10)
+    /// - Returns: Ответ с найденными рецептами и метаданными
+    func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+        let endpoint = APIConfig.Endpoint.searchByCuisine(cuisine: cuisine, number: numberOfResults)
+        let url = try buildURL(for: endpoint)
+        
+        let (data, response) = try await session.data(from: url)
+        try validateResponse(response)
+        
+        do {
+            let searchResponse = try decoder.decode(RecipeSearchResponse.self, from: data)
+            return searchResponse
+        } catch {
+            throw NetworkError.decodingError(error)
+        }
+    }
+    
     // MARK: - Random Recipes
     /// Получает случайные рецепты
     /// - Parameter numberOfRecipes: Количество рецептов (по умолчанию 1)
