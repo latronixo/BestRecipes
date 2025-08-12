@@ -17,7 +17,7 @@ struct HomeScreenView: View {
             Text("Get amazing recipes for cooking")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fontWeight(.semibold)
-                .font(.title)
+                .font(.poppinsSemibold(size: 24))
             
             SearchBar()
             

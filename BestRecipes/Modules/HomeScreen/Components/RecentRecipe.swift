@@ -47,11 +47,11 @@ struct RecentRecipe: View {
             }
 
             Text(recipe.title)
-                .fontWeight(.semibold)
+                .font(.poppinsSemibold(size: 14))
                 .lineLimit(2)
 
             Text("By \(author)")
-                .font(.subheadline)
+                .font(.poppinsRegular(size: 10))
                 .foregroundColor(.gray)
 
             Spacer()

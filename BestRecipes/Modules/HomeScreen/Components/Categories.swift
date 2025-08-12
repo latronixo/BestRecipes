@@ -23,6 +23,7 @@ struct Categories: View {
                             : Color.clear
                         )
                         .foregroundColor(index == 0 ? .white : .red)
+                        .font(.poppinsRegular(size: 12)) 
                         .cornerRadius(10)
                 }
             }

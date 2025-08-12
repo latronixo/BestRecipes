@@ -78,7 +78,7 @@ struct MainRecipe: View {
                 
             }
             Text(recipe.title)
-                .fontWeight(.semibold)
+                .font(.poppinsSemibold(size: 16))
                 .lineLimit(2)
 
             HStack {
@@ -88,7 +88,7 @@ struct MainRecipe: View {
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
                 Text("By \(author)")
-                    .font(.subheadline)
+                    .font(.poppinsRegular(size: 16)) 
                     .foregroundColor(.gray)
                 Spacer()
             }

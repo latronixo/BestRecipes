@@ -16,17 +16,17 @@ struct CategoryRecipe: View {
                 Spacer().frame(height: 50)
 
                 Text(recipe)
-                    .font(.headline)
+                    .font(.poppinsSemibold(size: 14))
 
                 Text("Time")
-                    .font(.subheadline)
+                    .font(.poppinsRegular(size: 12))
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
 
                 HStack() {
                     Text("5 mins")
-                        .fontWeight(.bold)
+                        .font(.poppinsSemibold(size: 12))
                     Spacer()
                     Button {
                         

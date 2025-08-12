@@ -14,13 +14,14 @@ struct Heading: View {
         HStack {
             Text(title)
                 .fontWeight(.semibold)
-                .font(.title2)
+                .font(.poppinsSemibold(size: 20))
             Spacer()
             Button {
                 
             } label: {
                 HStack {
                     Text("See all")
+                        .font(.poppinsSemibold(size: 14))
                         .foregroundStyle(.red)
                     Image("Arrow-Right")
                 }
