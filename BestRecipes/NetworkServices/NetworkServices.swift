@@ -9,6 +9,12 @@ import Foundation
 
 // MARK: - NetworkServices
 final class NetworkServices {
+    private enum ImageURLs {
+        static let ingredientBase = "https://img.spoonacular.com/ingredients_100x100/"
+        static let equipmentBase = "https://img.spoonacular.com/equipment_100x100/"
+        static let defaultRecipeSize = "556x370"
+    }
+    
     static let shared = NetworkServices()
     private init() {}
     
@@ -16,7 +22,7 @@ final class NetworkServices {
     private let decoder = JSONDecoder()
     private let imageCache = NSCache<NSString, NSData>()
     
-    // MARK: - Network Operation
+    // MARK: - Recipe Network Operations
     /// Получает подробную информацию о рецепте по ID
     func fetchRecipeInformation(id: Int, includeNutrition: Bool = true) async throws -> Recipe {
         let endpoint = APIConfig.Endpoint.recipeInformation(id: id, includeNutrition: includeNutrition)
@@ -41,14 +47,14 @@ final class NetworkServices {
         return try await fetchData(endpoint, as: RandomRecipesResponse.self)
     }
     
-    // MARK: - Image Operations
+    // MARK: - Image Loading Operations
     /// Загружает изображение рецепта
     func fetchRecipeImageData(_ recipe: Recipe, size: String? = nil) async throws -> Data? {
         guard let imageURL = recipe.image else { return nil }
         
         let finalURL: String
         if let size = size {
-            finalURL = imageURL.replacingOccurrences(of: "556x370", with: size)
+            finalURL = imageURL.replacingOccurrences(of: ImageURLs.defaultRecipeSize, with: size)
         } else {
             finalURL = imageURL
         }
@@ -81,31 +87,29 @@ final class NetworkServices {
     /// Загружает изображение ингредиента
     func fetchIngredientImageData(_ ingredient: Ingredient) async throws -> Data? {
         guard let imageName = ingredient.image else { return nil }
-        let imageURL = "https://img.spoonacular.com/ingredients_100x100/\(imageName)"
+        let imageURL = ImageURLs.ingredientBase + imageName
         return try await fetchImageData(from: imageURL)
     }
 
     /// Загружает изображение оборудования
     func fetchEquipmentImageData(_ equipment: InstructionEquipment) async throws -> Data? {
         guard let imageName = equipment.image else { return nil }
-        let imageURL = "https://img.spoonacular.com/equipment_100x100/\(imageName)"
+        let imageURL = ImageURLs.equipmentBase + imageName
         return try await fetchImageData(from: imageURL)
     }
     
     // MARK: - Cache Management
     /// Очищает кэш изображений
-    func clearImageCache() {
-        imageCache.removeAllObjects()
-    }
-    
-    /// Устанавливает лимит кэша (по умолчанию 50MB)
-    func setupImageCache(memoryLimit: Int = 50 * 1024 * 1024) {
+    func configureImageCache(memoryLimit: Int = 50 * 1024 * 1024, clearExisting: Bool = false) {
+        if clearExisting {
+            imageCache.removeAllObjects()
+        }
         imageCache.totalCostLimit = memoryLimit
-        imageCache.countLimit = 100 // максимум 100 изображений
+        imageCache.countLimit = 100
     }
 }
 
-// MARK: - Private Helpers
+// MARK: - Private Network Helpers
 private extension NetworkServices {
     func buildURL(for endpoint: APIConfig.Endpoint) throws -> URL {
         guard var urlComponents = URLComponents(string: APIConfig.baseURL + endpoint.path) else {
