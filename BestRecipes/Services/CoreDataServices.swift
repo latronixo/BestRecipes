@@ -15,7 +15,7 @@ final class CoreDataManager {
     private let maxItems = 10
     
     private init() {
-        container = NSPersistentContainer(name: "RecentRecipesModel")
+        container = NSPersistentContainer(name: "CoreDataModel")
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("не удалось загрузить хранилище CoreData: \(error), \(error.userInfo)")
