@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-// Temporary placeholder for build — remove when API key is added via .xcconfig
-enum Secrets {
-    static let apiKey: String = ""
-}
-
 // MARK: - RecipeCardView
 struct RecipeCardView: View {
     let recipe: Recipe
