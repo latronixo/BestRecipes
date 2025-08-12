@@ -16,6 +16,9 @@ final class CoreDataManager {
     
     private init() {
         container = NSPersistentContainer(name: "CoreDataModel")
+
+        container.viewContext.automaticallyMergesChangesFromParent = true
+
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("не удалось загрузить хранилище CoreData: \(error), \(error.userInfo)")
@@ -23,7 +26,6 @@ final class CoreDataManager {
         }
         //в случае необходимости миграции новая версия объекта заменяет старую
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.viewContext.automaticallyMergesChangesFromParent = true
     }
     
     private var context: NSManagedObjectContext {
@@ -33,48 +35,56 @@ final class CoreDataManager {
     // MARK: Recent Recipes
     
     func addRecent(recipe: Recipe) async {
-        await context.perform { [weak self] in
-            guard let self = self else { return }
-            
-            let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
-            
-            do {
-                if let existingRecipe = try self.context.fetch(fetchRequest).first {
-                    existingRecipe.dateAdded = Date()
-                } else {
-                    let newRecipe = RecentRecipeCD(context: self.context)
-                    self.updateRecent(coreDataRecipe: newRecipe, with: recipe)
-                }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            container.performBackgroundTask { context in
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 
-                try self.cleanupRecentIfNeeded()
-                try self.context.save()
-            } catch {
-                print("Ошибка при добавлении или обновлении рецепта: \(error)")
-                self.context.rollback()
+                let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
+                
+                do {
+                    if let existingRecipe = try self.context.fetch(fetchRequest).first {
+                        existingRecipe.dateAdded = Date()
+                    } else {
+                        let newRecipe = RecentRecipeCD(context: self.context)
+                        self.updateRecent(coreDataRecipe: newRecipe, with: recipe)
+                    }
+                    
+                    try self.cleanupRecentIfNeeded(context: context)
+                    
+                    if context.hasChanges {
+                        try self.context.save()
+                    }
+                } catch {
+                    print("Ошибка при добавлении или обновлении рецепта: \(error)")
+                }
+                continuation.resume()
             }
         }
     }
     
     func fetchRecentRecipes() async -> [Recipe] {
-        return await container.performBackgroundTask { context in
-            let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
-            let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
-            fetchRequest.sortDescriptors = [sortDescriptor]
-            fetchRequest.fetchLimit = self.maxRecentItems
-            
-            do {
-                let coreDataRecipes = try context.fetch(fetchRequest)
-                return coreDataRecipes.compactMap { self.convertToRecentRecipe(from: $0) }
-            } catch {
-                print("Ошибка при извлечении рецептов: \(error)")
-                return []
+        return await withCheckedContinuation { continuation in
+            container.performBackgroundTask { context in
+                let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
+                let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
+                fetchRequest.sortDescriptors = [sortDescriptor]
+                fetchRequest.fetchLimit = self.maxRecentItems
+                
+                do {
+                    let coreDataRecipes = try context.fetch(fetchRequest)
+                    let recipes = coreDataRecipes.compactMap { self.convertToRecentRecipe(from: $0) }
+                    continuation.resume(returning: recipes)
+                } catch {
+                    print("Ошибка при извлечении рецептов: \(error)")
+                }
+                continuation.resume(returning: [])
             }
         }
     }
     
     //удаляет старые рецепты из таблицы RecentRecipesCD, если их количество превышает лимит
-    private func cleanupRecentIfNeeded() throws {
+    private func cleanupRecentIfNeeded(context: NSManagedObjectContext) throws {
         let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
@@ -190,55 +200,63 @@ final class CoreDataManager {
     
     // MARK: Favorite Recipes
     func toggleFavorite(recipe: Recipe) async {
-        await container.performBackgroundTask { context in
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
-            let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
-            fetchRequest.predicate = NSPredicate("id == %d", recipe.id)
-            
-            do {
-                if let existingRecipe = try self.context.fetch(fetchRequest).first {
-                    self.context.delete(existingRecipe)
-                } else {
-                    let newFavorite = FavoriteRecipeCD(context: self.context)
-                    self.updateFavorite(favoriteRecipe: newFavorite, with: recipe)
-                }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            container.performBackgroundTask { context in
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 
-                try self.context.save()
-            } catch {
-                print("Ошибка при переключении статуса избранного: \(error)")
-                self.context.rollback()
+                let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %lld", Int64(recipe.id))
+                
+                do {
+                    if let existingRecipe = try self.context.fetch(fetchRequest).first {
+                        self.context.delete(existingRecipe)
+                    } else {
+                        let newFavorite = FavoriteRecipeCD(context: context)
+                        self.updateFavorite(favoriteRecipe: newFavorite, with: recipe)
+                    }
+                    
+                    try self.context.save()
+                } catch {
+                    print("Ошибка при переключении статуса избранного: \(error)")
+                    self.context.rollback()
+                }
             }
-            
         }
     }
     
     func isFavorite(id: Int) async -> Bool {
-        return await container.performBackgroundTask { context in
-            let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
-            fetchRequest.predicate = NSPredicate(value: "id == %d", id)
-            
-            do {
-                let count = try context.count(for: fetchRequest)
-                return count > 0
-            } catch {
-                print("Ошибка проверки нахождения в списке избранного: \(error)")
-                return false
+        return await withCheckedContinuation { continuation in
+            container.performBackgroundTask { context in
+                let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %lld", Int64(id))
+                
+                do {
+                    let count = try context.count(for: fetchRequest)
+                    continuation.resume(returning: count > 0)
+                } catch {
+                    print("Ошибка проверки нахождения в списке избранного: \(error)")
+                    continuation.resume(returning: false)
+                }
             }
         }
     }
     
     func fetchFavoriteRecipes() async -> [Recipe] {
-        let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        do {
-            let coreDataRecipes = try context.fetch(fetchRequest)
-            return coreDataRecipes.compactMap { self.convertToFavoriteRecipe(from: $0) }
-        } catch {
-            print("Ошибка при извлечении избранных рецептов: \(error)")
-            return []
+        return await withCheckedContinuation { continuation in
+            container.performBackgroundTask { context in
+                let fetchRequest: NSFetchRequest<FavoriteRecipeCD> = FavoriteRecipeCD.fetchRequest()
+                let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
+                fetchRequest.sortDescriptors = [sortDescriptor]
+                
+                do {
+                    let coreDataRecipes = try context.fetch(fetchRequest)
+                    let recipes =  coreDataRecipes.compactMap { self.convertToFavoriteRecipe(from: $0) }
+                    continuation.resume(returning: recipes)
+                } catch {
+                    print("Ошибка при извлечении избранных рецептов: \(error)")
+                    continuation.resume(returning: [])
+                }
+            }
         }
     }
     
