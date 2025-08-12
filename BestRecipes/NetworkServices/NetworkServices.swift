@@ -14,6 +14,7 @@ final class NetworkServices {
     
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
+    private let imageCache = NSCache<NSString, NSData>()
     
     // MARK: - Recipe Information
     /// Получает подробную информацию о рецепте по ID
@@ -96,6 +97,88 @@ final class NetworkServices {
             throw NetworkError.decodingError(error)
         }
     }
+    
+    // MARK: - Image Operations
+    /// Загружает изображение как Data с кэшированием
+    func fetchImageData(from urlString: String) async throws -> Data {
+        if let cachedData = imageCache.object(forKey: urlString as NSString) {
+            return cachedData as Data
+        }
+        
+        guard let url = URL(string: urlString) else {
+            throw NetworkError.invalidURL
+        }
+        
+        let (data, response) = try await session.data(from: url)
+        try validateResponse(response)
+        
+        guard data.count > 0 else {
+            throw NetworkError.invalidImageData
+        }
+        
+        imageCache.setObject(data as NSData, forKey: urlString as NSString)
+        
+        return data
+    }
+    
+    /// Загружает изображение рецепта
+    func fetchRecipeImageData(_ recipe: Recipe) async throws -> Data? {
+        guard let imageURL = recipe.image else { return nil }
+        return try await fetchImageData(from: imageURL)
+    }
+    
+    /// Загружает изображение рецепта определенного размера
+    func fetchRecipeImageData(_ recipe: Recipe, size: String) async throws -> Data? {
+        guard let imageURL = recipe.image else { return nil }
+        let sizedURL = imageURL.replacingOccurrences(of: "556x370", with: size)
+        return try await fetchImageData(from: sizedURL)
+    }
+    
+    /// Загружает изображение ингредиента
+    func fetchIngredientImageData(_ ingredient: Ingredient) async throws -> Data? {
+        guard let imageName = ingredient.image else { return nil }
+        return try await fetchImageData(from: imageName.ingredientImageURL)
+    }
+    
+    /// Загружает изображение оборудования
+    func fetchEquipmentImageData(_ equipment: InstructionEquipment) async throws -> Data? {
+        guard let imageName = equipment.image else { return nil }
+        return try await fetchImageData(from: imageName.equipmentImageURL)
+    }
+    
+    /// Загружает изображения для списка рецептов
+    func fetchRecipeImageData(_ recipes: [Recipe]) async throws -> [Int: Data] {
+        var imagesData: [Int: Data] = [:]
+        
+        try await withThrowingTaskGroup(of: (Int, Data).self) { group in
+            for recipe in recipes {
+                guard let imageURL = recipe.image else { continue }
+                
+                group.addTask {
+                    let data = try await self.fetchImageData(from: imageURL)
+                    return (recipe.id, data)
+                }
+            }
+            
+            for try await (id, data) in group {
+                imagesData[id] = data
+            }
+        }
+        
+        return imagesData
+    }
+    
+    // MARK: - Cache Management
+    /// Очищает кэш изображений
+    func clearImageCache() {
+        imageCache.removeAllObjects()
+    }
+    
+    /// Устанавливает лимит кэша (по умолчанию 50MB)
+    func setupImageCache(memoryLimit: Int = 50 * 1024 * 1024) {
+        imageCache.totalCostLimit = memoryLimit
+        imageCache.countLimit = 100 // максимум 100 изображений
+    }
 }
 
 // MARK: - Private Helpers
@@ -127,6 +210,19 @@ private extension NetworkServices {
         default:
             throw NetworkError.invalidResponse
         }
+    }
+}
+
+// MARK: - URL Building Extensions
+private extension String {
+    /// Формирует URL для изображения ингредиента
+    var ingredientImageURL: String {
+        "https://img.spoonacular.com/ingredients_100x100/\(self)"
+    }
+    
+    /// Формирует URL для изображения оборудования
+    var equipmentImageURL: String {
+        "https://img.spoonacular.com/equipment_100x100/\(self)"
     }
 }
 
