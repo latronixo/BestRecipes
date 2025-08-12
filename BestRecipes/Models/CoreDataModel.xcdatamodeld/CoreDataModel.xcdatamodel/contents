@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="FavoriteRecipeCD" representedClassName="FavoriteRecipeCD" syncable="YES" codeGenerationType="class">
+        <attribute name="aggregateLikes" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="analyzedInstructionsData" optional="YES" attributeType="Binary"/>
+        <attribute name="cheap" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="cookingMinutes" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="creditsText" optional="YES" attributeType="String"/>
+        <attribute name="cuisinesData" optional="YES" attributeType="Binary"/>
+        <attribute name="dairyFree" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="dateAdded" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="dietsData" optional="YES" attributeType="Binary"/>
+        <attribute name="dishTypesData" optional="YES" attributeType="Binary"/>
+        <attribute name="extendedIngredientsData" optional="YES" attributeType="Binary"/>
+        <attribute name="gaps" optional="YES" attributeType="String"/>
+        <attribute name="glutenFree" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="healthScore" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="image" optional="YES" attributeType="String"/>
+        <attribute name="imageType" optional="YES" attributeType="String"/>
+        <attribute name="instructions" optional="YES" attributeType="String"/>
+        <attribute name="license" optional="YES" attributeType="String"/>
+        <attribute name="lowFodmap" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="nutritionData" optional="YES" attributeType="Binary"/>
+        <attribute name="occasionsData" optional="YES" attributeType="Binary"/>
+        <attribute name="preparationMinutes" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pricePerServing" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="readyInMinutes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="servings" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sourceName" optional="YES" attributeType="String"/>
+        <attribute name="sourceUrl" attributeType="String"/>
+        <attribute name="spoonacularScore" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="spoonacularSourceUrl" attributeType="String"/>
+        <attribute name="summary" optional="YES" attributeType="String"/>
+        <attribute name="sustainable" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="vegan" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="vegetarian" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="veryHealthy" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="veryPopular" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="weightWatcherSmartPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="RecentRecipeCD" representedClassName="RecentRecipeCD" syncable="YES" codeGenerationType="class">
         <attribute name="aggregateLikes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="analyzedInstructionsData" optional="YES" attributeType="Binary"/>
