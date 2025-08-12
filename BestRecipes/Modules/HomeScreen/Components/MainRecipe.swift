@@ -17,6 +17,8 @@ struct MainRecipe: View {
         }
     }
     
+    let onSelect: (Recipe) -> Void
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .top) {
@@ -63,7 +65,7 @@ struct MainRecipe: View {
                     Spacer()
                     
                     Button {
-                        
+                        onSelect(recipe)
                     } label: {
                         Image("Bookmark")
                             .resizable()

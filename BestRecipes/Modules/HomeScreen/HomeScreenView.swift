@@ -26,7 +26,9 @@ struct HomeScreenView: View {
             ScrollView(.horizontal, showsIndicators: false){
                 HStack {
                     ForEach(viewModel.trendingRecipes) {recipe in
-                        MainRecipe(recipe: recipe)
+                        MainRecipe(recipe: recipe) { selectedRecipe in
+                                viewModel.toggleFavourite(with: selectedRecipe)
+                            }
                     }
                 }
             }

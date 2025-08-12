@@ -10,6 +10,7 @@ import Foundation
 @MainActor
 class HomeScreenViewModel: ObservableObject {
     private var networkService = NetworkServices.shared
+    private var dataService = CoreDataManager.shared
     @Published var currentCategory: CuisineType = .french
     @Published var categoryRecipes: [Recipe] = []
     @Published var trendingRecipes: [Recipe] = []
@@ -54,7 +55,6 @@ class HomeScreenViewModel: ObservableObject {
         do {
             let response = try await networkService.searchRecipesByCuisine(currentCategory)
             self.categoryRecipes = response.results
-            print(self.categoryRecipes)
         } catch {
             print("Ошибка при загрузке рецептов по категории: \(error)")
         }
@@ -64,10 +64,13 @@ class HomeScreenViewModel: ObservableObject {
         do {
             let response = try await networkService.fetchRandomRecipes(numberOfRecipes: 10)
             self.recentRecipes = response.recipes
-            print(self.recentRecipes)
         } catch {
             print("Ошибка при загрузке недавних рецептов: \(error)")
         }
+    }
+    
+    func toggleFavourite(with recipe: Recipe) {
+        print("ADDED")
     }
 }
 
