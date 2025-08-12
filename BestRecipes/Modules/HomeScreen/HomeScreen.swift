@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - ContentView
-struct ContentView: View {
+struct HomeScreen: View {
     
     var body: some View {
         Text("Hi")
@@ -16,5 +16,5 @@ struct ContentView: View {
 }
        
 #Preview {
-    ContentView()
+    HomeScreen()
 }

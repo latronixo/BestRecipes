@@ -22,7 +22,7 @@ struct MainView: View {
                         case .homeScreen:
                             HomeScreen()
                         case .detailScreen(recipeDetails: let recipeDetails):
-                            DetailView(detailVM: DetailViewModel(recipe: recipeDetails, router: Router()))
+                            DetailView(detailVM: DetailViewModel(recipe: recipeDetails, router: router))
                         case .seeAllScreen:
                             SeeAllView()
                         case .searchScreen:
