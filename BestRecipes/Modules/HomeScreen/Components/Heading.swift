@@ -26,6 +26,8 @@ struct Heading: View {
                 }
             }
         }
+        .padding(.trailing)
+        .padding(.vertical)
     }
 }
 

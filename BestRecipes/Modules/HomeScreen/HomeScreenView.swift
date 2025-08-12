@@ -13,7 +13,7 @@ struct HomeScreenView: View {
     var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
     
     var body: some View {
-        ScrollView() {
+        ScrollView(.vertical, showsIndicators: false) {
             Text("Get amazing recipes for cooking")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fontWeight(.semibold)
@@ -22,6 +22,14 @@ struct HomeScreenView: View {
             SearchBar()
             
             Heading(title: "Trending now 🔥")
+            
+            ScrollView(.horizontal, showsIndicators: false){
+                HStack {
+                    ForEach(categories, id: \.self) {recipe in
+                        MainRecipe(recipe: recipe)
+                    }
+                }
+            }
             
             // Popular category
             VStack {
@@ -56,8 +64,9 @@ struct HomeScreenView: View {
             Heading(title: "Popular cuisine")
             
         }
-        .padding(.horizontal)
+        .padding(.leading)
         .padding(.top, 70)
+        .padding(.bottom, 70)
     }
 }
        

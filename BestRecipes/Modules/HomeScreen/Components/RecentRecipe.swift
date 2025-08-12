@@ -11,7 +11,7 @@ struct RecentRecipe: View {
     var recipe: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Image("DishMock")
                 .resizable()
                 .scaledToFill()
@@ -29,7 +29,7 @@ struct RecentRecipe: View {
             Spacer()
         }
         .frame(width: 120)
-        .padding(.trailing, 15)
+        .padding(.trailing, 10)
     }
 }
 

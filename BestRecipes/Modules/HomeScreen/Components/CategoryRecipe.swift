@@ -50,7 +50,7 @@ struct CategoryRecipe: View {
                 .offset(y: -50)
         }
         .frame(width: 150)
-        .padding(.trailing, 15)
+        .padding(.trailing, 10)
     }
 }
 

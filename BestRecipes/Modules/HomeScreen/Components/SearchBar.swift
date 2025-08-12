@@ -27,5 +27,6 @@ struct SearchBar: View {
                 .stroke(lineWidth: 1)
                 .foregroundStyle(Color(.systemGray3))
         }
+        .padding(.trailing)
     }
 }
