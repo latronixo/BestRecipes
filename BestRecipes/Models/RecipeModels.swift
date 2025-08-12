@@ -126,7 +126,7 @@ struct WeightPerServing: Codable, Hashable {
 
 // MARK: - Analyzed Instructions
 struct AnalyzedInstruction: Codable, Identifiable, Hashable {
-  
+    
     let name: String?                       // Название группы инструкций
     let steps: [InstructionStep]?           // Список шагов приготовления
     
@@ -241,6 +241,16 @@ extension Nutrition {
         ],
         caloricBreakdown: CaloricBreakdown(percentProtein: 12.29, percentFat: 26.61, percentCarbs: 61.1),
         weightPerServing: WeightPerServing(amount: 259, unit: "g")
+    )
+}
+
+extension AnalyzedInstruction {
+    static let preview = AnalyzedInstruction(
+        name: "",
+        steps: [InstructionStep(number: 1, step: "Step number one", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
+                InstructionStep(number: 2, step: "Step number two", ingredients: [], equipment: [], length: nil),
+                InstructionStep(number: 3, step: "Step number three", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
+                InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
     )
 }
 #endif
