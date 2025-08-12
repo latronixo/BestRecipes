@@ -18,84 +18,30 @@ final class NetworkServices {
     
     // MARK: - Recipe Information
     /// Получает подробную информацию о рецепте по ID
-    /// - Parameters:
-    ///   - id: ID рецепта
-    ///   - includeNutrition: Включать ли информацию о питательности
-    /// - Returns: Модель Recipe
     func fetchRecipeInformation(id: Int, includeNutrition: Bool = true) async throws -> Recipe {
         let endpoint = APIConfig.Endpoint.recipeInformation(id: id, includeNutrition: includeNutrition)
-        let url = try buildURL(for: endpoint)
-        
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response)
-        
-        do {
-            let recipe = try decoder.decode(Recipe.self, from: data)
-            return recipe
-        } catch {
-            throw NetworkError.decodingError(error)
-        }
+        return try await fetchData(endpoint, as: Recipe.self)
     }
     
     // MARK: - Search Recipes
     /// Поиск рецептов по запросу
-    /// - Parameters:
-    ///   - query: Поисковый запрос
-    ///   - numberOfResults: Количество результатов (по умолчанию 10)
-    /// - Returns: Массив рецептов
     func searchRecipes(query: String, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
         let endpoint = APIConfig.Endpoint.searchRecipes(query: query, number: numberOfResults)
-        let url = try buildURL(for: endpoint)
-        
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response)
-        
-        do {
-            let searchResponse = try decoder.decode(RecipeSearchResponse.self, from: data)
-            return searchResponse
-        } catch {
-            throw NetworkError.decodingError(error)
-        }
+        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
     }
     
     // MARK: - Cuisine Search
     /// Поиск рецептов по типу кухни
-    /// - Parameters:
-    ///   - cuisine: Тип кухни (итальянская, французская, азиатская и т.д.)
-    ///   - numberOfResults: Количество результатов (по умолчанию 10)
-    /// - Returns: Ответ с найденными рецептами и метаданными
     func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
         let endpoint = APIConfig.Endpoint.searchByCuisine(cuisine: cuisine, number: numberOfResults)
-        let url = try buildURL(for: endpoint)
-        
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response)
-        
-        do {
-            let searchResponse = try decoder.decode(RecipeSearchResponse.self, from: data)
-            return searchResponse
-        } catch {
-            throw NetworkError.decodingError(error)
-        }
+        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
     }
     
     // MARK: - Random Recipes
     /// Получает случайные рецепты
-    /// - Parameter numberOfRecipes: Количество рецептов (по умолчанию 1)
-    /// - Returns: Массив случайных рецептов
     func fetchRandomRecipes(numberOfRecipes: Int = 1) async throws -> RandomRecipesResponse {
         let endpoint = APIConfig.Endpoint.randomRecipes(number: numberOfRecipes)
-        let url = try buildURL(for: endpoint)
-        
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response)
-        
-        do {
-            let randomResponse = try decoder.decode(RandomRecipesResponse.self, from: data)
-            return randomResponse
-        } catch {
-            throw NetworkError.decodingError(error)
-        }
+        return try await fetchData(endpoint, as: RandomRecipesResponse.self)
     }
     
     // MARK: - Image Operations
@@ -121,17 +67,19 @@ final class NetworkServices {
         return data
     }
     
+    // MARK: - Recipe Image Operations
     /// Загружает изображение рецепта
-    func fetchRecipeImageData(_ recipe: Recipe) async throws -> Data? {
+    func fetchRecipeImageData(_ recipe: Recipe, size: String? = nil) async throws -> Data? {
         guard let imageURL = recipe.image else { return nil }
-        return try await fetchImageData(from: imageURL)
-    }
-    
-    /// Загружает изображение рецепта определенного размера
-    func fetchRecipeImageData(_ recipe: Recipe, size: String) async throws -> Data? {
-        guard let imageURL = recipe.image else { return nil }
-        let sizedURL = imageURL.replacingOccurrences(of: "556x370", with: size)
-        return try await fetchImageData(from: sizedURL)
+        
+        let finalURL: String
+        if let size = size {
+            finalURL = imageURL.replacingOccurrences(of: "556x370", with: size)
+        } else {
+            finalURL = imageURL
+        }
+        
+        return try await fetchImageData(from: finalURL)
     }
     
     /// Загружает изображение ингредиента
@@ -209,6 +157,19 @@ private extension NetworkServices {
             throw NetworkError.serverError(httpResponse.statusCode)
         default:
             throw NetworkError.invalidResponse
+        }
+    }
+    
+    // MARK: - Generic Network Operations
+    func fetchData<T: Codable>(_ endpoint: APIConfig.Endpoint, as responseType: T.Type) async throws -> T {
+        let url = try buildURL(for: endpoint)
+        let (data, response) = try await session.data(from: url)
+        try validateResponse(response)
+        
+        do {
+            return try decoder.decode(responseType, from: data)
+        } catch {
+            throw NetworkError.decodingError(error)
         }
     }
 }
