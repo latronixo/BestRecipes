@@ -48,11 +48,10 @@ struct OnboardingView: View {
                             .foregroundStyle(.white)
                     }
                     
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("Continue")
+                    NavigationLink(destination: {
+                        MainOnboardingPage()
+                    }, label: {
+                        Text("Get Started")
                             .font(.system(size: 18))
                             .foregroundStyle(Color.white)
                             .bold()
@@ -61,8 +60,8 @@ struct OnboardingView: View {
                                     .fill(Color.red.opacity(0.6))
                                     .frame(width: 300, height: 50)
                             }
-                    }
-                    .padding()
+                            .padding()
+                    })
                     
                     
                 }

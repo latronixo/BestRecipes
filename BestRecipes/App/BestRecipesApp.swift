@@ -11,7 +11,7 @@ import SwiftUI
 struct BestRecipesApp: App {
     var body: some Scene {
         WindowGroup {
-            CustomTabBar()
+            OnboardingView()
         }
     }
 }

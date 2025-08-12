@@ -9,7 +9,10 @@ import SwiftUI
 
 struct MainOnboardingPage: View {
     var body: some View {
-        
+        TabView{
+            
+        }
+        .tabViewStyle(.page)
     }
 }
 
