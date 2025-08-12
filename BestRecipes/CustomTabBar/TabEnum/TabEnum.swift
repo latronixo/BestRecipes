@@ -25,7 +25,7 @@ enum TabEnum: Int, CaseIterable {
     var screen: some View {
         switch self {
         case .home: ContentView()
-        case .bookmarks: BookmarkView()
+        case .bookmarks: DiscoverView()
         case .add: AddView()
         case .notifications: BellView()
         case .profile: PersonView()

@@ -91,7 +91,7 @@ struct RecipeCardView: View {
                 }
             }
         }
-        .padding(16)
+        .padding(.horizontal, 16)
         .background(Color(.systemBackground))
         .cornerRadius(16)
     }
