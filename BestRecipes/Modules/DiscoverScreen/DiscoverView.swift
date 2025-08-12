@@ -11,7 +11,10 @@ import SwiftUI
 struct DiscoverView: View {
     @State private var favorites: [Recipe] = []
     @State private var isLoading = false
+    @State private var localSelectedTab: TabEnum = .bookmarks
     
+    private let tabBarHeight: CGFloat = 60
+
     // allow injection for previews
     init(favorites: [Recipe] = []) {
         _favorites = State(initialValue: favorites)
@@ -19,12 +22,12 @@ struct DiscoverView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                    // Recipe cards
+            VStack {
+                ScrollView {
                     if favorites.isEmpty {
                         EmptyState()
                             .padding(.all, 16)
-                        
+                            .padding(.bottom, tabBarHeight)
                     } else {
                         VStack(spacing: 24) {
                             ForEach(favorites) { recipe in
@@ -32,14 +35,16 @@ struct DiscoverView: View {
                             }
                         }
                         .padding(.vertical, 16)
+                        .padding(.bottom, tabBarHeight)
                     }
+                }
+                BottomTabBar(selectedTab: $localSelectedTab)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Saved recipes")
                         .font(.poppinsSemibold(size: 24))
-                         
                 }
             }
             .task { if favorites.isEmpty { await loadFavorites() } }
@@ -73,6 +78,7 @@ private struct EmptyState: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
 
 #Preview {
     DiscoverView(favorites: Array(repeating: .preview, count: 3))
