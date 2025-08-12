@@ -16,6 +16,8 @@ enum NetworkError: LocalizedError {
     case invalidResponse
     case serverError(Int)
     case apiKeyMissing
+    case invalidImageData
+    case imageNotFound
     
     var errorDescription: String? {
         switch self {
@@ -33,6 +35,10 @@ enum NetworkError: LocalizedError {
             return "Ошибка сервера: \(statusCode)"
         case .apiKeyMissing:
             return "API ключ отсутствует"
+        case .invalidImageData:
+            return "Недействительные данные изображения"
+        case .imageNotFound:
+            return "Изображение не найдено"
         }
     }
 }
