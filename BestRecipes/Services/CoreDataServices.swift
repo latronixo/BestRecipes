@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-final class RecentRecipesManager {
-    static let shared = RecentRecipesManager()
+final class CoreDataManager {
+    static let shared = CoreDataManager()
     
     private let container: NSPersistentContainer
     private let maxItems = 10
@@ -29,7 +29,9 @@ final class RecentRecipesManager {
         return container.viewContext
     }
     
-    func add(recipe: Recipe) async {
+    // MARK: Recent Recipes
+    
+    func addRecent(recipe: Recipe) async {
         await context.perform { [weak self] in
             guard let self = self else { return }
             
@@ -44,7 +46,7 @@ final class RecentRecipesManager {
                     self.update(coreDataRecipe: newRecipe, with: recipe)
                 }
                 
-                try self.cleanupIfNeeded()
+                try self.cleanupRecentIfNeeded()
                 try self.context.save()
             } catch {
                 print("Ошибка при добавлении или обновлении рецепта: \(error)")
@@ -53,7 +55,7 @@ final class RecentRecipesManager {
         }
     }
     
-    func fetchRecipes() -> [Recipe] {
+    func fetchRecentRecipes() -> [Recipe] {
         let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
@@ -69,7 +71,7 @@ final class RecentRecipesManager {
     }
     
     //удаляет старые рецепты из таблицы RecentRecipesCD, если их количество превышает лимит
-    private func cleanupIfNeeded() throws {
+    private func cleanupRecentIfNeeded() throws {
         let fetchRequest: NSFetchRequest<RecentRecipeCD> = RecentRecipeCD.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
