@@ -13,7 +13,7 @@ class HomeScreenViewModel: ObservableObject {
     @Published var currentCategory: CuisineType = .french
     @Published var categoryRecipes: [Recipe] = []
     @Published var trendingRecipes: [Recipe] = []
-    
+    @Published var recentRecipes: [Recipe] = []
     
     
     let mealTypes = [
@@ -37,6 +37,7 @@ class HomeScreenViewModel: ObservableObject {
         Task {
             await fetchTrendingRecipes()
             await fetchCategoryRecipes()
+            await fetchRecentRecipes()
         }
     }
     
@@ -56,6 +57,16 @@ class HomeScreenViewModel: ObservableObject {
             print(self.categoryRecipes)
         } catch {
             print("Ошибка при загрузке рецептов по категории: \(error)")
+        }
+    }
+    
+    func fetchRecentRecipes() async {
+        do {
+            let response = try await networkService.fetchRandomRecipes(numberOfRecipes: 10)
+            self.recentRecipes = response.recipes
+            print(self.recentRecipes)
+        } catch {
+            print("Ошибка при загрузке недавних рецептов: \(error)")
         }
     }
 }

@@ -55,7 +55,7 @@ struct HomeScreenView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(categories, id: \.self) {recipe in
+                    ForEach(viewModel.recentRecipes) {recipe in
                         RecentRecipe(recipe: recipe)
                     }
                 }
