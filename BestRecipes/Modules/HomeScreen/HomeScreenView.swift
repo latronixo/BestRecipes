@@ -38,7 +38,7 @@ struct HomeScreenView: View {
                     .fontWeight(.semibold)
                     .font(.title2)
                 
-                Categories(categories: categories)
+                Categories(categories: viewModel.mealTypes)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
