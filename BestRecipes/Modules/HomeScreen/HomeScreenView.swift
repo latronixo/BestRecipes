@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - ContentView
 struct HomeScreenView: View {
-    
+    @ObservedObject var viewModel = HomeScreenViewModel()
     var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
     
     var body: some View {
@@ -25,7 +25,7 @@ struct HomeScreenView: View {
             
             ScrollView(.horizontal, showsIndicators: false){
                 HStack {
-                    ForEach(categories, id: \.self) {recipe in
+                    ForEach(viewModel.trendingRecipes) {recipe in
                         MainRecipe(recipe: recipe)
                     }
                 }
