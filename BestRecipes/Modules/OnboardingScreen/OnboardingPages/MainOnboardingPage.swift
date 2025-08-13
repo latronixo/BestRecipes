@@ -8,31 +8,46 @@
 import SwiftUI
 
 struct MainOnboardingPage: View {
-    
     @State private var currentPage: Int = 0
     @State private var totalPages = 3
     
     var body: some View {
-        ZStack(alignment: .bottom){
-            TabView(selection: $currentPage){
-                ContsructOnboardingView(enumConstraction: .first, thirdScreen: false, currentPage: $currentPage, totalPages: $totalPages)
-                    .tag(0)
-                ContsructOnboardingView(enumConstraction: .second, thirdScreen: false, currentPage: $currentPage, totalPages: $totalPages)
-                    .tag(1)
-                ContsructOnboardingView(enumConstraction: .third, thirdScreen: true, currentPage: $currentPage, totalPages: $totalPages)
-                    .tag(2)
-            }
-            .ignoresSafeArea(.all)
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            HStack(spacing: 8) {
-                ForEach(0..<totalPages, id: \.self) { index in
-                    Capsule()
-                        .fill(index == currentPage ? Color.green : Color.gray.opacity(0.5))
-                        .frame(width: 40, height: 8)
-                        .animation(.easeInOut, value: currentPage)
+        GeometryReader { geometry in
+            ZStack(alignment: .bottom) {
+                Image(EnumConstructor.allCases[currentPage].backgroundImage)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea(.all)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea(.all)
+                
+                TabView(selection: $currentPage) {
+                    ForEach(0..<totalPages, id: \.self) { index in
+                        ContsructOnboardingView(
+                            enumConstraction: EnumConstructor.allCases[index],
+                            thirdScreen: index == totalPages - 1,
+                            currentPage: $currentPage,
+                            totalPages: $totalPages
+                        )
+                        .tag(index)
+                        .background(Color.clear)
+                    }
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                
+                // Индикаторы страниц
+                HStack(spacing: 8) {
+                    ForEach(0..<totalPages, id: \.self) { index in
+                        Capsule()
+                            .fill(index == currentPage ? Color.green : Color.gray.opacity(0.5))
+                            .frame(width: 40, height: 8)
+                            .animation(.easeInOut, value: currentPage)
+                    }
+                }
+                .padding(.bottom, currentPage == totalPages - 1 ? 110 : 130)
             }
-            .padding(.bottom, currentPage == totalPages - 1 ? 100 : 120)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

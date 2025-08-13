@@ -116,7 +116,7 @@ private extension NetworkServices {
             throw NetworkError.invalidURL
         }
         
-        urlComponents.queryItems = endpoint.queryItems
+       // urlComponents.queryItems = endpoint.queryItems
         
         guard let url = urlComponents.url else {
             throw NetworkError.invalidURL

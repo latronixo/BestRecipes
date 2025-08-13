@@ -14,7 +14,7 @@ struct OnboardingView: View {
                 Image("backOnboardingImage")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
+                    .ignoresSafeArea(.all)
                 
                 LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea(.all)
@@ -27,7 +27,7 @@ struct OnboardingView: View {
                             .foregroundStyle(.black)
                         
                         Text("100k+ Premium Recipes")
-                            .font(.system(size: 18))
+                            .font(.poppinsRegular(size: 18))
                             .foregroundStyle(.white)
                     }
                     
@@ -36,10 +36,10 @@ struct OnboardingView: View {
                     VStack(alignment: .center, spacing: 20) {
                         VStack(alignment: .center){
                             Text("Best")
-                            
+                                .offset(y: 10)
                             Text("Recipes")
                         }
-                        .font(.system(size: 56))
+                        .font(.poppinsSemibold(size: 56))
                         .foregroundStyle(.white)
                         .bold()
                         
@@ -52,7 +52,7 @@ struct OnboardingView: View {
                         MainOnboardingPage()
                     }, label: {
                         Text("Get Started")
-                            .font(.system(size: 18))
+                            .font(.poppinsSemibold(size: 18))
                             .foregroundStyle(Color.white)
                             .bold()
                             .background {
@@ -67,6 +67,7 @@ struct OnboardingView: View {
                 }
                 .padding()
             }
+            .navigationBarBackButtonHidden()
         }
     }
 }
