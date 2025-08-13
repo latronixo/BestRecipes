@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct RecipeTextView: View {
+    
+    @ObservedObject var detailVM: DetailViewModel
+    @State var instruction: [AnalyzedInstruction]
+    
     var body: some View {
         VStack {
             Spacer(minLength: 20)
@@ -17,19 +21,18 @@ struct RecipeTextView: View {
             }
             
             Spacer(minLength: 10)
-            Text("""
-                
-                Place eggs in a saucepan and cover with cold water. Bring water to a boil and immediately remove from heat. Cover and let eggs stand in hot water for 10 to 12 minutes. Remove from hot water, cool, peel, and chop.
-                 Place chopped eggs in a bowl.
-                 Add chopped tomatoes, corns, lettuce, and any other vegitable of your choice.
-                 Stir in mayonnaise, green onion, and mustard. Season with paprika, salt, and pepper.
-                 Stir and serve on your favorite bread or crackers.
-                """)
-            .padding()
+            HStack {
+                Spacer(minLength: 10)
+                Text(detailVM.makeInstructionsText(with: instruction))
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer()
+            }
         }
     }
 }
 
 #Preview {
-    RecipeTextView()
+    RecipeTextView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]), instruction: [AnalyzedInstruction.preview])
 }
