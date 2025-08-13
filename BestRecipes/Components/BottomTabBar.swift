@@ -40,7 +40,6 @@ struct BottomTabBar: View {
         @State private var tab: TabEnum = .home
         var body: some View {
             BottomTabBar(selectedTab: $tab)
-                .previewLayout(.sizeThatFits)
         }
     }
     return BottomTabBarPreview()
