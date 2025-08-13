@@ -16,7 +16,6 @@ struct ContsructOnboardingView: View {
     @Binding var shouldShowOnboarding: Bool
     
     var body: some View {
-        NavigationView{
             VStack(alignment: .center, spacing: 40) {
                 Spacer()
                 Group{
@@ -99,7 +98,6 @@ struct ContsructOnboardingView: View {
             .padding(.horizontal)
             .navigationBarBackButtonHidden()
             .navigationBarHidden(true)
-        }
     }
 }
 
