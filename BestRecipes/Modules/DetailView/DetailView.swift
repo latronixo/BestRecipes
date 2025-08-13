@@ -25,7 +25,7 @@ struct DetailView: View {
             VStack {
                 ScrollView {
                     RecipeView()
-                    RecipeTextView()
+                    RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
                     
                     ForEach(0..<5) { _ in
                         IngredientsViewCell()
@@ -39,14 +39,10 @@ struct DetailView: View {
         }
     }
     
-    func tapToggle() {
-        
-        detailVM.goHome()
-        
-    }
+  
     
 }
 
 #Preview {
-    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
+    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
 }

@@ -8,6 +8,53 @@
 import Foundation
 import CoreData
 
+// MARK: - RecipeCD Protocol
+private protocol RecipeCD: NSManagedObject {
+    var id: Int64 { get set }
+    var dateAdded: Date? { get set }
+    var image: String? { get set }
+    var imageType: String? { get set }
+    var title: String? { get set }
+    var readyInMinutes: Int64 { get set }
+    var servings: Int64 { get set }
+    var sourceUrl: String? { get set }
+    var vegetarian: Bool { get set }
+    var vegan: Bool { get set }
+    var glutenFree: Bool { get set }
+    var dairyFree: Bool { get set }
+    var veryHealthy: Bool { get set }
+    var cheap: Bool { get set }
+    var veryPopular: Bool { get set }
+    var sustainable: Bool { get set }
+    var lowFodmap: Bool { get set }
+    var weightWatcherSmartPoints: Int64 { get set }
+    var gaps: String? { get set }
+    var preparationMinutes: Int64 { get set }
+    var cookingMinutes: Int64 { get set }
+    var aggregateLikes: Int64 { get set }
+    var healthScore: Double { get set }
+    var creditsText: String? { get set }
+    var license: String? { get set }
+    var sourceName: String? { get set }
+    var pricePerServing: Double { get set }
+    var spoonacularScore: Double { get set }
+    var spoonacularSourceUrl: String? { get set }
+    var summary: String? { get set }
+    var instructions: String? { get set }
+    var extendedIngredientsData: Data? { get set }
+    var nutritionData: Data? { get set }
+    var cuisinesData: Data? { get set }
+    var dishTypesData: Data? { get set }
+    var dietsData: Data? { get set }
+    var occasionsData: Data? { get set }
+    var analyzedInstructionsData: Data? { get set }
+}
+
+// MARK: - Protocol Conformance
+extension RecentRecipeCD: RecipeCD {}
+extension FavoriteRecipeCD: RecipeCD {}
+extension MyRecipeCD: RecipeCD {}
+
 final class CoreDataManager {
     static let shared = CoreDataManager()
     
@@ -47,7 +94,7 @@ final class CoreDataManager {
                         existingRecipe.dateAdded = Date()
                     } else {
                         let newRecipe = RecentRecipeCD(context: self.context)
-                        self.updateRecent(coreDataRecipe: newRecipe, with: recipe)
+                        self.update(recipeCD: newRecipe, with: recipe)
                     }
                     
                     try self.cleanupRecentIfNeeded(context: context)
@@ -73,7 +120,7 @@ final class CoreDataManager {
                 
                 do {
                     let coreDataRecipes = try context.fetch(fetchRequest)
-                    let recipes = coreDataRecipes.compactMap { self.convertToRecentRecipe(from: $0) }
+                    let recipes = coreDataRecipes.compactMap { self.convert(from: $0) }
                     continuation.resume(returning: recipes)
                 } catch {
                     print("Ошибка при извлечении рецептов: \(error)")
@@ -99,106 +146,8 @@ final class CoreDataManager {
         }
     }
 
-    //заполняет таблицу CoreData данными из сетевой модели
-    private func updateRecent(coreDataRecipe: RecentRecipeCD, with recipe: Recipe) {
-        coreDataRecipe.id = Int64(recipe.id)
-        coreDataRecipe.dateAdded = Date()
-        coreDataRecipe.image = recipe.image
-        coreDataRecipe.imageType = recipe.imageType
-        coreDataRecipe.title = recipe.title
-        coreDataRecipe.readyInMinutes = Int64(recipe.readyInMinutes)
-        coreDataRecipe.servings = Int64(recipe.servings)
-        coreDataRecipe.sourceUrl = recipe.sourceUrl
-        coreDataRecipe.vegetarian = recipe.vegetarian
-        coreDataRecipe.vegan = recipe.vegan
-        coreDataRecipe.glutenFree = recipe.glutenFree
-        coreDataRecipe.dairyFree = recipe.dairyFree
-        coreDataRecipe.veryHealthy = recipe.veryHealthy
-        coreDataRecipe.cheap = recipe.cheap
-        coreDataRecipe.veryPopular = recipe.veryPopular
-        coreDataRecipe.sustainable = recipe.sustainable
-        coreDataRecipe.lowFodmap = recipe.lowFodmap
-        coreDataRecipe.weightWatcherSmartPoints = recipe.weightWatcherSmartPoints.map { NSNumber(value: $0) } as! Int64
-        coreDataRecipe.gaps = recipe.gaps
-        coreDataRecipe.preparationMinutes = recipe.preparationMinutes.map { NSNumber(value: $0) } as! Int64
-        coreDataRecipe.cookingMinutes = recipe.cookingMinutes.map { NSNumber(value: $0) } as! Int64
-        coreDataRecipe.aggregateLikes = Int64(recipe.aggregateLikes)
-        coreDataRecipe.healthScore = recipe.healthScore
-        coreDataRecipe.creditsText = recipe.creditsText
-        coreDataRecipe.license = recipe.license
-        coreDataRecipe.sourceName = recipe.sourceName
-        coreDataRecipe.pricePerServing = Double(recipe.pricePerServing.map { NSNumber(value: $0) } as! Double)
-        coreDataRecipe.spoonacularScore = recipe.spoonacularScore
-        coreDataRecipe.spoonacularSourceUrl = recipe.spoonacularSourceUrl
-        coreDataRecipe.summary = recipe.summary
-        coreDataRecipe.instructions = recipe.instructions
-        
-        let encoder = JSONEncoder()
-        coreDataRecipe.extendedIngredientsData = try? encoder.encode(recipe.extendedIngredients)
-        coreDataRecipe.nutritionData = try? encoder.encode(recipe.nutrition)
-        coreDataRecipe.cuisinesData = try? encoder.encode(recipe.cuisines)
-        coreDataRecipe.dishTypesData = try? encoder.encode(recipe.dishTypes)
-        coreDataRecipe.dietsData = try? encoder.encode(recipe.diets)
-        coreDataRecipe.occasionsData = try? encoder.encode(recipe.occasions)
-        coreDataRecipe.analyzedInstructionsData = try? encoder.encode(recipe.analyzedInstructions)
-    }
-    
-    //конвертирует объект (запись) CoreData обратно в сетевую модель Recipe
-    private func convertToRecentRecipe(from cdRecent: RecentRecipeCD) -> Recipe? {
-        let decoder = JSONDecoder()
-        
-        //поля-массивы не могут быть nil в сетевой модели (Recipe), поэтому даем им пустой массив по умолчанию
-        let extendedIngredients = cdRecent.extendedIngredientsData.flatMap { try? decoder.decode([Ingredient].self, from: $0) } ?? []
-        let cuisines = cdRecent.cuisinesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let dishTypes = cdRecent.dishTypesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let diets = cdRecent.dietsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let occasions = cdRecent.occasionsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let analyzedInstructions = cdRecent.analyzedInstructionsData.flatMap { try? decoder.decode([AnalyzedInstruction].self, from: $0) } ?? []
-        
-        let nutrition = cdRecent.nutritionData.flatMap { try? decoder.decode(Nutrition.self, from: $0) }
-
-        return Recipe(
-            id: Int(cdRecent.id),
-            image: cdRecent.image,
-            imageType: cdRecent.imageType ?? "",
-            title: cdRecent.title ?? "",
-            readyInMinutes: Int(cdRecent.readyInMinutes),
-            servings: Int(cdRecent.servings),
-            sourceUrl: cdRecent.sourceUrl,
-            vegetarian: cdRecent.vegetarian,
-            vegan: cdRecent.vegan,
-            glutenFree: cdRecent.glutenFree,
-            dairyFree: cdRecent.dairyFree,
-            veryHealthy: cdRecent.veryHealthy,
-            cheap: cdRecent.cheap,
-            veryPopular: cdRecent.veryPopular,
-            sustainable: cdRecent.sustainable,
-            lowFodmap: cdRecent.lowFodmap,
-            weightWatcherSmartPoints: Int(cdRecent.weightWatcherSmartPoints),
-            gaps: cdRecent.gaps,
-            preparationMinutes: Int(cdRecent.preparationMinutes),
-            cookingMinutes: Int(cdRecent.cookingMinutes),
-            aggregateLikes: Int(cdRecent.aggregateLikes),
-            healthScore: cdRecent.healthScore,
-            creditsText: cdRecent.creditsText,
-            license: cdRecent.license,
-            sourceName: cdRecent.sourceName,
-            pricePerServing: Double(cdRecent.pricePerServing),
-            extendedIngredients: extendedIngredients,
-            nutrition: nutrition,
-            summary: cdRecent.summary,
-            cuisines: cuisines,
-            dishTypes: dishTypes,
-            diets: diets,
-            occasions: occasions,
-            instructions: cdRecent.instructions,
-            analyzedInstructions: analyzedInstructions,
-            spoonacularScore: cdRecent.spoonacularScore,
-            spoonacularSourceUrl: cdRecent.spoonacularSourceUrl ?? ""
-        )
-    }
-    
     // MARK: Favorite Recipes
+    
     func toggleFavorite(recipe: Recipe) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             container.performBackgroundTask { context in
@@ -212,7 +161,7 @@ final class CoreDataManager {
                         self.context.delete(existingRecipe)
                     } else {
                         let newFavorite = FavoriteRecipeCD(context: context)
-                        self.updateFavorite(favoriteRecipe: newFavorite, with: recipe)
+                        self.update(recipeCD: newFavorite, with: recipe)
                     }
                     
                     try self.context.save()
@@ -250,7 +199,7 @@ final class CoreDataManager {
                 
                 do {
                     let coreDataRecipes = try context.fetch(fetchRequest)
-                    let recipes =  coreDataRecipes.compactMap { self.convertToFavoriteRecipe(from: $0) }
+                    let recipes = coreDataRecipes.compactMap { self.convert(from: $0) }
                     continuation.resume(returning: recipes)
                 } catch {
                     print("Ошибка при извлечении избранных рецептов: \(error)")
@@ -260,101 +209,214 @@ final class CoreDataManager {
         }
     }
     
-    private func updateFavorite(favoriteRecipe: FavoriteRecipeCD, with recipe: Recipe) {
-        favoriteRecipe.id = Int64(recipe.id)
-        favoriteRecipe.dateAdded = Date()
-        favoriteRecipe.image = recipe.image
-        favoriteRecipe.imageType = recipe.imageType
-        favoriteRecipe.title = recipe.title
-        favoriteRecipe.readyInMinutes = Int64(recipe.readyInMinutes)
-        favoriteRecipe.servings = Int64(recipe.servings)
-        favoriteRecipe.sourceUrl = recipe.sourceUrl
-        favoriteRecipe.vegetarian = recipe.vegetarian
-        favoriteRecipe.vegan = recipe.vegan
-        favoriteRecipe.glutenFree = recipe.glutenFree
-        favoriteRecipe.dairyFree = recipe.dairyFree
-        favoriteRecipe.veryHealthy = recipe.veryHealthy
-        favoriteRecipe.cheap = recipe.cheap
-        favoriteRecipe.veryPopular = recipe.veryPopular
-        favoriteRecipe.sustainable = recipe.sustainable
-        favoriteRecipe.lowFodmap = recipe.lowFodmap
-        favoriteRecipe.weightWatcherSmartPoints = recipe.weightWatcherSmartPoints.map { NSNumber(value: $0) } as! Int64
-        favoriteRecipe.gaps = recipe.gaps
-        favoriteRecipe.preparationMinutes = recipe.preparationMinutes.map { NSNumber(value: $0) } as! Int64
-        favoriteRecipe.cookingMinutes = recipe.cookingMinutes.map { NSNumber(value: $0) } as! Int64
-        favoriteRecipe.aggregateLikes = Int64(recipe.aggregateLikes)
-        favoriteRecipe.healthScore = recipe.healthScore
-        favoriteRecipe.creditsText = recipe.creditsText
-        favoriteRecipe.license = recipe.license
-        favoriteRecipe.sourceName = recipe.sourceName
-        favoriteRecipe.pricePerServing = Double(recipe.pricePerServing.map { NSNumber(value: $0) } as! Double)
-        favoriteRecipe.spoonacularScore = recipe.spoonacularScore
-        favoriteRecipe.spoonacularSourceUrl = recipe.spoonacularSourceUrl
-        favoriteRecipe.summary = recipe.summary
-        favoriteRecipe.instructions = recipe.instructions
+    // MARK: - Generic Converters
+    
+    private func update<T: RecipeCD>(recipeCD: T, with recipe: Recipe) {
+        recipeCD.id = Int64(recipe.id)
+        recipeCD.dateAdded = Date()
+        recipeCD.image = recipe.image
+        recipeCD.imageType = recipe.imageType
+        recipeCD.title = recipe.title
+        recipeCD.readyInMinutes = Int64(recipe.readyInMinutes)
+        recipeCD.servings = Int64(recipe.servings)
+        recipeCD.sourceUrl = recipe.sourceUrl
+        recipeCD.vegetarian = recipe.vegetarian
+        recipeCD.vegan = recipe.vegan
+        recipeCD.glutenFree = recipe.glutenFree
+        recipeCD.dairyFree = recipe.dairyFree
+        recipeCD.veryHealthy = recipe.veryHealthy
+        recipeCD.cheap = recipe.cheap
+        recipeCD.veryPopular = recipe.veryPopular
+        recipeCD.sustainable = recipe.sustainable
+        recipeCD.lowFodmap = recipe.lowFodmap
+        recipeCD.weightWatcherSmartPoints = Int64(recipe.weightWatcherSmartPoints ?? 0)
+        recipeCD.gaps = recipe.gaps
+        recipeCD.preparationMinutes = Int64(recipe.preparationMinutes ?? 0)
+        recipeCD.cookingMinutes = Int64(recipe.cookingMinutes ?? 0)
+        recipeCD.aggregateLikes = Int64(recipe.aggregateLikes)
+        recipeCD.healthScore = recipe.healthScore
+        recipeCD.creditsText = recipe.creditsText
+        recipeCD.license = recipe.license
+        recipeCD.sourceName = recipe.sourceName
+        recipeCD.pricePerServing = recipe.pricePerServing ?? 0.0
+        recipeCD.spoonacularScore = recipe.spoonacularScore
+        recipeCD.spoonacularSourceUrl = recipe.spoonacularSourceUrl
+        recipeCD.summary = recipe.summary
+        recipeCD.instructions = recipe.instructions
         
         let encoder = JSONEncoder()
         
-        favoriteRecipe.extendedIngredientsData = try? encoder.encode(recipe.extendedIngredients)
-        favoriteRecipe.nutritionData = try? encoder.encode(recipe.nutrition)
-        favoriteRecipe.cuisinesData = try? encoder.encode(recipe.cuisines)
-        favoriteRecipe.dishTypesData = try? encoder.encode(recipe.dishTypes)
-        favoriteRecipe.dietsData = try? encoder.encode(recipe.diets)
-        favoriteRecipe.occasionsData = try? encoder.encode(recipe.occasions)
-        favoriteRecipe.analyzedInstructionsData = try? encoder.encode(recipe.analyzedInstructions)
+        recipeCD.extendedIngredientsData = try? encoder.encode(recipe.extendedIngredients)
+        recipeCD.nutritionData = try? encoder.encode(recipe.nutrition)
+        recipeCD.cuisinesData = try? encoder.encode(recipe.cuisines)
+        recipeCD.dishTypesData = try? encoder.encode(recipe.dishTypes)
+        recipeCD.dietsData = try? encoder.encode(recipe.diets)
+        recipeCD.occasionsData = try? encoder.encode(recipe.occasions)
+        recipeCD.analyzedInstructionsData = try? encoder.encode(recipe.analyzedInstructions)
     }
     
-    private func convertToFavoriteRecipe(from cdFavorite: FavoriteRecipeCD) -> Recipe? {
+    private func convert<T: RecipeCD>(from recipeCD: T) -> Recipe? {
         let decoder = JSONDecoder()
         
         //поля-массивы не могут быть nil в сетевой модели (Recipe), поэтому даем им пустой массив по умолчанию
-        let extendedIngredients = cdFavorite.extendedIngredientsData.flatMap { try? decoder.decode([Ingredient].self, from: $0) } ?? []
-        let cuisines = cdFavorite.cuisinesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let dishTypes = cdFavorite.dishTypesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let diets = cdFavorite.dietsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let occasions = cdFavorite.occasionsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
-        let analyzedInstructions = cdFavorite.analyzedInstructionsData.flatMap { try? decoder.decode([AnalyzedInstruction].self, from: $0) } ?? []
+        let extendedIngredients = recipeCD.extendedIngredientsData.flatMap { try? decoder.decode([Ingredient].self, from: $0) } ?? []
+        let cuisines = recipeCD.cuisinesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
+        let dishTypes = recipeCD.dishTypesData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
+        let diets = recipeCD.dietsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
+        let occasions = recipeCD.occasionsData.flatMap { try? decoder.decode([String].self, from: $0) } ?? []
+        let analyzedInstructions = recipeCD.analyzedInstructionsData.flatMap { try? decoder.decode([AnalyzedInstruction].self, from: $0) } ?? []
         
-        let nutrition = cdFavorite.nutritionData.flatMap { try? decoder.decode(Nutrition.self, from: $0) }
+        let nutrition = recipeCD.nutritionData.flatMap { try? decoder.decode(Nutrition.self, from: $0) }
 
         return Recipe(
-            id: Int(cdFavorite.id),
-            image: cdFavorite.image,
-            imageType: cdFavorite.imageType ?? "",
-            title: cdFavorite.title ?? "",
-            readyInMinutes: Int(cdFavorite.readyInMinutes),
-            servings: Int(cdFavorite.servings),
-            sourceUrl: cdFavorite.sourceUrl,
-            vegetarian: cdFavorite.vegetarian,
-            vegan: cdFavorite.vegan,
-            glutenFree: cdFavorite.glutenFree,
-            dairyFree: cdFavorite.dairyFree,
-            veryHealthy: cdFavorite.veryHealthy,
-            cheap: cdFavorite.cheap,
-            veryPopular: cdFavorite.veryPopular,
-            sustainable: cdFavorite.sustainable,
-            lowFodmap: cdFavorite.lowFodmap,
-            weightWatcherSmartPoints: Int(cdFavorite.weightWatcherSmartPoints),
-            gaps: cdFavorite.gaps,
-            preparationMinutes: Int(cdFavorite.preparationMinutes),
-            cookingMinutes: Int(cdFavorite.cookingMinutes),
-            aggregateLikes: Int(cdFavorite.aggregateLikes),
-            healthScore: cdFavorite.healthScore,
-            creditsText: cdFavorite.creditsText,
-            license: cdFavorite.license,
-            sourceName: cdFavorite.sourceName,
-            pricePerServing: Double(cdFavorite.pricePerServing),
+            id: Int(recipeCD.id),
+            image: recipeCD.image,
+            imageType: recipeCD.imageType ?? "",
+            title: recipeCD.title ?? "",
+            readyInMinutes: Int(recipeCD.readyInMinutes),
+            servings: Int(recipeCD.servings),
+            sourceUrl: recipeCD.sourceUrl,
+            vegetarian: recipeCD.vegetarian,
+            vegan: recipeCD.vegan,
+            glutenFree: recipeCD.glutenFree,
+            dairyFree: recipeCD.dairyFree,
+            veryHealthy: recipeCD.veryHealthy,
+            cheap: recipeCD.cheap,
+            veryPopular: recipeCD.veryPopular,
+            sustainable: recipeCD.sustainable,
+            lowFodmap: recipeCD.lowFodmap,
+            weightWatcherSmartPoints: Int(recipeCD.weightWatcherSmartPoints),
+            gaps: recipeCD.gaps,
+            preparationMinutes: Int(recipeCD.preparationMinutes),
+            cookingMinutes: Int(recipeCD.cookingMinutes),
+            aggregateLikes: Int(recipeCD.aggregateLikes),
+            healthScore: recipeCD.healthScore,
+            creditsText: recipeCD.creditsText,
+            license: recipeCD.license,
+            sourceName: recipeCD.sourceName,
+            pricePerServing: Double(recipeCD.pricePerServing),
             extendedIngredients: extendedIngredients,
             nutrition: nutrition,
-            summary: cdFavorite.summary,
+            summary: recipeCD.summary,
             cuisines: cuisines,
             dishTypes: dishTypes,
             diets: diets,
             occasions: occasions,
-            instructions: cdFavorite.instructions,
+            instructions: recipeCD.instructions,
             analyzedInstructions: analyzedInstructions,
-            spoonacularScore: cdFavorite.spoonacularScore,
-            spoonacularSourceUrl: cdFavorite.spoonacularSourceUrl ?? ""
+            spoonacularScore: recipeCD.spoonacularScore,
+            spoonacularSourceUrl: recipeCD.spoonacularSourceUrl ?? ""
         )
     }
+    
+    // MARK: My Recipes
+    
+    func addMyRecipe(recipe: Recipe) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            container.performBackgroundTask { context in
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                
+                let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
+                
+                do {
+                    if let existingRecipe = try context.fetch(fetchRequest).first {
+                        self.update(recipeCD: existingRecipe, with: recipe)
+                    } else  {
+                        let newRecipe = MyRecipeCD(context: context)
+                        self.update(recipeCD: newRecipe, with: recipe)
+                    }
+                    
+                    if context.hasChanges {
+                        try context.save()
+                    }
+                } catch {
+                    print("Ошибка при добавлении или обновлении своего рецепта: \(error)")
+                }
+                continuation.resume()
+            }
+        }
+    }
+    
+    func fetchMyRecipes() async -> [Recipe] {
+        return await withCheckedContinuation { continuation in
+            container.performBackgroundTask { context in
+                let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
+                let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
+                fetchRequest.sortDescriptors = [sortDescriptor]
+                
+                do {
+                    let coreDataRecipes = try context.fetch(fetchRequest)
+                    let recipes = coreDataRecipes.compactMap { self.convert(from: $0) }
+                    continuation.resume(returning: recipes)
+                } catch {
+                    print("Ошибка при извлечении своих рецептов: \(error)")
+                    continuation.resume(returning: [])
+                }
+            }
+        }
+    }
+    
+    func deleteMyRecipe(id: Int) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            container.performBackgroundTask { container in
+                let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+                
+                do {
+                    if let recipeToDelete = try self.context.fetch(fetchRequest).first {
+                        self.context.delete(recipeToDelete)
+                        try self.context.save()
+                    }
+                } catch {
+                    print("Ошибка при удалении своего рецепта: \(error)")
+                }
+                continuation.resume()
+            }
+        }
+    }
+    
+    private func updateMyRecipe(myRecipe: MyRecipeCD, with recipe: Recipe) {
+            myRecipe.id = Int64(recipe.id)
+            myRecipe.dateAdded = Date()
+            myRecipe.image = recipe.image
+            myRecipe.imageType = recipe.imageType
+            myRecipe.title = recipe.title
+            myRecipe.readyInMinutes = Int64(recipe.readyInMinutes)
+            myRecipe.servings = Int64(recipe.servings)
+            myRecipe.sourceUrl = recipe.sourceUrl
+            myRecipe.vegetarian = recipe.vegetarian
+            myRecipe.vegan = recipe.vegan
+            myRecipe.glutenFree = recipe.glutenFree
+            myRecipe.dairyFree = recipe.dairyFree
+            myRecipe.veryHealthy = recipe.veryHealthy
+            myRecipe.cheap = recipe.cheap
+            myRecipe.veryPopular = recipe.veryPopular
+            myRecipe.sustainable = recipe.sustainable
+            myRecipe.lowFodmap = recipe.lowFodmap
+            myRecipe.weightWatcherSmartPoints = Int64(recipe.weightWatcherSmartPoints ?? 0)
+            myRecipe.gaps = recipe.gaps
+            myRecipe.preparationMinutes = Int64(recipe.preparationMinutes ?? 0)
+            myRecipe.cookingMinutes = Int64(recipe.cookingMinutes ?? 0)
+            myRecipe.aggregateLikes = Int64(recipe.aggregateLikes)
+            myRecipe.healthScore = recipe.healthScore
+            myRecipe.creditsText = recipe.creditsText
+            myRecipe.license = recipe.license
+            myRecipe.sourceName = recipe.sourceName
+            myRecipe.pricePerServing = recipe.pricePerServing ?? 0.0
+            myRecipe.spoonacularScore = recipe.spoonacularScore
+            myRecipe.spoonacularSourceUrl = recipe.spoonacularSourceUrl
+            myRecipe.summary = recipe.summary
+            myRecipe.instructions = recipe.instructions
+            
+            let encoder = JSONEncoder()
+            
+            myRecipe.extendedIngredientsData = try? encoder.encode(recipe.extendedIngredients)
+            myRecipe.nutritionData = try? encoder.encode(recipe.nutrition)
+            myRecipe.cuisinesData = try? encoder.encode(recipe.cuisines)
+            myRecipe.dishTypesData = try? encoder.encode(recipe.dishTypes)
+            myRecipe.dietsData = try? encoder.encode(recipe.diets)
+            myRecipe.occasionsData = try? encoder.encode(recipe.occasions)
+            myRecipe.analyzedInstructionsData = try? encoder.encode(recipe.analyzedInstructions)
+        }
 }

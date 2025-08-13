@@ -175,8 +175,8 @@ extension Recipe {
         imageType: "jpg",
         title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
         readyInMinutes: 45,
-        servings: 2,
-        sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
+servings: 2,
+sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
         vegetarian: false,
         vegan: false,
         glutenFree: false,
@@ -248,7 +248,7 @@ extension AnalyzedInstruction {
     static let preview = AnalyzedInstruction(
         name: "",
         steps: [InstructionStep(number: 1, step: "Step number one", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
-                InstructionStep(number: 2, step: "Step number two", ingredients: [], equipment: [], length: nil),
+                InstructionStep(number: 2, step: "Step number two  dfg dfg dfg ertwertwr wsfgwrt sfsfwtwdfg werff", ingredients: [], equipment: [], length: nil),
                 InstructionStep(number: 3, step: "Step number three", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
                 InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
     )
