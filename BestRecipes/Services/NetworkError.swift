@@ -96,6 +96,37 @@ enum CuisineType: String, CaseIterable {
     }
 }
 
+// MARK: - Recipe Categories
+enum RecipeCategory: String, CaseIterable {
+    case mainCourse = "main course"
+    case appetizer = "appetizer"
+    case dessert = "dessert"
+    case salad = "salad"
+    case soup = "soup"
+    case beverage = "beverage"
+    case breakfast = "breakfast"
+    case lunch = "lunch"
+    case dinner = "dinner"
+    case sideDish = "side dish"
+    case snack = "snack"
+    
+    var displayName: String {
+        switch self {
+        case .mainCourse: return "Основные блюда"
+        case .appetizer: return "Закуски"
+        case .dessert: return "Десерты"
+        case .salad: return "Салаты"
+        case .soup: return "Супы"
+        case .beverage: return "Напитки"
+        case .breakfast: return "Завтрак"
+        case .lunch: return "Обед"
+        case .dinner: return "Ужин"
+        case .sideDish: return "Гарниры"
+        case .snack: return "Перекусы"
+        }
+    }
+}
+
 // MARK: - API Configuration
 struct APIConfig {
     static let baseURL = "https://api.spoonacular.com"
@@ -105,6 +136,7 @@ struct APIConfig {
         case searchRecipes(query: String, number: Int = 10)
         case randomRecipes(number: Int = 1)
         case searchByCuisine(cuisine: CuisineType, number: Int = 10)
+        case searchByCategory(category: String, number: Int = 10)
         
         var path: String {
             switch self {
@@ -114,35 +146,44 @@ struct APIConfig {
                 return "/recipes/complexSearch"
             case .randomRecipes:
                 return "/recipes/random"
+            case .searchByCategory(category: let category, number: let number):
+                return "/recipes/complexSearch"
             }
         }
         
-//        var queryItems: [URLQueryItem] {
-//            var items = [URLQueryItem(name: "apiKey", value: Secrets.apiKey)]
-//            
-//            switch self {
-//            case .recipeInformation(_, let includeNutrition):
-//                items.append(URLQueryItem(name: "includeNutrition", value: "\(includeNutrition)"))
-//                
-//            case .searchRecipes(let query, let number):
-//                items.append(contentsOf: [
-//                    URLQueryItem(name: "query", value: query),
-//                    URLQueryItem(name: "number", value: "\(number)"),
-//                    URLQueryItem(name: "addRecipeInformation", value: "true")
-//                ])
-//                
-//            case .searchByCuisine(let cuisine, let number):
-//                items.append(contentsOf: [
-//                    URLQueryItem(name: "cuisine", value: cuisine.rawValue),
-//                    URLQueryItem(name: "number", value: "\(number)"),
-//                    URLQueryItem(name: "addRecipeInformation", value: "true")
-//                ])
-//                
-//            case .randomRecipes(let number):
-//                items.append(URLQueryItem(name: "number", value: "\(number)"))
-//            }
-//            
-//            return items
-//        }
+        var queryItems: [URLQueryItem] {
+            var items = [URLQueryItem(name: "apiKey", value: Secrets.apiKey)]
+            
+            switch self {
+            case .recipeInformation(_, let includeNutrition):
+                items.append(URLQueryItem(name: "includeNutrition", value: "\(includeNutrition)"))
+                
+            case .searchRecipes(let query, let number):
+                items.append(contentsOf: [
+                    URLQueryItem(name: "query", value: query),
+                    URLQueryItem(name: "number", value: "\(number)"),
+                    URLQueryItem(name: "addRecipeInformation", value: "true")
+                ])
+                
+            case .searchByCuisine(let cuisine, let number):
+                items.append(contentsOf: [
+                    URLQueryItem(name: "cuisine", value: cuisine.rawValue),
+                    URLQueryItem(name: "number", value: "\(number)"),
+                    URLQueryItem(name: "addRecipeInformation", value: "true")
+                ])
+                
+            case .randomRecipes(let number):
+                items.append(URLQueryItem(name: "number", value: "\(number)"))
+                
+            case .searchByCategory(category: let category, number: let number):
+                items.append(contentsOf: [
+                    URLQueryItem(name: "type", value: category),
+                    URLQueryItem(name: "number", value: "\(number)"),
+                    URLQueryItem(name: "addRecipeInformation", value: "true")
+                ])
+            }
+            
+            return items
+        }
     }
 }
