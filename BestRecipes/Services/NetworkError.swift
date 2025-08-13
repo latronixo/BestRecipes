@@ -146,7 +146,7 @@ struct APIConfig {
                 return "/recipes/complexSearch"
             case .randomRecipes:
                 return "/recipes/random"
-            case .searchByCategory(category: let category, number: let number):
+            case .searchByCategory(category: _, number: _):
                 return "/recipes/complexSearch"
             }
         }
