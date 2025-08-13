@@ -174,6 +174,7 @@ struct APIConfig {
                 
             case .randomRecipes(let number):
                 items.append(URLQueryItem(name: "number", value: "\(number)"))
+                
             case .searchByCategory(category: let category, number: let number):
                 items.append(contentsOf: [
                     URLQueryItem(name: "type", value: category),
