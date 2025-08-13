@@ -38,7 +38,7 @@ struct DiscoverView: View {
                         .padding(.bottom, tabBarHeight)
                     }
                 }
-                BottomTabBar(selectedTab: $localSelectedTab)
+//                BottomTabBar(selectedTab: $localSelectedTab)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
