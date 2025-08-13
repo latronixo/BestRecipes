@@ -42,7 +42,7 @@ struct Recipe: Codable, Identifiable {
     let pricePerServing: Double?                   // Цена за порцию (USD)
     
     // MARK: - Состав и инструкции
-    let extendedIngredients: [Ingredient]          // Список ингредиентов
+    let extendedIngredients: [Ingredient]?          // Список ингредиентов
     let nutrition: Nutrition?                      // Информация о питательности
     let summary: String?                           // Краткое описание рецепта
     let cuisines: [String]                         // Типы кухни (итальянская, китайская)
@@ -50,7 +50,7 @@ struct Recipe: Codable, Identifiable {
     let diets: [String]                            // Подходящие диеты
     let occasions: [String]                        // Подходящие случаи (завтрак, ужин)
     let instructions: String?                      // Инструкции приготовления (текст)
-    let analyzedInstructions: [AnalyzedInstruction] // Структурированные инструкции
+    let analyzedInstructions: [AnalyzedInstruction]? // Структурированные инструкции
     
     // MARK: - Оценки Spoonacular
     let spoonacularScore: Double                   // Внутренняя оценка качества
