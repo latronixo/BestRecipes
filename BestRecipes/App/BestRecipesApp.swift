@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct BestRecipesApp: App {
+    
+    @State private var shouldOnboardingFinal = !OnboardingManager.onboardingFlag
+    
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
+            if shouldOnboardingFinal {
+                OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
+                    .transition(.opacity)
+            } else {
+                CustomTabBar()
+                    .transition(.opacity)
+            }
         }
     }
 }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    
+    @Binding var shouldShowOnboarding: Bool
+    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -49,7 +52,7 @@ struct OnboardingView: View {
                     }
                     
                     NavigationLink(destination: {
-                        MainOnboardingPage()
+                        MainOnboardingPage(shouldShowOnboarding: $shouldShowOnboarding)
                     }, label: {
                         Text("Get Started")
                             .font(.poppinsSemibold(size: 18))
@@ -72,6 +75,6 @@ struct OnboardingView: View {
     }
 }
 
-#Preview{
-    OnboardingView()
-}
+//#Preview{
+//    OnboardingView()
+//}

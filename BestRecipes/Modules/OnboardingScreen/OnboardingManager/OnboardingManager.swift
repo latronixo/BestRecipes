@@ -8,7 +8,7 @@
 import Foundation
 
 final class OnboardingManager {
-    private static let onboardingKey: String = "OnboardingKey"
+    private static var onboardingKey: String = "OnboardingKey"
     
     static var onboardingFlag: Bool {
         get {
@@ -16,5 +16,9 @@ final class OnboardingManager {
         } set {
             UserDefaults.standard.set(newValue, forKey: onboardingKey)
         }
+    }
+    
+    static func completeOnboarding() {
+        onboardingFlag = true
     }
 }

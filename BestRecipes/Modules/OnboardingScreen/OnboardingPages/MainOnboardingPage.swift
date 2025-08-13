@@ -10,6 +10,7 @@ import SwiftUI
 struct MainOnboardingPage: View {
     @State private var currentPage: Int = 0
     @State private var totalPages = 3
+    @Binding var shouldShowOnboarding: Bool
     
     var body: some View {
         GeometryReader { geometry in
@@ -28,7 +29,7 @@ struct MainOnboardingPage: View {
                             enumConstraction: EnumConstructor.allCases[index],
                             thirdScreen: index == totalPages - 1,
                             currentPage: $currentPage,
-                            totalPages: $totalPages
+                            totalPages: $totalPages, shouldShowOnboarding: $shouldShowOnboarding
                         )
                         .tag(index)
                         .background(Color.clear)
@@ -51,7 +52,7 @@ struct MainOnboardingPage: View {
         }
     }
 }
-
-#Preview{
-    MainOnboardingPage()
-}
+//
+//#Preview{
+//    MainOnboardingPage()
+//}
