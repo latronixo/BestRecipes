@@ -47,6 +47,12 @@ final class NetworkServices {
         return try await fetchData(endpoint, as: RandomRecipesResponse.self)
     }
     
+    /// Поиск рецептов по категориям
+    func searchRecipesByCategory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+        let endpoint = APIConfig.Endpoint.searchByCategory(category: category.rawValue, number: numberOfResults)
+        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
+    }
+    
     // MARK: - Image Loading Operations
     /// Загружает изображение рецепта
     func fetchRecipeImageData(_ recipe: Recipe, size: String? = nil) async throws -> Data? {
@@ -112,11 +118,11 @@ final class NetworkServices {
 // MARK: - Private Network Helpers
 private extension NetworkServices {
     func buildURL(for endpoint: APIConfig.Endpoint) throws -> URL {
-        guard var urlComponents = URLComponents(string: APIConfig.baseURL + endpoint.path) else {
+        guard let urlComponents = URLComponents(string: APIConfig.baseURL + endpoint.path) else {
             throw NetworkError.invalidURL
         }
         
-        urlComponents.queryItems = endpoint.queryItems
+       // urlComponents.queryItems = endpoint.queryItems
         
         guard let url = urlComponents.url else {
             throw NetworkError.invalidURL

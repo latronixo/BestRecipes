@@ -24,8 +24,8 @@ enum TabEnum: Int, CaseIterable {
     @ViewBuilder
     var screen: some View {
         switch self {
-        case .home: HomeScreenView()
-        case .bookmarks: BookmarkView()
+        case .home: ContentView()
+        case .bookmarks: DiscoverView(favorites: Array(repeating: .preview, count: 3))
         case .add: AddView()
         case .notifications: BellView()
         case .profile: PersonView()
