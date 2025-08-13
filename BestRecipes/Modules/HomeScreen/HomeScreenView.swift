@@ -20,6 +20,7 @@ struct HomeScreenView: View {
                 .font(.poppinsSemibold(size: 24))
             
             SearchBar()
+                .padding(.bottom, 70)
             
             Heading(title: "Trending now 🔥")
             

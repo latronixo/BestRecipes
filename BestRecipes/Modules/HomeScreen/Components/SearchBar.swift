@@ -12,12 +12,15 @@ struct SearchBar: View {
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-            HStack {
-                Text("Search recipes")
-                    .foregroundStyle(.gray)
-                Spacer()
+            Text("How to")
+                .font(.footnote)
+                .fontWeight(.semibold)
+            Spacer()
+            Button {} label: {
+                Image(systemName: "xmark")
+                    .foregroundStyle(.black)
             }
-            
+
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
