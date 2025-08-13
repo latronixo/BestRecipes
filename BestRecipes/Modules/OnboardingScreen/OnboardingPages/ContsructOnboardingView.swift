@@ -63,7 +63,7 @@ struct ContsructOnboardingView: View {
                 Button {
                     if currentPage < totalPages - 1{
                         currentPage += 1
-                    }
+                    } 
                 } label: {
                     Text(thirdScreen ? "Start Cooking" : "Continue")
                         .font(.poppinsRegular(size: 18))
