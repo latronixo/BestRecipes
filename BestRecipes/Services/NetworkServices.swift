@@ -118,7 +118,7 @@ final class NetworkServices {
 // MARK: - Private Network Helpers
 private extension NetworkServices {
     func buildURL(for endpoint: APIConfig.Endpoint) throws -> URL {
-        guard var urlComponents = URLComponents(string: APIConfig.baseURL + endpoint.path) else {
+        guard let urlComponents = URLComponents(string: APIConfig.baseURL + endpoint.path) else {
             throw NetworkError.invalidURL
         }
         
