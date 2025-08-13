@@ -10,6 +10,8 @@ import SwiftUI
 
 struct IngredientsViewCell: View {
     
+    @ObservedObject var detailVM: DetailViewModel
+    
     @State var isSelected = false
     
     var body: some View {
@@ -47,5 +49,5 @@ struct IngredientsViewCell: View {
 
 
 #Preview {
-    IngredientsViewCell()
+    IngredientsViewCell(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
 }

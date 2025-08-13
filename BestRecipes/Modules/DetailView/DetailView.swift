@@ -24,11 +24,11 @@ struct DetailView: View {
             
             VStack {
                 ScrollView {
-                    RecipeView()
+                    RecipeView(detailVM: detailVM)
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
                     
                     ForEach(0..<5) { _ in
-                        IngredientsViewCell()
+                        IngredientsViewCell(detailVM: detailVM)
                         
                     }
                     
