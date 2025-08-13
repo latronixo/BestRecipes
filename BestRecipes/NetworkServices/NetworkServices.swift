@@ -47,6 +47,12 @@ final class NetworkServices {
         return try await fetchData(endpoint, as: RandomRecipesResponse.self)
     }
     
+    /// Поиск рецептов по категориям
+    func searchRecipesByCtegory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+        let endpoint = APIConfig.Endpoint.searchByCategory(category: category.rawValue, number: numberOfResults)
+        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
+    }
+    
     // MARK: - Image Loading Operations
     /// Загружает изображение рецепта
     func fetchRecipeImageData(_ recipe: Recipe, size: String? = nil) async throws -> Data? {
