@@ -14,7 +14,6 @@ final class AddRecipeViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var recipe: Recipe
     @Published var imagePath: String?
-    @Published var showingImagePicker = false
     @Published var showingServingsPicker = false
     @Published var showingCookTimePicker = false
     @Published var showingAlert = false

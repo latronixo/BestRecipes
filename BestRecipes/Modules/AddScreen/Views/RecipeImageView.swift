@@ -13,7 +13,7 @@ struct RecipeImageView: View {
     
     // MARK: - Properties
     @ObservedObject var viewModel: AddRecipeViewModel
-    @State private var showingImagePicker = false
+    @State private var selectedItem: PhotosPickerItem?
     @State private var selectedUIImage: UIImage?
     
     // MARK: - Body
@@ -59,9 +59,11 @@ struct RecipeImageView: View {
                     HStack {
                         Spacer()
                         
-                        Button(action: {
-                            showingImagePicker = true
-                        }) {
+                        PhotosPicker(
+                            selection: $selectedItem,
+                            matching: .images,
+                            photoLibrary: .shared()
+                        ) {
                             Circle()
                                 .fill(Color.white)
                                 .frame(width: 40, height: 40)
@@ -74,16 +76,22 @@ struct RecipeImageView: View {
                         }
                         .padding(.trailing, 16)
                         .padding(.top, 16)
+                        .onChange(of: selectedItem) { newItem in
+                            Task {
+                                if let data = try? await newItem?.loadTransferable(type: Data.self),
+                                   let image = UIImage(data: data) {
+                                    await MainActor.run {
+                                        selectedUIImage = image
+                                        handleImageSelection(image)
+                                    }
+                                }
+                            }
+                        }
                     }
                     
                     Spacer()
                 }
             }
-        }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(selectedImage: $selectedUIImage, onImageSelected: { image in
-                handleImageSelection(image)
-            })
         }
     }
     
