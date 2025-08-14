@@ -2,7 +2,7 @@
 //  IngredientsView.swift
 //  BestRecipes
 //
-//  Created by Наташа Спиридонова on 11.08.2025.
+//  Created by Наташа Спиридонова on 14.08.2025.
 //
 
 import SwiftUI
@@ -17,52 +17,44 @@ struct IngredientsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // MARK: - Header
-            Text("Ingredients")
-                .font(.poppinsSemibold(size: 20))
-                .foregroundColor(.black)
+            HStack {
+                Text("Ingredients")
+                    .font(.poppinsSemibold(size: 18))
+                
+                Spacer()
+                
+                Button(action: {
+                    viewModel.addIngredient()
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(.red)
+                }
+            }
             
             // MARK: - Ingredients List
-            VStack(spacing: 12) {
-                ForEach(Array(viewModel.recipe.ingredients.enumerated()), id: \.element.id) { index, ingredient in
+            if viewModel.recipe.extendedIngredients.isEmpty {
+                Text("No ingredients added yet")
+                    .font(.poppinsRegular(size: 16))
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 20)
+            } else {
+                ForEach(Array(viewModel.recipe.extendedIngredients.enumerated()), id: \.element.id) { index, ingredient in
                     IngredientRow(
                         ingredient: ingredient,
                         index: index,
                         viewModel: viewModel
                     )
                 }
-                
-                // MARK: - Add Ingredient Button
-                Button(action: {
-                    viewModel.addIngredient()
-                }) {
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 24, height: 24)
-                            .overlay(
-                                Image(systemName: "plus")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(.white)
-                            )
-                        
-                        Text("Add ingredient")
-                            .font(.poppinsRegular(size: 16))
-                            .foregroundColor(.red)
-                    }
-                    .padding(.vertical, 12)
-                }
-                .buttonStyle(PlainButtonStyle())
             }
         }
+        .padding(.horizontal, 20)
     }
 }
 
 // MARK: - Preview
 #Preview {
-    VStack(spacing: 20) {
-        IngredientsView(viewModel: AddRecipeViewModel())
-        
-        Spacer()
-    }
-    .padding()
+    IngredientsView(viewModel: AddRecipeViewModel())
+        .background(Color(.systemBackground))
 }

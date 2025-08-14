@@ -253,4 +253,186 @@ extension AnalyzedInstruction {
                 InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
     )
 }
+
+// MARK: - Mutable Recipe for Creating New Recipes
+struct MutableRecipe {
+    var id: Int
+    var image: String?
+    var imageType: String?
+    var title: String
+    var readyInMinutes: Int
+    var servings: Int
+    var sourceUrl: String?
+    var vegetarian: Bool
+    var vegan: Bool
+    var glutenFree: Bool
+    var dairyFree: Bool
+    var veryHealthy: Bool
+    var cheap: Bool
+    var veryPopular: Bool
+    var sustainable: Bool
+    var lowFodmap: Bool
+    var weightWatcherSmartPoints: Int?
+    var gaps: String?
+    var preparationMinutes: Int?
+    var cookingMinutes: Int?
+    var aggregateLikes: Int
+    var healthScore: Double
+    var creditsText: String
+    var license: String
+    var sourceName: String
+    var pricePerServing: Double?
+    var extendedIngredients: [MutableIngredient]
+    var nutrition: Nutrition?
+    var summary: String?
+    var cuisines: [String]
+    var dishTypes: [String]
+    var diets: [String]
+    var occasions: [String]
+    var instructions: String?
+    var analyzedInstructions: [AnalyzedInstruction]
+    var spoonacularScore: Double
+    var spoonacularSourceUrl: String
+    
+    // MARK: - Convert to Recipe
+    func toRecipe() -> Recipe {
+        return Recipe(
+            id: id,
+            image: image,
+            imageType: imageType,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            servings: servings,
+            sourceUrl: sourceUrl,
+            vegetarian: vegetarian,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            dairyFree: dairyFree,
+            veryHealthy: veryHealthy,
+            cheap: cheap,
+            veryPopular: veryPopular,
+            sustainable: sustainable,
+            lowFodmap: lowFodmap,
+            weightWatcherSmartPoints: weightWatcherSmartPoints,
+            gaps: gaps,
+            preparationMinutes: preparationMinutes,
+            cookingMinutes: cookingMinutes,
+            aggregateLikes: aggregateLikes,
+            healthScore: healthScore,
+            creditsText: creditsText,
+            license: license,
+            sourceName: sourceName,
+            pricePerServing: pricePerServing,
+            extendedIngredients: extendedIngredients.map { $0.toIngredient() },
+            nutrition: nutrition,
+            summary: summary,
+            cuisines: cuisines,
+            dishTypes: dishTypes,
+            diets: diets,
+            occasions: occasions,
+            instructions: instructions,
+            analyzedInstructions: analyzedInstructions,
+            spoonacularScore: spoonacularScore,
+            spoonacularSourceUrl: spoonacularSourceUrl
+        )
+    }
+    
+    // MARK: - Factory Method
+    static func createEmpty() -> MutableRecipe {
+        return MutableRecipe(
+            id: Int.random(in: 1000000...9999999),
+            image: nil,
+            imageType: nil,
+            title: "",
+            readyInMinutes: 20,
+            servings: 1,
+            sourceUrl: nil,
+            vegetarian: false,
+            vegan: false,
+            glutenFree: false,
+            dairyFree: false,
+            veryHealthy: false,
+            cheap: false,
+            veryPopular: false,
+            sustainable: false,
+            lowFodmap: false,
+            weightWatcherSmartPoints: nil,
+            gaps: nil,
+            preparationMinutes: nil,
+            cookingMinutes: 20,
+            aggregateLikes: 0,
+            healthScore: 0.0,
+            creditsText: "User created",
+            license: "User license",
+            sourceName: "User",
+            pricePerServing: nil,
+            extendedIngredients: [],
+            nutrition: nil,
+            summary: "",
+            cuisines: [],
+            dishTypes: [],
+            diets: [],
+            occasions: [],
+            instructions: "",
+            analyzedInstructions: [],
+            spoonacularScore: 0.0,
+            spoonacularSourceUrl: ""
+        )
+    }
+}
+
+// MARK: - Mutable Ingredient for Creating New Ingredients
+struct MutableIngredient {
+    var id: Int
+    var aisle: String?
+    var image: String?
+    var consistency: String?
+    var name: String
+    var nameClean: String?
+    var original: String
+    var originalName: String
+    var amount: Double
+    var unit: String
+    var meta: [String]
+    var measures: Measures
+    
+    // MARK: - Convert to Ingredient
+    func toIngredient() -> Ingredient {
+        return Ingredient(
+            id: id,
+            aisle: aisle,
+            image: image,
+            consistency: consistency,
+            name: name,
+            nameClean: nameClean,
+            original: original,
+            originalName: originalName,
+            amount: amount,
+            unit: unit,
+            meta: meta,
+            measures: measures
+        )
+    }
+    
+    // MARK: - Factory Method
+    static func createEmpty() -> MutableIngredient {
+        return MutableIngredient(
+            id: Int.random(in: 1...1000000),
+            aisle: nil,
+            image: nil,
+            consistency: nil,
+            name: "",
+            nameClean: "",
+            original: "",
+            originalName: "",
+            amount: 1.0,
+            unit: "piece",
+            meta: [],
+            measures: Measures(
+                us: MeasureUnit(amount: 1.0, unitShort: "pc", unitLong: "piece"),
+                metric: MeasureUnit(amount: 1.0, unitShort: "шт", unitLong: "штука")
+            )
+        )
+    }
+}
 #endif

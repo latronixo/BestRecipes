@@ -11,7 +11,7 @@ import SwiftUI
 struct IngredientRow: View {
     
     // MARK: - Properties
-    let ingredient: NewIngredient
+    let ingredient: MutableIngredient
     let index: Int
     @ObservedObject var viewModel: AddRecipeViewModel
     
@@ -33,7 +33,7 @@ struct IngredientRow: View {
             
             // MARK: - Quantity Field
             TextField("Quantity", text: Binding(
-                get: { ingredient.quantity },
+                get: { String(format: "%.1f", ingredient.amount) },
                 set: { viewModel.updateIngredientQuantity(at: index, quantity: $0) }
             ))
             .font(.poppinsRegular(size: 16))
@@ -67,13 +67,13 @@ struct IngredientRow: View {
 #Preview {
     VStack(spacing: 16) {
         IngredientRow(
-            ingredient: NewIngredient(name: "Pasta", quantity: "250gr"),
+            ingredient: MutableIngredient.createEmpty(),
             index: 0,
             viewModel: AddRecipeViewModel()
         )
         
         IngredientRow(
-            ingredient: NewIngredient(name: "Green Beans", quantity: "150gr"),
+            ingredient: MutableIngredient.createEmpty(),
             index: 1,
             viewModel: AddRecipeViewModel()
         )

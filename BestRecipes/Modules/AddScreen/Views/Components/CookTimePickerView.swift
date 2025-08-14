@@ -25,7 +25,7 @@ struct CookTimePickerView: View {
                 
                 // MARK: - Picker
                 Picker("Cook Time", selection: Binding(
-                    get: { viewModel.recipe.cookTimeMinutes },
+                    get: { viewModel.recipe.readyInMinutes },
                     set: { viewModel.updateCookTime($0) }
                 )) {
                     ForEach(viewModel.cookTimeOptions, id: \.self) { minutes in

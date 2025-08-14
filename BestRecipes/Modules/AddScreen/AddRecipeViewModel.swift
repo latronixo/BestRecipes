@@ -12,7 +12,7 @@ import Foundation
 final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Published Properties
-    @Published var recipe: NewRecipe
+    @Published var recipe: MutableRecipe
     @Published var imagePath: String?
     @Published var showingImagePicker = false
     @Published var showingServingsPicker = false
@@ -23,8 +23,8 @@ final class AddRecipeViewModel: ObservableObject {
     // MARK: - Computed Properties
     var isFormValid: Bool {
         !recipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !recipe.ingredients.isEmpty &&
-        recipe.ingredients.allSatisfy { !$0.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        !recipe.extendedIngredients.isEmpty &&
+        recipe.extendedIngredients.allSatisfy { !$0.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     }
     
     var servingsOptions: [Int] {
@@ -37,7 +37,7 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Initialization
     init() {
-        self.recipe = NewRecipe()
+        self.recipe = MutableRecipe.createEmpty()
     }
     
     // MARK: - Recipe Title Management
@@ -48,12 +48,14 @@ final class AddRecipeViewModel: ObservableObject {
     // MARK: - Image Management
     func selectImage(path: String?) {
         imagePath = path
-        recipe.imagePath = path
+        recipe.image = path
+        recipe.imageType = path?.components(separatedBy: ".").last
     }
     
     func removeImage() {
         imagePath = nil
-        recipe.imagePath = nil
+        recipe.image = nil
+        recipe.imageType = nil
     }
     
     // MARK: - Servings Management
@@ -67,37 +69,42 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Cook Time Management
     func updateCookTime(_ minutes: Int) {
-        recipe.cookTimeMinutes = minutes
+        recipe.readyInMinutes = minutes
+        recipe.cookingMinutes = minutes
     }
     
     func cookTimeDisplayValue() -> String {
-        return "\(recipe.cookTimeMinutes) min"
+        return "\(recipe.readyInMinutes) min"
     }
     
     // MARK: - Ingredients Management
     func addIngredient() {
-        let newIngredient = NewIngredient()
-        recipe.ingredients.append(newIngredient)
+        let newIngredient = MutableIngredient.createEmpty()
+        recipe.extendedIngredients.append(newIngredient)
     }
     
     func removeIngredient(at index: Int) {
-        guard index < recipe.ingredients.count else { return }
-        recipe.ingredients.remove(at: index)
+        guard index < recipe.extendedIngredients.count else { return }
+        recipe.extendedIngredients.remove(at: index)
     }
     
     func updateIngredientName(at index: Int, name: String) {
-        guard index < recipe.ingredients.count else { return }
-        recipe.ingredients[index].name = name
+        guard index < recipe.extendedIngredients.count else { return }
+        recipe.extendedIngredients[index].name = name
+        recipe.extendedIngredients[index].nameClean = name
+        recipe.extendedIngredients[index].originalName = name
     }
     
     func updateIngredientQuantity(at index: Int, quantity: String) {
-        guard index < recipe.ingredients.count else { return }
-        recipe.ingredients[index].quantity = quantity
+        guard index < recipe.extendedIngredients.count else { return }
+        recipe.extendedIngredients[index].amount = Double(quantity) ?? 1.0
+        recipe.extendedIngredients[index].original = "\(quantity) \(recipe.extendedIngredients[index].name)"
     }
     
     // MARK: - Instructions Management
     func updateInstructions(_ instructions: String) {
         recipe.instructions = instructions
+        recipe.summary = instructions
     }
     
     // MARK: - Recipe Creation
@@ -108,8 +115,9 @@ final class AddRecipeViewModel: ObservableObject {
             return
         }
         
-        // Here you can add logic for saving to Core Data or sending to server
-        print("Creating recipe: \(recipe.title)")
+        // Конвертируем MutableRecipe в Recipe и сохраняем через существующий метод
+        let recipeToSave = recipe.toRecipe()
+        await CoreDataManager.shared.addMyRecipe(recipe: recipeToSave)
         
         // Show success notification
         alertMessage = "Recipe created successfully!"
@@ -121,7 +129,7 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Form Reset
     private func resetForm() {
-        recipe = NewRecipe()
+        recipe = MutableRecipe.createEmpty()
         imagePath = nil
     }
     
@@ -133,13 +141,13 @@ final class AddRecipeViewModel: ObservableObject {
             return false
         }
         
-        if recipe.ingredients.isEmpty {
+        if recipe.extendedIngredients.isEmpty {
             alertMessage = "Please add at least one ingredient"
             showingAlert = true
             return false
         }
         
-        for (index, ingredient) in recipe.ingredients.enumerated() {
+        for (index, ingredient) in recipe.extendedIngredients.enumerated() {
             if ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 alertMessage = "Please enter ingredient name \(index + 1)"
                 showingAlert = true
