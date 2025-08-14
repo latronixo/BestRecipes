@@ -11,7 +11,7 @@ import SwiftUI
 struct IngredientRow: View {
     
     // MARK: - Properties
-    let ingredient: MutableIngredient
+    let ingredient: Ingredient
     let index: Int
     @ObservedObject var viewModel: AddRecipeViewModel
     
@@ -67,13 +67,13 @@ struct IngredientRow: View {
 #Preview {
     VStack(spacing: 16) {
         IngredientRow(
-            ingredient: MutableIngredient.createEmpty(),
+            ingredient: Ingredient.createEmpty(),
             index: 0,
             viewModel: AddRecipeViewModel()
         )
         
         IngredientRow(
-            ingredient: MutableIngredient.createEmpty(),
+            ingredient: Ingredient.createEmpty(),
             index: 1,
             viewModel: AddRecipeViewModel()
         )

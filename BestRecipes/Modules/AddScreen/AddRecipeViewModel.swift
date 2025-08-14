@@ -12,7 +12,7 @@ import Foundation
 final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Published Properties
-    @Published var recipe: MutableRecipe
+    @Published var recipe: Recipe
     @Published var imagePath: String?
     @Published var showingImagePicker = false
     @Published var showingServingsPicker = false
@@ -37,7 +37,7 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Initialization
     init() {
-        self.recipe = MutableRecipe.createEmpty()
+        self.recipe = Recipe.createEmpty()
     }
     
     // MARK: - Recipe Title Management
@@ -79,7 +79,7 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Ingredients Management
     func addIngredient() {
-        let newIngredient = MutableIngredient.createEmpty()
+        let newIngredient = Ingredient.createEmpty()
         recipe.extendedIngredients.append(newIngredient)
     }
     
@@ -115,21 +115,17 @@ final class AddRecipeViewModel: ObservableObject {
             return
         }
         
-        // Конвертируем MutableRecipe в Recipe и сохраняем через существующий метод
-        let recipeToSave = recipe.toRecipe()
-        await CoreDataManager.shared.addMyRecipe(recipe: recipeToSave)
+        await CoreDataManager.shared.addMyRecipe(recipe: recipe)
         
-        // Show success notification
         alertMessage = "Recipe created successfully!"
         showingAlert = true
         
-        // Reset form
         resetForm()
     }
     
     // MARK: - Form Reset
     private func resetForm() {
-        recipe = MutableRecipe.createEmpty()
+        recipe = Recipe.createEmpty()
         imagePath = nil
     }
     
