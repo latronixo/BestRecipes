@@ -28,7 +28,7 @@ struct MainView: View {
                         case .searchScreen:
                             SearchView()
                         case .createScreen:
-                            AddView()
+                            AddRecipeView()
                         case .profileScreen:
                             PersonView()
                         }

@@ -62,18 +62,10 @@ final class AddRecipeViewModel: ObservableObject {
         recipe.servings = servings
     }
     
-    func servingsDisplayValue() -> String {
-        return String(format: "%02d", recipe.servings)
-    }
-    
     // MARK: - Cook Time Management
     func updateCookTime(_ minutes: Int) {
         recipe.readyInMinutes = minutes
         recipe.cookingMinutes = minutes
-    }
-    
-    func cookTimeDisplayValue() -> String {
-        return "\(recipe.readyInMinutes) min"
     }
     
     // MARK: - Ingredients Management

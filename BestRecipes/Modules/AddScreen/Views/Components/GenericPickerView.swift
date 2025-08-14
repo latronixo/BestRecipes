@@ -1,19 +1,21 @@
 //
-//  RecipeParameterRow.swift
+//  GenericPickerView.swift
 //  BestRecipes
 //
 //  Created by Наташа Спиридонова on 14.08.2025.
 //
 
-
 import SwiftUI
 
-struct RecipeParameterRow: View {
+// MARK: - Generic Picker View
+struct GenericPickerView<T: Hashable>: View {
     
     // MARK: - Properties
-    let icon: String
     let title: String
-    let value: String
+    let icon: String
+    let selection: Binding<T>
+    let options: [T]
+    let valueFormatter: (T) -> String
     let action: () -> Void
     
     // MARK: - Body
@@ -34,7 +36,7 @@ struct RecipeParameterRow: View {
                 Spacer()
                 
                 // MARK: - Value
-                Text(value)
+                Text(valueFormatter(selection.wrappedValue))
                     .font(.poppinsSemibold(size: 16))
                     .foregroundColor(.black)
                 
@@ -57,17 +59,23 @@ struct RecipeParameterRow: View {
 // MARK: - Preview
 #Preview {
     VStack(spacing: 16) {
-        RecipeParameterRow(
-            icon: "person.2.fill",
+        // Пример для порций
+        GenericPickerView(
             title: "Serves",
-            value: "04",
+            icon: "person.2.fill",
+            selection: .constant(4),
+            options: Array(1...12),
+            valueFormatter: { String(format: "%02d", $0) },
             action: {}
         )
         
-        RecipeParameterRow(
-            icon: "clock.fill",
+        // Пример для времени приготовления
+        GenericPickerView(
             title: "Cook Time",
-            value: "20 min",
+            icon: "clock.fill",
+            selection: .constant(20),
+            options: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 105, 120],
+            valueFormatter: { "\($0) min" },
             action: {}
         )
     }
