@@ -49,81 +49,25 @@ struct RecipeParametersView: View {
             )
         }
         .sheet(isPresented: $showingServingsPicker) {
-            ServingsPickerSheet(viewModel: viewModel)
-        }
-        .sheet(isPresented: $showingCookTimePicker) {
-            CookTimePickerSheet(viewModel: viewModel)
-        }
-    }
-}
-
-// MARK: - Servings Picker Sheet
-struct ServingsPickerSheet: View {
-    @ObservedObject var viewModel: AddRecipeViewModel
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("Select Servings")
-                    .font(.poppinsSemibold(size: 20))
-                    .padding(.top, 20)
-                
-                Picker("Servings", selection: Binding(
+            GenericPickerSheet(
+                title: "Select Servings",
+                selection: Binding(
                     get: { viewModel.recipe.servings },
                     set: { viewModel.updateServings($0) }
-                )) {
-                    ForEach(viewModel.servingsOptions, id: \.self) { servings in
-                        Text("\(servings)")
-                            .font(.poppinsRegular(size: 18))
-                            .tag(servings)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                
-                Spacer()
-            }
-            .navigationBarItems(
-                trailing: Button("Done") {
-                    dismiss()
-                }
-                .font(.poppinsSemibold(size: 16))
+                ),
+                options: viewModel.servingsOptions,
+                valueFormatter: { "\($0)" }
             )
         }
-    }
-}
-
-// MARK: - Cook Time Picker Sheet
-struct CookTimePickerSheet: View {
-    @ObservedObject var viewModel: AddRecipeViewModel
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("Select Cook Time")
-                    .font(.poppinsSemibold(size: 20))
-                    .padding(.top, 20)
-                
-                Picker("Cook Time", selection: Binding(
+        .sheet(isPresented: $showingCookTimePicker) {
+            GenericPickerSheet(
+                title: "Select Cook Time",
+                selection: Binding(
                     get: { viewModel.recipe.readyInMinutes },
                     set: { viewModel.updateCookTime($0) }
-                )) {
-                    ForEach(viewModel.cookTimeOptions, id: \.self) { minutes in
-                        Text("\(minutes) min")
-                            .font(.poppinsRegular(size: 18))
-                            .tag(minutes)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                
-                Spacer()
-            }
-            .navigationBarItems(
-                trailing: Button("Done") {
-                    dismiss()
-                }
-                .font(.poppinsSemibold(size: 16))
+                ),
+                options: viewModel.cookTimeOptions,
+                valueFormatter: { "\($0) min" }
             )
         }
     }
@@ -138,3 +82,4 @@ struct CookTimePickerSheet: View {
     }
     .padding()
 }
+

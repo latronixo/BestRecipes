@@ -16,7 +16,7 @@ struct AddRecipeView: View {
     
     // MARK: - Body
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     // MARK: - Recipe Image
@@ -72,15 +72,17 @@ struct AddRecipeView: View {
             .navigationTitle("Create recipe")
             .navigationBarTitleDisplayMode(.large)
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(
-                leading: Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(.black)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(.black)
+                    }
                 }
-            )
+            }
             .alert("Notification", isPresented: $viewModel.showingAlert) {
                 Button("OK") {
                     if viewModel.alertMessage.contains("successfully") {
@@ -91,7 +93,6 @@ struct AddRecipeView: View {
                 Text(viewModel.alertMessage)
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

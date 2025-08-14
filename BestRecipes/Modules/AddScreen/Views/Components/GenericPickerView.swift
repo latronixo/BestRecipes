@@ -1,5 +1,5 @@
 //
-//  GenericPickerView.swift
+//  GenericPicker.swift
 //  BestRecipes
 //
 //  Created by Наташа Спиридонова on 14.08.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: - Generic Picker View
+// MARK: - Generic Picker View (Row)
 struct GenericPickerView<T: Hashable>: View {
     
     // MARK: - Properties
@@ -58,8 +58,8 @@ struct GenericPickerView<T: Hashable>: View {
 
 // MARK: - Preview
 #Preview {
-    VStack(spacing: 16) {
-        // Пример для порций
+    VStack(spacing: 20) {
+        // Примеры GenericPickerView
         GenericPickerView(
             title: "Serves",
             icon: "person.2.fill",
@@ -69,7 +69,6 @@ struct GenericPickerView<T: Hashable>: View {
             action: {}
         )
         
-        // Пример для времени приготовления
         GenericPickerView(
             title: "Cook Time",
             icon: "clock.fill",
@@ -78,6 +77,8 @@ struct GenericPickerView<T: Hashable>: View {
             valueFormatter: { "\($0) min" },
             action: {}
         )
+        
+        Spacer()
     }
     .padding()
     .background(Color(.systemBackground))
