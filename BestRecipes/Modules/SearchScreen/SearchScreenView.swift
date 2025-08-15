@@ -21,6 +21,7 @@ struct SearchScreenView: View {
             VStack(spacing: 16) {
                 
                 SearchBar(text: $viewModel.searchQuery)
+                    .zIndex(1)
                 
                 ForEach(recipes, id: \.id) { recipe in
                     SearchRecipe(recipe: recipe)

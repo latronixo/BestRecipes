@@ -9,20 +9,24 @@ import SwiftUI
 
 struct SearchBar: View {
     @Binding var text: String
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
+                .foregroundColor(Color(.systemGray))
             
             TextField("Search...", text: $text)
-                .textFieldStyle(PlainTextFieldStyle())
+                .foregroundColor(.black)
+                .focused($isFocused)
                 .disableAutocorrection(true)
                 .autocapitalization(.none)
+                .focused($isFocused)
             
             if !text.isEmpty {
                 Button(action: {
                     text = ""
+                    isFocused = false
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
@@ -30,7 +34,12 @@ struct SearchBar: View {
             }
         }
         .padding(8)
-        .background(Color(.systemGray6))
+        .background(Color.white)
         .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(isFocused ? Color.red : Color(.systemGray), lineWidth: 1)
+        )
+        .animation(.easeInOut(duration: 0.2), value: isFocused)
     }
 }
