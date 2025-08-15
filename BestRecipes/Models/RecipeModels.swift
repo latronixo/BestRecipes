@@ -8,7 +8,8 @@
 import Foundation
 
 // MARK: - Recipe Model
-struct Recipe: Codable, Identifiable {
+struct Recipe: Codable, Identifiable, Hashable {
+  
     // MARK: - Основная информация
     let id: Int                                    // Уникальный ID рецепта
     let image: String?                             // URL изображения рецепта
@@ -58,7 +59,9 @@ struct Recipe: Codable, Identifiable {
 }
 
 // MARK: - Ingredient Model
-struct Ingredient: Codable, Identifiable {
+struct Ingredient: Codable, Identifiable, Hashable {
+
+    
     // MARK: - Основная информация
     let id: Int                     // Уникальный ID ингредиента
     let aisle: String?              // Отдел в магазине (молочный, мясной)
@@ -77,27 +80,29 @@ struct Ingredient: Codable, Identifiable {
 }
 
 // MARK: - Measures Model
-struct Measures: Codable {
+struct Measures: Codable, Hashable {
+    
     let us: MeasureUnit         // Американские единицы измерения
     let metric: MeasureUnit     // Метрические единицы измерения
 }
 
 // MARK: - MeasureUnit Model
-struct MeasureUnit: Codable {
+struct MeasureUnit: Codable, Hashable {
     let amount: Double          // Количество в данной системе мер
     let unitShort: String       // Краткое название единицы (г, мл)
     let unitLong: String        // Полное название единицы (граммы, миллилитры)
 }
 
 // MARK: - Nutrition Model
-struct Nutrition: Codable {
+struct Nutrition: Codable, Hashable {
+
     let nutrients: [Nutrient]               // Список питательных веществ
     let caloricBreakdown: CaloricBreakdown? // Распределение калорий по БЖУ
     let weightPerServing: WeightPerServing? // Вес одной порции
 }
 
 // MARK: - Nutrient Model
-struct Nutrient: Codable, Identifiable {
+struct Nutrient: Codable, Identifiable, Hashable {
     let name: String                        // Название нутриента (Calories, Protein)
     let amount: Double                      // Количество
     let unit: String                        // Единица измерения (g, mg, kcal)
@@ -107,20 +112,21 @@ struct Nutrient: Codable, Identifiable {
 }
 
 // MARK: - CaloricBreakdown Model
-struct CaloricBreakdown: Codable {
+struct CaloricBreakdown: Codable, Hashable {
     let percentProtein: Double              // Процент калорий из белков
     let percentFat: Double                  // Процент калорий из жиров
     let percentCarbs: Double                // Процент калорий из углеводов
 }
 
 // MARK: - WeightPerServing Model
-struct WeightPerServing: Codable {
+struct WeightPerServing: Codable, Hashable {
     let amount: Double                      // Количество
     let unit: String                        // Единица измерения веса
 }
 
 // MARK: - Analyzed Instructions
-struct AnalyzedInstruction: Codable, Identifiable {
+struct AnalyzedInstruction: Codable, Identifiable, Hashable {
+    
     let name: String?                       // Название группы инструкций
     let steps: [InstructionStep]?           // Список шагов приготовления
     
@@ -128,7 +134,7 @@ struct AnalyzedInstruction: Codable, Identifiable {
 }
 
 // MARK: - InstructionStep Model
-struct InstructionStep: Codable, Identifiable {
+struct InstructionStep: Codable, Identifiable, Hashable {
     let number: Int                         // Номер шага
     let step: String                        // Описание шага
     let ingredients: [InstructionIngredient]? // Ингредиенты для этого шага
@@ -139,7 +145,7 @@ struct InstructionStep: Codable, Identifiable {
 }
 
 // MARK: - InstructionIngredient Model
-struct InstructionIngredient: Codable, Identifiable {
+struct InstructionIngredient: Codable, Identifiable, Hashable {
     let id: Int                             // ID ингредиента
     let name: String                        // Название ингредиента
     let localizedName: String?              // Локализованное название
@@ -147,7 +153,7 @@ struct InstructionIngredient: Codable, Identifiable {
 }
 
 // MARK: - InstructionEquipment Model
-struct InstructionEquipment: Codable, Identifiable {
+struct InstructionEquipment: Codable, Identifiable, Hashable {
     let id: Int                             // ID оборудования
     let name: String                        // Название оборудования
     let localizedName: String?              // Локализованное название
@@ -155,7 +161,7 @@ struct InstructionEquipment: Codable, Identifiable {
 }
 
 // MARK: - InstructionLength Model
-struct InstructionLength: Codable {
+struct InstructionLength: Codable, Hashable {
     let number: Int                         // Количество времени
     let unit: String                        // Единица времени (минуты, часы)
 }
@@ -169,8 +175,8 @@ extension Recipe {
         imageType: "jpg",
         title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
         readyInMinutes: 45,
-        servings: 2,
-        sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
+servings: 2,
+sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
         vegetarian: false,
         vegan: false,
         glutenFree: false,
@@ -235,6 +241,16 @@ extension Nutrition {
         ],
         caloricBreakdown: CaloricBreakdown(percentProtein: 12.29, percentFat: 26.61, percentCarbs: 61.1),
         weightPerServing: WeightPerServing(amount: 259, unit: "g")
+    )
+}
+
+extension AnalyzedInstruction {
+    static let preview = AnalyzedInstruction(
+        name: "",
+        steps: [InstructionStep(number: 1, step: "Step number one", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
+                InstructionStep(number: 2, step: "Step number two  dfg dfg dfg ertwertwr wsfgwrt sfsfwtwdfg werff", ingredients: [], equipment: [], length: nil),
+                InstructionStep(number: 3, step: "Step number three", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
+                InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
     )
 }
 #endif

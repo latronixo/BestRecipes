@@ -1,0 +1,87 @@
+//
+//  DetailViewModel.swift
+//  BestRecipes
+//
+//  Created by Sergey on 11.08.2025.
+//
+
+import Foundation
+import Combine
+import SwiftUI
+
+enum ImageType {
+    case largeImage
+    case ingredientImage
+}
+
+final class DetailViewModel: ObservableObject {
+    
+    @Published var recipe: Recipe
+    @Published var instruction: [AnalyzedInstruction]
+    
+    @Published var isImageLoaded : Bool = false
+    @Published var largeImage: UIImage?
+    @Published var ingredientsImage: UIImage?
+    
+    private var sourceUrl: URL?
+    private let router: Router
+    private let network = NetworkServices.shared
+    
+    init(recipe: Recipe, router: Router, instruction: [AnalyzedInstruction]) {
+        
+        self.recipe = recipe
+        self.router = router
+        self.instruction = instruction
+    }
+    
+    func fetchImage(imageType: ImageType) async {
+        
+        switch imageType {
+            
+        case .largeImage:
+            guard let imgData = try? await network.fetchRecipeImageData(recipe) else {
+                return
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.largeImage = UIImage(data: imgData)
+            }
+            
+        case .ingredientImage:
+            guard let imgData = try? await network.fetchIngredientImageData(Ingredient.preview) else {
+                return
+            }
+            
+            self.ingredientsImage = UIImage(data: imgData)
+            
+        }
+        
+    }
+    
+    
+    
+    func makeInstructionsText(with instructions: [AnalyzedInstruction]) -> String {
+        
+        guard let instruction = instructions.first, instruction.steps?.capacity != 1
+        else {
+            if let url = URL(string: recipe.sourceUrl ?? "") {
+                sourceUrl = url
+            }
+            print("sourceUrl")
+            return ""
+        }
+        
+        var finalString = ""
+        for step in instruction.steps! {
+            finalString += "\(step.number). \(step.step)\n\n"
+        }
+        
+        return finalString
+    }
+    
+    func goBack() {
+        router.goBack()
+    }
+    
+    
+    
+}
