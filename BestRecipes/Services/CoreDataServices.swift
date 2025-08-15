@@ -124,8 +124,8 @@ final class CoreDataManager {
                     continuation.resume(returning: recipes)
                 } catch {
                     print("Ошибка при извлечении рецептов: \(error)")
+                    continuation.resume(returning: [])
                 }
-                continuation.resume(returning: [])
             }
         }
     }

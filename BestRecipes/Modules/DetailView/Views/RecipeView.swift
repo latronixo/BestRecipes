@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct RecipeView: View {
+    
+    @ObservedObject var detailVM: DetailViewModel
+    
+    
+    
     var body: some View {
         VStack {
             HStack {
@@ -18,11 +23,33 @@ struct RecipeView: View {
                 Spacer(minLength: 230)
                 
             }
-            Image(systemName: "photo.artframe")
-                .resizable()
-                .frame(width: 350, height: 350)
-                .cornerRadius(40)
-                .scaledToFit()
+            
+            ZStack {
+                if let img = detailVM.largeImage {
+                    Image(uiImage: img)
+                        .resizable()
+                        .frame(width: 350, height: 350)
+                        .cornerRadius(40)
+                        .scaledToFit()
+                } else {
+                    
+                    Image(systemName: "photo.artframe")
+                        .resizable()
+                        .frame(width: 350, height: 350)
+                        .cornerRadius(40)
+                        .scaledToFit()
+                        .foregroundStyle(.regularMaterial)
+                        .task {
+                            await detailVM.fetchImage(imageType: .largeImage)
+                        }
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                        
+                }
+
+                
+            }
+            
             HStack{
                 Spacer(minLength: 20)
                 Image(systemName: "star.fill")
@@ -33,9 +60,13 @@ struct RecipeView: View {
             }
             
         }
+        .onAppear() {
+            
+        }
     }
+    
 }
 
 #Preview {
-    RecipeView()
+    RecipeView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
 }
