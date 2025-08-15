@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 // MARK: - ContentView
 struct HomeScreenView: View {
     @ObservedObject var viewModel = HomeScreenViewModel()
@@ -67,10 +69,19 @@ struct HomeScreenView: View {
            
             Heading(title: "Popular cuisine")
             
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(viewModel.cuisineCountry, id: \.self) {country in
+                        Country(country: country)
+                    }
+                }
+                
+            }
+            
         }
         .padding(.leading)
         .padding(.top, 70)
-        .padding(.bottom, 70)
+        .padding(.bottom, 120)
     }
 }
        
