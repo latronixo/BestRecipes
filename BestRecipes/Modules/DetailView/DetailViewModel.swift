@@ -22,6 +22,7 @@ final class DetailViewModel: ObservableObject {
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
     @Published var ingredientsImage: UIImage?
+    @Published var ingredientsTuples: [(Ingredient, UIImage)] = []
     
     private var sourceUrl: URL?
     private let router: Router
@@ -32,26 +33,44 @@ final class DetailViewModel: ObservableObject {
         self.recipe = recipe
         self.router = router
         self.instruction = instruction
+        
     }
     
-    func fetchImage(imageType: ImageType) async {
+    func fetchIngredients() async {
+        for ingredient in recipe.extendedIngredients {
+            
+            guard let img =  await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient) else { return }
+            ingredientsTuples.append((ingredient, img))
+            print("image loaded... \(ingredient.name)")
+            
+        }
+    }
+    
+    func fetchImage(imageType: ImageType,  ingredientExtended: Ingredient? = nil) async -> UIImage? {
         
         switch imageType {
             
         case .largeImage:
             guard let imgData = try? await network.fetchRecipeImageData(recipe) else {
-                return
+                return nil
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.largeImage = UIImage(data: imgData)
-            }
+            
+            self.largeImage = UIImage(data: imgData)
+            return UIImage(data: imgData)
             
         case .ingredientImage:
-            guard let imgData = try? await network.fetchIngredientImageData(Ingredient.preview) else {
-                return
-            }
             
-            self.ingredientsImage = UIImage(data: imgData)
+            guard let ingredient = ingredientExtended else {
+                ingredientsImage = UIImage(systemName: "fish")
+                return nil
+            }
+            guard let imgData = try? await network.fetchIngredientImageData(ingredient) else {
+                return nil
+            }
+//            self.ingredientsTuples.append((ingredient, UIImage(data: imgData) ?? UIImage(systemName: "fish")!))
+//            self.ingredientsImage = UIImage(data: imgData)
+            
+            return UIImage(data: imgData)
             
         }
         

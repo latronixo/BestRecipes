@@ -11,6 +11,8 @@ struct DetailView: View {
     
     @ObservedObject var detailVM: DetailViewModel
     
+    
+    
     init(detailVM: DetailViewModel) {
         
         self.detailVM = detailVM
@@ -26,9 +28,17 @@ struct DetailView: View {
                 ScrollView {
                     RecipeView(detailVM: detailVM)
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
+//                        .task {
+//                            await detailVM.fetchIngredients()
+//                        }
                     
-                    ForEach(0..<5) { _ in
-                        IngredientsViewCell(detailVM: detailVM)
+                    ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
+                        
+                        IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
+                                            text: ingredient.name,
+                                            weight: ingredient.measures.metric.amount,
+                                            unitShort: ingredient.measures.metric.unitShort,
+                                            image: detailVM.ingredientsImage)
                         
                     }
                     
@@ -37,6 +47,7 @@ struct DetailView: View {
             .navigationTitle("Recipe Detail")
              
         }
+ 
     }
     
   

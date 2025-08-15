@@ -196,7 +196,9 @@ sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scal
         license: "CC BY-SA 3.0",
         sourceName: "Full Belly Sisters",
         pricePerServing: 157.06,
-        extendedIngredients: [Ingredient.preview],
+        extendedIngredients: [Ingredient.preview,
+                              Ingredient.previewA,
+                              Ingredient.previewB],
         nutrition: Nutrition.preview,
         summary: "Delicious pasta recipe...",
         cuisines: [],
@@ -210,6 +212,8 @@ sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scal
     )
 }
 
+
+
 extension Ingredient {
     static let preview = Ingredient(
         id: 1001,
@@ -217,6 +221,39 @@ extension Ingredient {
         image: "butter-sliced.jpg",
         consistency: "SOLID",
         name: "butter",
+        nameClean: "butter",
+        original: "1 tbsp butter",
+        originalName: "butter",
+        amount: 1.0,
+        unit: "tbsp",
+        meta: [],
+        measures: Measures.preview
+    )
+}
+extension Ingredient {
+    static let previewA = Ingredient(
+        id: 10719335,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "sugar-in-bowl.png",
+        consistency: "SOLID",
+        name: "granulated sugar",
+        nameClean: "butter",
+        original: "1 tbsp butter",
+        originalName: "butter",
+        amount: 1.0,
+        unit: "tbsp",
+        meta: [],
+        measures: Measures.preview
+    )
+}
+
+extension Ingredient {
+    static let previewB = Ingredient(
+        id: 93813,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "molasses.jpg",
+        consistency: "SOLID",
+        name: "vanilla extract",
         nameClean: "butter",
         original: "1 tbsp butter",
         originalName: "butter",
@@ -250,7 +287,7 @@ extension AnalyzedInstruction {
         steps: [InstructionStep(number: 1, step: "Step number one", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
                 InstructionStep(number: 2, step: "Step number two  dfg dfg dfg ertwertwr wsfgwrt sfsfwtwdfg werff", ingredients: [], equipment: [], length: nil),
                 InstructionStep(number: 3, step: "Step number three", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
-                InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
+                InstructionStep(number: 4, step: "Step number four fhghf ert ewtyreuh dfgfcg", ingredients: [], equipment: [], length: nil)]
     )
 }
 #endif
