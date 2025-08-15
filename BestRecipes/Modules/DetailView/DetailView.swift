@@ -34,6 +34,7 @@ struct DetailView: View {
                     
                     ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
                         
+                        
                         IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
                                             text: ingredient.name,
                                             weight: ingredient.measures.metric.amount,

@@ -42,6 +42,7 @@ final class DetailViewModel: ObservableObject {
             guard let img =  await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient) else { return }
             ingredientsTuples.append((ingredient, img))
             print("image loaded... \(ingredient.name)")
+            print(ingredientsTuples)
             
         }
     }
