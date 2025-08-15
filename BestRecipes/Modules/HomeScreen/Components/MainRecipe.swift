@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MainRecipe: View {
+    @State private var isFav: Bool = false
     var recipe: Recipe
+    
     var author: String {
         if recipe.creditsText?.localizedCaseInsensitiveContains("Foodista") == true {
             return "Foodista.com"
@@ -49,7 +51,7 @@ struct MainRecipe: View {
                     }
                 }
                 
-                HStack {
+                HStack() {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.black)
@@ -67,16 +69,19 @@ struct MainRecipe: View {
                     Button {
                         onSelect(recipe)
                     } label: {
-                        Image("Bookmark")
+                        Image(isFav ? "BookmarkActive" : "Bookmark")
                             .resizable()
                             .scaledToFill()
                             .frame(width: 35, height: 35)
                     }
+                    .task {
+                        isFav = await CoreDataManager.shared.isFavorite(id: recipe.id)
+                    }
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 8)
-                
             }
+            
             Text(recipe.title)
                 .font(.poppinsSemibold(size: 16))
                 .lineLimit(2)
@@ -88,12 +93,11 @@ struct MainRecipe: View {
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
                 Text("By \(author)")
-                    .font(.poppinsRegular(size: 16)) 
+                    .font(.poppinsRegular(size: 16))
                     .foregroundColor(.gray)
                 Spacer()
             }
             
-
             Spacer()
         }
         .frame(width: 300)
