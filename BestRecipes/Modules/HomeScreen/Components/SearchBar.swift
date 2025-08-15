@@ -8,28 +8,29 @@
 import SwiftUI
 
 struct SearchBar: View {
+    @Binding var text: String
     
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-            Text("How to")
-                .font(.footnote)
-                .fontWeight(.semibold)
-            Spacer()
-            Button {} label: {
-                Image(systemName: "xmark")
-                    .foregroundStyle(.black)
+                .foregroundColor(.gray)
+            
+            TextField("Search...", text: $text)
+                .textFieldStyle(PlainTextFieldStyle())
+                .disableAutocorrection(true)
+                .autocapitalization(.none)
+            
+            if !text.isEmpty {
+                Button(action: {
+                    text = ""
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.gray)
+                }
             }
-
         }
-        .padding(.horizontal)
-        .padding(.vertical, 10)
-        
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(lineWidth: 1)
-                .foregroundStyle(Color(.systemGray3))
-        }
-        .padding(.trailing)
+        .padding(8)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
     }
 }

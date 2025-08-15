@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct SearchRecipe: View {
-    var recipe: String
+    var recipe: Recipe
+    
     var author: String {
-        if recipe.localizedCaseInsensitiveContains("Foodista") == true {
+        if recipe.creditsText?.localizedCaseInsensitiveContains("Foodista") == true {
             return "Foodista.com"
         } else {
-            return recipe ?? ""
+            return recipe.creditsText ?? ""
         }
     }
     
@@ -21,23 +22,44 @@ struct SearchRecipe: View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .top) {
                 
-                Image("DishMock")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                if let imageUrl = recipe.image, let url = URL(string: imageUrl) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(height: 200)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 200)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .stroke(Color.clear, lineWidth: 0)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                        case .failure:
+                            Image("DishMock")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 200)
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                }
                 
                 VStack {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.black)
-                        //Text(String(format: "%.2f", recipe.spoonacularScore))
-                        Text("4.04")
+                        Text(String(format: "%.2f", recipe.spoonacularScore))
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                     }
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 8)
                     .background(Color.gray.opacity(1))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -46,12 +68,13 @@ struct SearchRecipe: View {
                     Spacer()
                     
                     VStack {
-                        Text(recipe)
+                        Text(recipe.title)
                             .font(.poppinsSemibold(size: 16))
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.white)
                         
-                        Text("9 ingredients | 25 min")
+                        Text("\(recipe.extendedIngredients?.count ?? 0) ingredients | \(recipe.cookingMinutes ?? 0) min")
                             .font(.poppinsRegular(size: 12))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -65,7 +88,6 @@ struct SearchRecipe: View {
             
         }
         .frame(height: 200)
-        .padding(.trailing, 10)
         .padding(.bottom)
     }
 }

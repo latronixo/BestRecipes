@@ -4,29 +4,34 @@
 //
 //  Created by Dmitry Volkov on 12/08/2025.
 //
-
 import SwiftUI
 
+
+
 struct SearchScreenView: View {
-    var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
+    @StateObject private var viewModel = SearchScreenViewModel()
+    
+    let recipes = [
+        Recipe.preview,
+        Recipe.preview
+    ]
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
-                SearchBar()
-                    .padding(.bottom)
-            }
-            VStack {
-                ForEach(categories, id: \.self) {recipe in
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 16) {
+                
+                SearchBar(text: $viewModel.searchQuery)
+                
+                ForEach(recipes, id: \.id) { recipe in
                     SearchRecipe(recipe: recipe)
                 }
             }
+            .padding(.horizontal)
+            .padding(.top, 70)
         }
-        .padding(.leading)
-        .padding(.top, 70)
-        .padding(.bottom, 70)
     }
 }
+
 
 #Preview {
     SearchScreenView()
