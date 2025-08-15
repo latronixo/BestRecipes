@@ -12,6 +12,12 @@ class SearchScreenViewModel: ObservableObject {
     @Published var searchQuery: String = ""
     @Published var searchedRecipes: [Recipe] = []
     
+    let recipes = [
+        Recipe.preview,
+        Recipe.preview,
+        Recipe.preview
+    ]
+    
     init() {
         Task {
             await fetchRecipes(query: searchQuery)

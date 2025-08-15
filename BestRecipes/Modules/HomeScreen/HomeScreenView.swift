@@ -19,8 +19,8 @@ struct HomeScreenView: View {
                 .fontWeight(.semibold)
                 .font(.poppinsSemibold(size: 24))
             
-            //SearchBar()
-            //    .padding(.bottom, 70)
+            SearchBar(text: $viewModel.text)
+                .padding(.trailing)
             
             Heading(title: "Trending now 🔥")
             
@@ -45,7 +45,7 @@ struct HomeScreenView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(categories, id: \.self) {recipe in
+                        ForEach(viewModel.categoryRecipes, id: \.self) {recipe in
                             CategoryRecipe(recipe: recipe)
                         }
                         .padding(.top, 70)
@@ -54,11 +54,12 @@ struct HomeScreenView: View {
                 
             }
             
+            // Recent recipe
             Heading(title: "Recent recipe")
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(viewModel.randomRecipes) {recipe in
+                    ForEach(viewModel.recentRecipes) {recipe in
                         RecentRecipe(recipe: recipe)
                     }
                 }
