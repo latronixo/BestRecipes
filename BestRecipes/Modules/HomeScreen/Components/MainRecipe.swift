@@ -69,10 +69,16 @@ struct MainRecipe: View {
                     Button {
                         onSelect(recipe)
                     } label: {
-                        Image(isFav ? "BookmarkActive" : "Bookmark")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 35, height: 35)
+                        ZStack {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 35, height: 35)
+
+                            Image(isFav ? "BookmarkActive" : "Bookmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 28, height: 28)
+                        }
                     }
                     .task {
                         isFav = await CoreDataManager.shared.isFavorite(id: recipe.id)

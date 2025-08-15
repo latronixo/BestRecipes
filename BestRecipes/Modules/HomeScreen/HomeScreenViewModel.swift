@@ -73,11 +73,12 @@ class HomeScreenViewModel: ObservableObject {
     func fetchRecentRecipes() async {
         do {
             self.recentRecipes = try await dataService.fetchRecentRecipes()
+            print(recentRecipes)
             
             if recentRecipes.isEmpty {
                 self.recentRecipes = recipes
             }
-            print(recentRecipes)
+            
         } catch {
             self.recentRecipes = recipes
             print("Ошибка при загрузке рецептов: \(error)")

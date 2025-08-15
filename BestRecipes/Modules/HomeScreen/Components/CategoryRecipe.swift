@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CategoryRecipe: View {
+    @State private var isFav: Bool = false
     var recipe: Recipe
     
     var body: some View {
@@ -28,10 +29,23 @@ struct CategoryRecipe: View {
                     Text("\(recipe.cookingMinutes ?? 0) min")
                         .font(.poppinsSemibold(size: 12))
                     Spacer()
+                    
                     Button {
-                        
+                        print("Tapped")
                     } label: {
-                        Image("Bookmark")
+                        ZStack {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 30, height: 30)
+
+                            Image(isFav ? "BookmarkActive" : "Bookmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 22, height: 22)
+                        }
+                    }
+                    .task {
+                        isFav = await CoreDataManager.shared.isFavorite(id: recipe.id)
                     }
                 }
                 .padding(.horizontal)
