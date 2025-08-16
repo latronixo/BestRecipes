@@ -22,18 +22,18 @@ final class DetailViewModel: ObservableObject {
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
     @Published var ingredientsImage: UIImage?
-    @Published var ingredientsTuples: [(Ingredient, UIImage)] = []
+    @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
     
     private var sourceUrl: URL?
     private let router: Router
     private let network = NetworkServices.shared
     
-//    init(recipe: Recipe, router: Router, instruction: [AnalyzedInstruction]) {
     init(recipe: Recipe, router: Router) {
         
         self.recipe = recipe
         self.router = router
-//        self.instruction = instruction
+//MARK: Debug options!
+        //Задержка в 2 секунды для отладки, убрать перед релизом!
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             Task {
                 await self.fetchIngredients()
@@ -41,15 +41,20 @@ final class DetailViewModel: ObservableObject {
             }
         }
         
+        
     }
     
     func fetchIngredients() async {
         for ingredient in recipe.extendedIngredients {
             
-            guard let img =  await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient) else { return }
-            ingredientsTuples.append((ingredient, img))
-            print("image loaded... \(ingredient.name)")
-            print(ingredientsTuples)
+            if let img =  await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
+                ingredientsTuples.append((ingredient, img))
+                print("image loaded... \(ingredient.name)")
+                print(ingredientsTuples)
+            
+            } else { ingredientsTuples.append((ingredient, nil))
+                print("image not loaded... \(ingredient.name)")
+                print(ingredientsTuples) }
             
         }
     }
