@@ -1,61 +1,54 @@
-//
-//  RecipeModels.swift
-//  BestRecipes
-//
-//  Created by Наташа Спиридонова on 11.08.2025.
-//
-
 import Foundation
 
 // MARK: - Recipe Model
 struct Recipe: Codable, Identifiable, Hashable {
   
     // MARK: - Основная информация
-    let id: Int                                    // Уникальный ID рецепта
-    let image: String?                             // URL изображения рецепта
-    let imageType: String?                         // Тип изображения (jpg, png и т.д.)
-    let title: String                              // Название рецепта
-    let readyInMinutes: Int                        // Общее время приготовления (мин)
-    let servings: Int                              // Количество порций
-    let sourceUrl: String?                         // Ссылка на оригинальный рецепт
+    var id: Int                                    // Уникальный ID рецепта
+    var image: String?                             // URL изображения рецепта
+    var imageType: String?                         // Тип изображения (jpg, png и т.д.)
+    var title: String                              // Название рецепта
+    var readyInMinutes: Int                        // Общее время приготовления (мин)
+    var servings: Int                              // Количество порций
+    var sourceUrl: String?                         // Ссылка на оригинальный рецепт
     
     // MARK: - Особенности диеты
-    let vegetarian: Bool                           // Вегетарианский рецепт
-    let vegan: Bool                                // Веганский рецепт
-    let glutenFree: Bool                           // Без глютена
-    let dairyFree: Bool                            // Без молочных продуктов
-    let veryHealthy: Bool                          // Очень полезный
-    let cheap: Bool                                // Дешевый в приготовлении
-    let veryPopular: Bool                          // Очень популярный
-    let sustainable: Bool                          // Экологически устойчивый
-    let lowFodmap: Bool                            // Подходит для диеты FODMAP
+    var vegetarian: Bool                           // Вегетарианский рецепт
+    var vegan: Bool                                // Веганский рецепт
+    var glutenFree: Bool                           // Без глютена
+    var dairyFree: Bool                            // Без молочных продуктов
+    var veryHealthy: Bool                          // Очень полезный
+    var cheap: Bool                                // Дешевый в приготовлении
+    var veryPopular: Bool                          // Очень популярный
+    var sustainable: Bool                          // Экологически устойчивый
+    var lowFodmap: Bool                            // Подходит для диеты FODMAP
     
     // MARK: - Дополнительная информация
-    let weightWatcherSmartPoints: Int?             // Баллы Weight Watchers
-    let gaps: String?                              // Соответствие диете GAPS
-    let preparationMinutes: Int?                   // Время подготовки (мин)
-    let cookingMinutes: Int?                       // Время готовки (мин)
-    let aggregateLikes: Int                        // Количество лайков
-    let healthScore: Double                        // Оценка полезности (0-100)
-    let creditsText: String?                       // Информация об авторах
-    let license: String?                           // Лицензия на рецепт
-    let sourceName: String?                        // Название источника
-    let pricePerServing: Double?                   // Цена за порцию (USD)
+    var weightWatcherSmartPoints: Int?             // Баллы Weight Watchers
+    var gaps: String?                              // Соответствие диете GAPS
+    var preparationMinutes: Int?                   // Время подготовки (мин)
+    var cookingMinutes: Int?                       // Время готовки (мин)
+    var aggregateLikes: Int                        // Количество лайков
+    var healthScore: Double                        // Оценка полезности (0-100)
+    var creditsText: String?                       // Информация об авторах
+    var license: String?                           // Лицензия на рецепт
+    var sourceName: String?                        // Название источника
+    var pricePerServing: Double?                   // Цена за порцию (USD)
     
     // MARK: - Состав и инструкции
-    let extendedIngredients: [Ingredient]?          // Список ингредиентов
-    let nutrition: Nutrition?                      // Информация о питательности
-    let summary: String?                           // Краткое описание рецепта
-    let cuisines: [String]                         // Типы кухни (итальянская, китайская)
-    let dishTypes: [String]                        // Типы блюд (закуска, основное)
-    let diets: [String]                            // Подходящие диеты
-    let occasions: [String]                        // Подходящие случаи (завтрак, ужин)
-    let instructions: String?                      // Инструкции приготовления (текст)
-    let analyzedInstructions: [AnalyzedInstruction]? // Структурированные инструкции
+    var extendedIngredients: [Ingredient]          // Список ингредиентов
+    var nutrition: Nutrition?                      // Информация о питательности
+    var summary: String?                           // Краткое описание рецепта
+    var cuisines: [String]                         // Типы кухни (итальянская, китайская)
+    var dishTypes: [String]                        // Типы блюд (закуска, основное)
+    var diets: [String]                            // Подходящие диеты
+    var occasions: [String]                        // Подходящие случаи (завтрак, ужин)
+    var instructions: String?                      // Инструкции приготовления (текст)
+    var analyzedInstructions: [AnalyzedInstruction] // Структурированные инструкции
     
     // MARK: - Оценки Spoonacular
-    let spoonacularScore: Double                   // Внутренняя оценка качества
-    let spoonacularSourceUrl: String               // URL в системе Spoonacular
+    var spoonacularScore: Double                   // Внутренняя оценка качества
+    var spoonacularSourceUrl: String               // URL в системе Spoonacular
 }
 
 // MARK: - Ingredient Model
@@ -63,20 +56,20 @@ struct Ingredient: Codable, Identifiable, Hashable {
 
     
     // MARK: - Основная информация
-    let id: Int                     // Уникальный ID ингредиента
-    let aisle: String?              // Отдел в магазине (молочный, мясной)
-    let image: String?              // Название изображения ингредиента
-    let consistency: String?        // Консистенция (жидкая, твердая)
-    let name: String                // Название ингредиента
-    let nameClean: String?          // Очищенное название без брендов
-    let original: String            // Оригинальная строка из рецепта
-    let originalName: String        // Оригинальное название
+    var id: Int                     // Уникальный ID ингредиента
+    var aisle: String?              // Отдел в магазине (молочный, мясной)
+    var image: String?              // Название изображения ингредиента
+    var consistency: String?        // Консистенция (жидкая, твердая)
+    var name: String                // Название ингредиента
+    var nameClean: String?          // Очищенное название без брендов
+    var original: String            // Оригинальная строка из рецепта
+    var originalName: String        // Оригинальное название
     
     // MARK: - Количество и единицы
-    let amount: Double              // Количество
-    let unit: String                // Единица измерения (стакан, ложка)
-    let meta: [String]              // Дополнительная информация (нарезанный, свежий)
-    let measures: Measures          // Единицы измерения (US/метрические)
+    var amount: Double              // Количество
+    var unit: String                // Единица измерения (стакан, ложка)
+    var meta: [String]              // Дополнительная информация (нарезанный, свежий)
+    var measures: Measures          // Единицы измерения (US/метрические)
 }
 
 // MARK: - Measures Model
@@ -166,91 +159,69 @@ struct InstructionLength: Codable, Hashable {
     let unit: String                        // Единица времени (минуты, часы)
 }
 
-// MARK: - Preview Support
-#if DEBUG
+// MARK: - Factory Methods
 extension Recipe {
-    static let preview = Recipe(
-        id: 716429,
-        image: "https://img.spoonacular.com/recipes/716429-556x370.jpg",
-        imageType: "jpg",
-        title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-        readyInMinutes: 45,
-servings: 2,
-sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
-        vegetarian: false,
-        vegan: false,
-        glutenFree: false,
-        dairyFree: false,
-        veryHealthy: false,
-        cheap: false,
-        veryPopular: false,
-        sustainable: false,
-        lowFodmap: false,
-        weightWatcherSmartPoints: 16,
-        gaps: "no",
-        preparationMinutes: 20,
-        cookingMinutes: 25,
-        aggregateLikes: 209,
-        healthScore: 18.0,
-        creditsText: "Full Belly Sisters",
-        license: "CC BY-SA 3.0",
-        sourceName: "Full Belly Sisters",
-        pricePerServing: 157.06,
-        extendedIngredients: [Ingredient.preview],
-        nutrition: Nutrition.preview,
-        summary: "Delicious pasta recipe...",
-        cuisines: [],
-        dishTypes: ["side dish", "lunch", "main course", "main dish", "dinner"],
-        diets: [],
-        occasions: [],
-        instructions: "",
-        analyzedInstructions: [],
-        spoonacularScore: 83.91,
-        spoonacularSourceUrl: "https://spoonacular.com/pasta-with-garlic-scallions-cauliflower-breadcrumbs-716429"
-    )
+    static func createEmpty() -> Recipe {
+        return Recipe(
+            id: Int.random(in: 1000000...9999999),
+            image: nil,
+            imageType: nil,
+            title: "",
+            readyInMinutes: 20,
+            servings: 1,
+            sourceUrl: nil,
+            vegetarian: false,
+            vegan: false,
+            glutenFree: false,
+            dairyFree: false,
+            veryHealthy: false,
+            cheap: false,
+            veryPopular: false,
+            sustainable: false,
+            lowFodmap: false,
+            weightWatcherSmartPoints: nil,
+            gaps: nil,
+            preparationMinutes: nil,
+            cookingMinutes: 20,
+            aggregateLikes: 0,
+            healthScore: 0.0,
+            creditsText: "User created",
+            license: "User license",
+            sourceName: "User",
+            pricePerServing: nil,
+            extendedIngredients: [],
+            nutrition: nil,
+            summary: "",
+            cuisines: [],
+            dishTypes: [],
+            diets: [],
+            occasions: [],
+            instructions: "",
+            analyzedInstructions: [],
+            spoonacularScore: 0.0,
+            spoonacularSourceUrl: ""
+        )
+    }
 }
 
 extension Ingredient {
-    static let preview = Ingredient(
-        id: 1001,
-        aisle: "Milk, Eggs, Other Dairy",
-        image: "butter-sliced.jpg",
-        consistency: "SOLID",
-        name: "butter",
-        nameClean: "butter",
-        original: "1 tbsp butter",
-        originalName: "butter",
-        amount: 1.0,
-        unit: "tbsp",
-        meta: [],
-        measures: Measures.preview
-    )
+    static func createEmpty() -> Ingredient {
+        return Ingredient(
+            id: Int.random(in: 1...1000000),
+            aisle: nil,
+            image: nil,
+            consistency: nil,
+            name: "",
+            nameClean: "",
+            original: "",
+            originalName: "",
+            amount: 1.0,
+            unit: "piece",
+            meta: [],
+            measures: Measures(
+                us: MeasureUnit(amount: 1.0, unitShort: "pc", unitLong: "piece"),
+                metric: MeasureUnit(amount: 1.0, unitShort: "шт", unitLong: "штука")
+            )
+        )
+    }
 }
-
-extension Measures {
-    static let preview = Measures(
-        us: MeasureUnit(amount: 1.0, unitShort: "Tbsp", unitLong: "Tbsp"),
-        metric: MeasureUnit(amount: 1.0, unitShort: "Tbsp", unitLong: "Tbsp")
-    )
-}
-
-extension Nutrition {
-    static let preview = Nutrition(
-        nutrients: [
-            Nutrient(name: "Calories", amount: 543.36, unit: "kcal", percentOfDailyNeeds: 27.17)
-        ],
-        caloricBreakdown: CaloricBreakdown(percentProtein: 12.29, percentFat: 26.61, percentCarbs: 61.1),
-        weightPerServing: WeightPerServing(amount: 259, unit: "g")
-    )
-}
-
-extension AnalyzedInstruction {
-    static let preview = AnalyzedInstruction(
-        name: "",
-        steps: [InstructionStep(number: 1, step: "Step number one", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
-                InstructionStep(number: 2, step: "Step number two  dfg dfg dfg ertwertwr wsfgwrt sfsfwtwdfg werff", ingredients: [], equipment: [], length: nil),
-                InstructionStep(number: 3, step: "Step number three", ingredients: [], equipment: [], length: InstructionLength(number: 15, unit: "min")),
-                InstructionStep(number: 4, step: "Step number four", ingredients: [], equipment: [], length: nil)]
-    )
-}
-#endif

@@ -39,9 +39,7 @@ struct RecipeView: View {
                         .cornerRadius(40)
                         .scaledToFit()
                         .foregroundStyle(.regularMaterial)
-                        .task {
-                            await detailVM.fetchImage(imageType: .largeImage)
-                        }
+
                     ProgressView("Loading...")
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                         
@@ -68,5 +66,5 @@ struct RecipeView: View {
 }
 
 #Preview {
-    RecipeView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
+    RecipeView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
 }

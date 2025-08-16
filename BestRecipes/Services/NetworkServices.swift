@@ -122,9 +122,10 @@ private extension NetworkServices {
             throw NetworkError.invalidURL
         }
         
-       // urlComponents.queryItems = endpoint.queryItems
+        var mutableComponents = urlComponents
+        mutableComponents.queryItems = endpoint.queryItems
         
-        guard let url = urlComponents.url else {
+        guard let url = mutableComponents.url else {
             throw NetworkError.invalidURL
         }
         
