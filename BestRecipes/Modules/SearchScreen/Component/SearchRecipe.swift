@@ -74,7 +74,7 @@ struct SearchRecipe: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.white)
                         
-                        Text("\(recipe.extendedIngredients?.count ?? 0) ingredients | \(recipe.cookingMinutes ?? 0) min")
+                        Text("\(recipe.extendedIngredients.count) ingredients | \(recipe.cookingMinutes ?? 0) min")
                             .font(.poppinsRegular(size: 12))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)

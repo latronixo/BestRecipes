@@ -30,8 +30,10 @@ struct HomeScreenView: View {
                 HStack {
                     ForEach(viewModel.trendingRecipes) {recipe in
                         MainRecipe(recipe: recipe) { selectedRecipe in
-                                viewModel.toggleFavourite(with: selectedRecipe)
+                            Task {
+                                await viewModel.toggleFavourite(with: selectedRecipe)
                             }
+                        }
                     }
                 }
             }

@@ -86,8 +86,14 @@ class HomeScreenViewModel: ObservableObject {
         }
     }
     
-    func toggleFavourite(with recipe: Recipe) {
-        print("ADDED")
+    @MainActor
+    func toggleFavourite(with recipe: Recipe) async {
+        do {
+            try await dataService.toggleFavorite(recipe: recipe)
+            print("ADDED")
+        } catch {
+            print("Ошибка при сохранении в избранные: \(error)")
+        }
     }
 }
 
