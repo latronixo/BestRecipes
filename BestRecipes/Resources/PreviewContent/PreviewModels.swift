@@ -38,7 +38,9 @@ extension Recipe {
         license: "CC BY-SA 3.0",
         sourceName: "Full Belly Sisters",
         pricePerServing: 157.06,
-        extendedIngredients: [Ingredient.preview],
+        extendedIngredients: [Ingredient.preview,
+                              Ingredient.previewA,
+                              Ingredient.previewB],
         nutrition: Nutrition.preview,
         summary: "Delicious pasta recipe...",
         cuisines: [],
@@ -69,6 +71,41 @@ extension Ingredient {
         measures: Measures.preview
     )
 }
+
+extension Ingredient {
+    static let previewA = Ingredient(
+        id: 10719335,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "sugar-in-bowl.png",
+        consistency: "SOLID",
+        name: "granulated sugar",
+        nameClean: "butter",
+        original: "1 tbsp butter",
+        originalName: "butter",
+        amount: 1.0,
+        unit: "tbsp",
+        meta: [],
+        measures: Measures.preview
+    )
+}
+
+extension Ingredient {
+    static let previewB = Ingredient(
+        id: 93813,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "molasses.jpg",
+        consistency: "SOLID",
+        name: "vanilla extract",
+        nameClean: "butter",
+        original: "1 tbsp butter",
+        originalName: "butter",
+        amount: 1.0,
+        unit: "tbsp",
+        meta: [],
+        measures: Measures.preview
+    )
+}
+
 
 // MARK: - Measures Preview
 extension Measures {

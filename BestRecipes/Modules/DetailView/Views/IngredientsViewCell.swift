@@ -16,16 +16,25 @@ struct IngredientsViewCell: View {
     @State var text: String
     @State var weight: Double
     @State var unitShort: String
-    @State var image: UIImage?
-    
+
     @State var isSelected = false
+    
+    init(detailVM: DetailViewModel, id: Int, text: String, weight: Double, unitShort: String, image: UIImage? = nil, isSelected: Bool = false) {
+        self.detailVM = detailVM
+        self.id = id
+        self.text = text
+        self.weight = weight
+        self.unitShort = unitShort
+        self.isSelected = isSelected
+        
+    }
     
     var body: some View {
         Spacer(minLength: 0)
         HStack {
             ZStack {
                 
-                if let image = image {
+                if let image = searchImg() {
                     Image(uiImage: image)
                         .resizable()
                         .frame(width: 50, height: 50)
@@ -38,14 +47,7 @@ struct IngredientsViewCell: View {
                         .cornerRadius(15)
                         .scaledToFit()
                         .foregroundStyle(.regularMaterial)
-                        .task {
-                            await detailVM.fetchIngredients()
-                            for ingredient in detailVM.ingredientsTuples {
-                                if ingredient.0.id == self.id {
-                                    self.image = ingredient.1
-                                }
-                            }
-                        }
+
                     ProgressView("Loading...")
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 }
@@ -71,10 +73,20 @@ struct IngredientsViewCell: View {
                 .opacity(0.3)
                 .shadow(color: .black, radius: 8, x:-2, y: 2)
         )
-        //        .background(Color.gray.opacity(0.1))
+ 
         .padding()
         Spacer(minLength: 10)
     }
+    
+    func searchImg() -> UIImage? {
+        for ingredient in detailVM.ingredientsTuples {
+            if ingredient.0.id == self.id {
+                return ingredient.1
+            }
+        }
+        return nil
+    }
+    
 }
 
 

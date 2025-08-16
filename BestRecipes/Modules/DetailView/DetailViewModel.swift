@@ -33,6 +33,12 @@ final class DetailViewModel: ObservableObject {
         self.recipe = recipe
         self.router = router
         self.instruction = instruction
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            Task {
+                await self.fetchIngredients()
+                await self.fetchLargeImage()
+            }
+        }
         
     }
     
@@ -45,6 +51,11 @@ final class DetailViewModel: ObservableObject {
             print(ingredientsTuples)
             
         }
+    }
+    
+    func fetchLargeImage() async {
+        guard let img = await fetchImage(imageType: .largeImage) else { return }
+        largeImage = img
     }
     
     func fetchImage(imageType: ImageType,  ingredientExtended: Ingredient? = nil) async -> UIImage? {

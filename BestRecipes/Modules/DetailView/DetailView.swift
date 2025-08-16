@@ -28,10 +28,7 @@ struct DetailView: View {
                 ScrollView {
                     RecipeView(detailVM: detailVM)
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
-//                        .task {
-//                            await detailVM.fetchIngredients()
-//                        }
-                    
+        
                     ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
                         
                         
