@@ -27,7 +27,7 @@ struct DetailView: View {
             VStack {
                 ScrollView {
                     RecipeView(detailVM: detailVM)
-                    RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
+                    RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
         
                     ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
                         
@@ -53,5 +53,5 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
+    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
 }

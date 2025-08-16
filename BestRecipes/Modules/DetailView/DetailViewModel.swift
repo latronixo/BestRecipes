@@ -17,7 +17,7 @@ enum ImageType {
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
-    @Published var instruction: [AnalyzedInstruction]
+//    @Published var instruction: [AnalyzedInstruction]
     
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
@@ -28,11 +28,12 @@ final class DetailViewModel: ObservableObject {
     private let router: Router
     private let network = NetworkServices.shared
     
-    init(recipe: Recipe, router: Router, instruction: [AnalyzedInstruction]) {
+//    init(recipe: Recipe, router: Router, instruction: [AnalyzedInstruction]) {
+    init(recipe: Recipe, router: Router) {
         
         self.recipe = recipe
         self.router = router
-        self.instruction = instruction
+//        self.instruction = instruction
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             Task {
                 await self.fetchIngredients()
@@ -79,8 +80,6 @@ final class DetailViewModel: ObservableObject {
             guard let imgData = try? await network.fetchIngredientImageData(ingredient) else {
                 return nil
             }
-//            self.ingredientsTuples.append((ingredient, UIImage(data: imgData) ?? UIImage(systemName: "fish")!))
-//            self.ingredientsImage = UIImage(data: imgData)
             
             return UIImage(data: imgData)
             

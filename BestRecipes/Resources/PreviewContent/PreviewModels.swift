@@ -48,7 +48,7 @@ extension Recipe {
         diets: [],
         occasions: [],
         instructions: "",
-        analyzedInstructions: [],
+        analyzedInstructions: [AnalyzedInstruction.preview],
         spoonacularScore: 83.91,
         spoonacularSourceUrl: "https://spoonacular.com/pasta-with-garlic-scallions-cauliflower-breadcrumbs-716429"
     )

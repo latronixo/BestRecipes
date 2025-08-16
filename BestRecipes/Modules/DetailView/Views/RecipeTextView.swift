@@ -34,5 +34,5 @@ struct RecipeTextView: View {
 }
 
 #Preview {
-    RecipeTextView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]), instruction: [AnalyzedInstruction.preview])
+    RecipeTextView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()), instruction: Recipe.preview.analyzedInstructions)
 }
