@@ -9,12 +9,6 @@ import Foundation
 
 // MARK: - NetworkServices
 final class NetworkServices {
-    private enum ImageURLs {
-        static let ingredientBase = "https://img.spoonacular.com/ingredients_100x100/"
-        static let equipmentBase = "https://img.spoonacular.com/equipment_100x100/"
-        static let defaultRecipeSize = "556x370"
-    }
-    
     static let shared = NetworkServices()
     private init() {}
     
@@ -30,27 +24,27 @@ final class NetworkServices {
     }
     
     /// Поиск рецептов по запросу
-    func searchRecipes(query: String, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+    func searchRecipes(query: String, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchRecipes(query: query, number: numberOfResults)
-        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
+        return try await fetchData(endpoint, as: [Recipe].self)
     }
     
     /// Поиск рецептов по типу кухни
-    func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+    func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCuisine(cuisine: cuisine, number: numberOfResults)
-        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
+        return try await fetchData(endpoint, as: [Recipe].self)
     }
     
     /// Получает случайные рецепты
-    func fetchRandomRecipes(numberOfRecipes: Int = 1) async throws -> RandomRecipesResponse {
+    func fetchRandomRecipes(numberOfRecipes: Int = 1) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.randomRecipes(number: numberOfRecipes)
-        return try await fetchData(endpoint, as: RandomRecipesResponse.self)
+        return try await fetchData(endpoint, as: [Recipe].self)
     }
     
     /// Поиск рецептов по категориям
-    func searchRecipesByCategory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> RecipeSearchResponse {
+    func searchRecipesByCategory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCategory(category: category.rawValue, number: numberOfResults)
-        return try await fetchData(endpoint, as: RecipeSearchResponse.self)
+        return try await fetchData(endpoint, as: [Recipe].self)
     }
     
     // MARK: - Image Loading Operations
@@ -60,7 +54,7 @@ final class NetworkServices {
         
         let finalURL: String
         if let size = size {
-            finalURL = imageURL.replacingOccurrences(of: ImageURLs.defaultRecipeSize, with: size)
+            finalURL = imageURL.replacingOccurrences(of: "556x370", with: size)
         } else {
             finalURL = imageURL
         }
@@ -93,14 +87,14 @@ final class NetworkServices {
     /// Загружает изображение ингредиента
     func fetchIngredientImageData(_ ingredient: Ingredient) async throws -> Data? {
         guard let imageName = ingredient.image else { return nil }
-        let imageURL = ImageURLs.ingredientBase + imageName
+        let imageURL = APIConfig.imageBaseURL + APIConfig.ImageURLs.ingredient + imageName
         return try await fetchImageData(from: imageURL)
     }
 
     /// Загружает изображение оборудования
     func fetchEquipmentImageData(_ equipment: InstructionEquipment) async throws -> Data? {
         guard let imageName = equipment.image else { return nil }
-        let imageURL = ImageURLs.equipmentBase + imageName
+        let imageURL = APIConfig.imageBaseURL + APIConfig.ImageURLs.equipment + imageName
         return try await fetchImageData(from: imageURL)
     }
     
@@ -173,22 +167,10 @@ private extension NetworkServices {
         try validateResponse(response)
         
         guard data.count > 0 else {
-            throw NetworkError.invalidImageData
+            throw NetworkError.imageError
         }
         
         imageCache.setObject(data as NSData, forKey: urlString as NSString)
         return data
     }
-}
-
-// MARK: - Response Models
-struct RecipeSearchResponse: Codable {
-    let results: [Recipe]
-    let offset: Int
-    let number: Int
-    let totalResults: Int
-}
-
-struct RandomRecipesResponse: Codable {
-    let recipes: [Recipe]
 }

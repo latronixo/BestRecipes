@@ -10,21 +10,16 @@ import Foundation
 // MARK: - Network Error Types
 enum NetworkError: LocalizedError {
     case invalidURL
-    case noData
     case decodingError(Error)
     case networkError(Error)
     case invalidResponse
     case serverError(Int)
-    case apiKeyMissing
-    case invalidImageData
-    case imageNotFound
+    case imageError
     
     var errorDescription: String? {
         switch self {
         case .invalidURL:
             return "Недействительный URL"
-        case .noData:
-            return "Нет данных в ответе"
         case .decodingError(let error):
             return "Ошибка декодирования данных: \(error.localizedDescription)"
         case .networkError(let error):
@@ -33,12 +28,8 @@ enum NetworkError: LocalizedError {
             return "Недействительный ответ сервера"
         case .serverError(let statusCode):
             return "Ошибка сервера: \(statusCode)"
-        case .apiKeyMissing:
-            return "API ключ отсутствует"
-        case .invalidImageData:
-            return "Недействительные данные изображения"
-        case .imageNotFound:
-            return "Изображение не найдено"
+        case .imageError:
+            return "Ошибка загрузки изображения"
         }
     }
 }
@@ -67,33 +58,6 @@ enum CuisineType: String, CaseIterable {
     case african = "african"
     case middleEastern = "middle eastern"
     case jewish = "jewish"
-    
-    var displayName: String {
-        switch self {
-        case .italian: return "Итальянская"
-        case .european: return "Европейская"
-        case .french: return "Французская"
-        case .spanish: return "Испанская"
-        case .german: return "Немецкая"
-        case .greek: return "Греческая"
-        case .mediterranean: return "Средиземноморская"
-        case .asian: return "Азиатская"
-        case .chinese: return "Китайская"
-        case .japanese: return "Японская"
-        case .thai: return "Тайская"
-        case .indian: return "Индийская"
-        case .korean: return "Корейская"
-        case .vietnamese: return "Вьетнамская"
-        case .mexican: return "Мексиканская"
-        case .american: return "Американская"
-        case .southern: return "Южноамериканская"
-        case .cajun: return "Каджунская"
-        case .caribbean: return "Карибская"
-        case .african: return "Африканская"
-        case .middleEastern: return "Ближневосточная"
-        case .jewish: return "Еврейская"
-        }
-    }
 }
 
 // MARK: - Recipe Categories
@@ -109,27 +73,17 @@ enum RecipeCategory: String, CaseIterable {
     case dinner = "dinner"
     case sideDish = "side dish"
     case snack = "snack"
-    
-    var displayName: String {
-        switch self {
-        case .mainCourse: return "Основные блюда"
-        case .appetizer: return "Закуски"
-        case .dessert: return "Десерты"
-        case .salad: return "Салаты"
-        case .soup: return "Супы"
-        case .beverage: return "Напитки"
-        case .breakfast: return "Завтрак"
-        case .lunch: return "Обед"
-        case .dinner: return "Ужин"
-        case .sideDish: return "Гарниры"
-        case .snack: return "Перекусы"
-        }
-    }
 }
 
 // MARK: - API Configuration
 struct APIConfig {
     static let baseURL = "https://api.spoonacular.com"
+    static let imageBaseURL = "https://img.spoonacular.com"
+    
+    enum ImageURLs {
+        static let ingredient = "ingredients_100x100/"
+        static let equipment = "equipment_100x100/"
+    }
     
     enum Endpoint {
         case recipeInformation(id: Int, includeNutrition: Bool = true)
@@ -142,11 +96,9 @@ struct APIConfig {
             switch self {
             case .recipeInformation(let id, _):
                 return "/recipes/\(id)/information"
-            case .searchRecipes, .searchByCuisine:
-                return "/recipes/complexSearch"
             case .randomRecipes:
                 return "/recipes/random"
-            case .searchByCategory(category: _, number: _):
+            default:
                 return "/recipes/complexSearch"
             }
         }
@@ -159,31 +111,30 @@ struct APIConfig {
                 items.append(URLQueryItem(name: "includeNutrition", value: "\(includeNutrition)"))
                 
             case .searchRecipes(let query, let number):
-                items.append(contentsOf: [
-                    URLQueryItem(name: "query", value: query),
-                    URLQueryItem(name: "number", value: "\(number)"),
-                    URLQueryItem(name: "addRecipeInformation", value: "true")
-                ])
+                items.append(URLQueryItem(name: "query", value: query))
+                items.append(contentsOf: Self.buildSearchQueryItems(number))
                 
             case .searchByCuisine(let cuisine, let number):
-                items.append(contentsOf: [
-                    URLQueryItem(name: "cuisine", value: cuisine.rawValue),
-                    URLQueryItem(name: "number", value: "\(number)"),
-                    URLQueryItem(name: "addRecipeInformation", value: "true")
-                ])
+                items.append(URLQueryItem(name: "cuisine", value: cuisine.rawValue))
+                items.append(contentsOf: Self.buildSearchQueryItems(number))
                 
             case .randomRecipes(let number):
                 items.append(URLQueryItem(name: "number", value: "\(number)"))
                 
             case .searchByCategory(category: let category, number: let number):
-                items.append(contentsOf: [
-                    URLQueryItem(name: "type", value: category),
-                    URLQueryItem(name: "number", value: "\(number)"),
-                    URLQueryItem(name: "addRecipeInformation", value: "true")
-                ])
+                items.append(URLQueryItem(name: "type", value: category))
+                items.append(contentsOf: Self.buildSearchQueryItems(number))
             }
             
             return items
         }
+        
+        private static func buildSearchQueryItems(_ number: Int) -> [URLQueryItem] {
+            return [
+                URLQueryItem(name: "number", value: "\(number)"),
+                URLQueryItem(name: "addRecipeInformation", value: "true")
+            ]
+        }
     }
 }
+
