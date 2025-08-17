@@ -19,6 +19,7 @@ struct FavoriteRecipesCardForPersonView: View{
                         //Use Image Recipe
                         Color.gray.opacity(0.3)
                             .frame(width: .infinity, height: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
             } else {
                 // Fallback on earlier versions
@@ -55,14 +56,27 @@ struct FavoriteRecipesCardForPersonView: View{
                     }
 
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 25)
+                .offset(y: -40)
                 
-                VStack(spacing: 20){
+                
+                VStack(alignment: .leading, spacing: 10){
                     VStack(spacing: 10) {
                         Text("First First First First First First First First First First First First")
                     }
+                    .font(.poppinsSemibold(size: 16))
+                    .foregroundStyle(.white)
+                    
+                    HStack(spacing: 16) {
+                        Text("9 ingredients")
+                        Text("|")
+                        Text("25 min")
+                    }
+                    .font(.poppinsRegular(size: 12))
+                    .foregroundStyle(.white)
                 }
                 .padding(.horizontal)
+                .offset(x: 10, y: 30)
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
