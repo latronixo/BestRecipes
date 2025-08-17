@@ -54,9 +54,9 @@ class HomeScreenViewModel: ObservableObject {
     func fetchTrendingRecipes() async {
         do {
             let response = try await networkService.fetchRandomRecipes(numberOfRecipes: 10)
-            self.trendingRecipes = response.recipes
+            self.trendingRecipes = response.recipes.unique()
         } catch {
-            self.trendingRecipes = recipes
+            self.trendingRecipes = recipes.unique()
             print("Ошибка при загрузке рецептов: \(error)")
         }
     }
@@ -64,9 +64,9 @@ class HomeScreenViewModel: ObservableObject {
     func fetchCategoryRecipes() async {
         do {
             let response = try await networkService.searchRecipesByCuisine(currentCategory)
-            self.categoryRecipes = response.results
+            self.categoryRecipes = response.results.unique()
         } catch {
-            self.categoryRecipes  = recipes
+            self.categoryRecipes = recipes.unique()
             print("Ошибка при загрузке рецептов по категории: \(error)")
         }
     }
@@ -77,15 +77,21 @@ class HomeScreenViewModel: ObservableObject {
         if recentRecipes.isEmpty {
             self.recentRecipes = recipes
         }
+        self.recentRecipes = self.recentRecipes.unique()
     }
     
     @MainActor
     func toggleFavourite(with recipe: Recipe) async {
         await dataService.toggleFavorite(recipe: recipe)
-        print("ADDED")
     }
 }
 
-
+//расширение, добавляющее к массивам функцию unique, которая удаляет дублирующиеся элементы массива
+extension Array where Element: Hashable {
+    func unique() -> [Element] {
+        var seen = Set<Element>()
+        return filter { seen.insert($0).inserted}
+    }
+}
 
 
