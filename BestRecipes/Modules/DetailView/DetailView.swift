@@ -11,6 +11,8 @@ struct DetailView: View {
     
     @ObservedObject var detailVM: DetailViewModel
     
+    
+    
     init(detailVM: DetailViewModel) {
         
         self.detailVM = detailVM
@@ -24,11 +26,17 @@ struct DetailView: View {
             
             VStack {
                 ScrollView {
-                    RecipeView()
-                    RecipeTextView(detailVM: detailVM, instruction: detailVM.instruction)
-                    
-                    ForEach(0..<5) { _ in
-                        IngredientsViewCell()
+                    RecipeView(detailVM: detailVM)
+                    RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
+        
+                    ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
+                        
+                        
+                        IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
+                                            text: ingredient.name,
+                                            weight: ingredient.measures.metric.amount,
+                                            unitShort: ingredient.measures.metric.unitShort,
+                                            image: detailVM.ingredientsImage)
                         
                     }
                     
@@ -37,6 +45,7 @@ struct DetailView: View {
             .navigationTitle("Recipe Detail")
              
         }
+ 
     }
     
   
@@ -44,5 +53,5 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router(), instruction: [AnalyzedInstruction.preview]))
+    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
 }
