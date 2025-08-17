@@ -68,7 +68,7 @@ struct DiscoverView: View {
 private struct EmptyState: View {
     var body: some View {
         HStack(spacing: 12) {
-            Image("bookmarkIcon")
+            Image("BookmarkForCard")
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(.secondary)
             Text("No saved recipes yet")

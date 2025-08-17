@@ -75,7 +75,7 @@ struct MainRecipe: View {
                                 .fill(Color.white)
                                 .frame(width: 35, height: 35)
 
-                            Image(isFav ? "BookmarkActive" : "bookmarkIcon")
+                            Image(isFav ? "BookmarkActive" : "BookmarkForCard")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 28, height: 28)
