@@ -36,7 +36,7 @@ struct Recipe: Codable, Identifiable, Hashable {
     var pricePerServing: Double?                   // Цена за порцию (USD)
     
     // MARK: - Состав и инструкции
-    var extendedIngredients: [Ingredient]          // Список ингредиентов
+    var extendedIngredients: [Ingredient]?          // Список ингредиентов
     var nutrition: Nutrition?                      // Информация о питательности
     var summary: String?                           // Краткое описание рецепта
     var cuisines: [String]                         // Типы кухни (итальянская, китайская)
