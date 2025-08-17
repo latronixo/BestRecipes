@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="FavoriteRecipeCD" representedClassName="FavoriteRecipeCD" syncable="YES" codeGenerationType="class">
         <attribute name="aggregateLikes" attributeType="Integer 64" usesScalarValueType="YES"/>
         <attribute name="analyzedInstructionsData" optional="YES" attributeType="Binary"/>
@@ -68,7 +68,7 @@
         <attribute name="readyInMinutes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="servings" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sourceName" optional="YES" attributeType="String"/>
-        <attribute name="sourceUrl" attributeType="String"/>
+        <attribute name="sourceUrl" optional="YES" attributeType="String"/>
         <attribute name="spoonacularScore" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="spoonacularSourceUrl" attributeType="String"/>
         <attribute name="summary" optional="YES" attributeType="String"/>

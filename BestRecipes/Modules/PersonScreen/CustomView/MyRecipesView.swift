@@ -62,7 +62,6 @@ struct MyRecipesView: View {
         .onAppear {
             Task{
                 await CoreDataManager.shared.fetchMyRecipes()
-                print(myRecipes.count)
             }
         }
     }
