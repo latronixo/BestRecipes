@@ -72,28 +72,17 @@ class HomeScreenViewModel: ObservableObject {
     }
     
     func fetchRecentRecipes() async {
-        do {
-            self.recentRecipes = try await dataService.fetchRecentRecipes()
-            print(recentRecipes)
-            
-            if recentRecipes.isEmpty {
-                self.recentRecipes = recipes
-            }
-            
-        } catch {
+        self.recentRecipes = await dataService.fetchRecentRecipes()
+       
+        if recentRecipes.isEmpty {
             self.recentRecipes = recipes
-            print("Ошибка при загрузке рецептов: \(error)")
         }
     }
     
     @MainActor
     func toggleFavourite(with recipe: Recipe) async {
-        do {
-            try await dataService.toggleFavorite(recipe: recipe)
-            print("ADDED")
-        } catch {
-            print("Ошибка при сохранении в избранные: \(error)")
-        }
+        await dataService.toggleFavorite(recipe: recipe)
+        print("ADDED")
     }
 }
 
