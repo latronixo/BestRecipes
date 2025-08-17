@@ -68,6 +68,7 @@ struct MainRecipe: View {
                     
                     Button {
                         onSelect(recipe)
+                        isFav.toggle()
                     } label: {
                         ZStack {
                             Circle()
