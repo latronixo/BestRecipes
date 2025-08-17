@@ -28,27 +28,27 @@ struct Recipe: Codable, Identifiable, Hashable {
     var gaps: String?                              // Соответствие диете GAPS
     var preparationMinutes: Int?                   // Время подготовки (мин)
     var cookingMinutes: Int?                       // Время готовки (мин)
-    var aggregateLikes: Int                        // Количество лайков
-    var healthScore: Double                        // Оценка полезности (0-100)
+    var aggregateLikes: Int?                       // Количество лайков
+    var healthScore: Double?                       // Оценка полезности (0-100)
     var creditsText: String?                       // Информация об авторах
     var license: String?                           // Лицензия на рецепт
     var sourceName: String?                        // Название источника
     var pricePerServing: Double?                   // Цена за порцию (USD)
     
     // MARK: - Состав и инструкции
-    var extendedIngredients: [Ingredient]?          // Список ингредиентов
+    var extendedIngredients: [Ingredient]?         // Список ингредиентов
     var nutrition: Nutrition?                      // Информация о питательности
     var summary: String?                           // Краткое описание рецепта
-    var cuisines: [String]                         // Типы кухни (итальянская, китайская)
-    var dishTypes: [String]                        // Типы блюд (закуска, основное)
-    var diets: [String]                            // Подходящие диеты
-    var occasions: [String]                        // Подходящие случаи (завтрак, ужин)
+    var cuisines: [String]?                        // Типы кухни (итальянская, китайская)
+    var dishTypes: [String]?                       // Типы блюд (закуска, основное)
+    var diets: [String]?                           // Подходящие диеты
+    var occasions: [String]?                       // Подходящие случаи (завтрак, ужин)
     var instructions: String?                      // Инструкции приготовления (текст)
-    var analyzedInstructions: [AnalyzedInstruction] // Структурированные инструкции
+    var analyzedInstructions: [AnalyzedInstruction]?// Структурированные инструкции
     
     // MARK: - Оценки Spoonacular
-    var spoonacularScore: Double                   // Внутренняя оценка качества
-    var spoonacularSourceUrl: String               // URL в системе Spoonacular
+    var spoonacularScore: Double?                  // Внутренняя оценка качества
+    var spoonacularSourceUrl: String?              // URL в системе Spoonacular
 }
 
 // MARK: - Ingredient Model
@@ -68,19 +68,20 @@ struct Ingredient: Codable, Identifiable, Hashable {
     // MARK: - Количество и единицы
     var amount: Double              // Количество
     var unit: String                // Единица измерения (стакан, ложка)
-    var meta: [String]              // Дополнительная информация (нарезанный, свежий)
-    var measures: Measures          // Единицы измерения (US/метрические)
+    var meta: [String]?             // Дополнительная информация (нарезанный, свежий)
+    var measures: Measures?         // Единицы измерения (US/метрические)
 }
 
 // MARK: - Measures Model
 struct Measures: Codable, Hashable {
     
-    let us: MeasureUnit         // Американские единицы измерения
-    let metric: MeasureUnit     // Метрические единицы измерения
+    let us: MeasureUnit?         // Американские единицы измерения
+    let metric: MeasureUnit?     // Метрические единицы измерения
 }
 
 // MARK: - MeasureUnit Model
 struct MeasureUnit: Codable, Hashable {
+    //var id: String { name }
     let amount: Double          // Количество в данной системе мер
     let unitShort: String       // Краткое название единицы (г, мл)
     let unitLong: String        // Полное название единицы (граммы, миллилитры)
@@ -106,9 +107,9 @@ struct Nutrient: Codable, Identifiable, Hashable {
 
 // MARK: - CaloricBreakdown Model
 struct CaloricBreakdown: Codable, Hashable {
-    let percentProtein: Double              // Процент калорий из белков
-    let percentFat: Double                  // Процент калорий из жиров
-    let percentCarbs: Double                // Процент калорий из углеводов
+    let percentProtein: Double?              // Процент калорий из белков
+    let percentFat: Double?                  // Процент калорий из жиров
+    let percentCarbs: Double?                // Процент калорий из углеводов
 }
 
 // MARK: - WeightPerServing Model

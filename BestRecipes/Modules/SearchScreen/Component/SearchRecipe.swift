@@ -54,7 +54,7 @@ struct SearchRecipe: View {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.black)
-                        Text(String(format: "%.2f", recipe.spoonacularScore))
+                        Text(String(format: "%.2f", recipe.spoonacularScore ?? 0.0))
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                     }
@@ -74,7 +74,7 @@ struct SearchRecipe: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.white)
                         
-                        Text("\(recipe.extendedIngredients.count) ingredients | \(recipe.cookingMinutes ?? 0) min")
+                        Text("\(recipe.extendedIngredients?.count ?? 0) ingredients | \(recipe.cookingMinutes ?? 0) min")
                             .font(.poppinsRegular(size: 12))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)

@@ -45,9 +45,9 @@ final class DetailViewModel: ObservableObject {
     }
     
     func fetchIngredients() async {
-        for ingredient in recipe.extendedIngredients {
+        for ingredient in recipe.extendedIngredients ?? [] {
             
-            if let img =  await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
+            if let img = await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
                 ingredientsTuples.append((ingredient, img))
                 print("image loaded... \(ingredient.name)")
                 print(ingredientsTuples)
@@ -94,9 +94,9 @@ final class DetailViewModel: ObservableObject {
     
     
     
-    func makeInstructionsText(with instructions: [AnalyzedInstruction]) -> String {
+    func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
         
-        guard let instruction = instructions.first, instruction.steps?.capacity != 1
+        guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let url = URL(string: recipe.sourceUrl ?? "") {
                 sourceUrl = url
@@ -106,7 +106,7 @@ final class DetailViewModel: ObservableObject {
         }
         
         var finalString = ""
-        for step in instruction.steps! {
+        for step in instruction.steps ?? [] {
             finalString += "\(step.number). \(step.step)\n\n"
         }
         

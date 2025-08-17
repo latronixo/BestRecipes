@@ -49,7 +49,7 @@ struct HomeScreenView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.categoryRecipes, id: \.self) {recipe in
+                        ForEach(viewModel.categoryRecipes) {recipe in
                             CategoryRecipe(recipe: recipe)
                         }
                         .padding(.top, 70)
@@ -63,7 +63,7 @@ struct HomeScreenView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(viewModel.recentRecipes) {recipe in
+                    ForEach(viewModel.recentRecipes, id: \.id) {recipe in
                         RecentRecipe(recipe: recipe)
                     }
                 }

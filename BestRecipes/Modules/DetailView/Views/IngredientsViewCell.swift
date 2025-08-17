@@ -93,8 +93,8 @@ struct IngredientsViewCell: View {
 
 #Preview {
     IngredientsViewCell(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()),
-                        id: Recipe.preview.extendedIngredients.first!.id,
-                        text: Recipe.preview.extendedIngredients.first!.name,
-                        weight: Recipe.preview.extendedIngredients.first!.measures.metric.amount,
-                        unitShort: Recipe.preview.extendedIngredients.first!.measures.metric.unitShort)
+                        id: Recipe.preview.extendedIngredients?.first?.id ?? 0,
+                        text: Recipe.preview.extendedIngredients?.first?.name ?? "",
+                        weight: Recipe.preview.extendedIngredients?.first?.measures?.metric?.amount ?? 0.0,
+                        unitShort: Recipe.preview.extendedIngredients?.first?.measures?.metric?.unitShort ?? "")
 }

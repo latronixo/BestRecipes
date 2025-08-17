@@ -29,13 +29,13 @@ struct DetailView: View {
                     RecipeView(detailVM: detailVM)
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
         
-                    ForEach(detailVM.recipe.extendedIngredients, id: \.id) { ingredient in
+                    ForEach(detailVM.recipe.extendedIngredients ?? [], id: \.id) { ingredient in
                         
                         
                         IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
                                             text: ingredient.name,
-                                            weight: ingredient.measures.metric.amount,
-                                            unitShort: ingredient.measures.metric.unitShort,
+                                            weight: ingredient.measures?.metric?.amount ?? 0,
+                                            unitShort: ingredient.measures?.metric?.unitShort ?? "",
                                             image: detailVM.ingredientsImage)
                         
                     }
