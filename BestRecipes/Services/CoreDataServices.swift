@@ -169,6 +169,7 @@ final class CoreDataManager {
                     print("Ошибка при переключении статуса избранного: \(error)")
                     self.context.rollback()
                 }
+                continuation.resume()
             }
         }
     }
