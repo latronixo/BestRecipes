@@ -16,6 +16,12 @@ struct MyRecipesView: View {
                     .foregroundStyle(.black)
                 Spacer()
             }
+            .padding(.horizontal)
+            VStack(spacing: 16){
+                ForEach(0..<10) { _ in
+                    FavoriteRecipesCardForPersonView()
+                }
+            }
             .padding()
             
             

@@ -10,18 +10,20 @@ import SwiftUI
 struct PersonView: View {
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack{
-                    Image("avatar")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .clipShape(RoundedRectangle(cornerRadius: 50))
-                    Spacer()
+            ScrollView(.vertical, showsIndicators: false){
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack{
+                        Image("avatar")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
+                        Spacer()
+                    }
                 }
                 .padding()
                 
-                
+                MyRecipesView()
                 
                 Spacer()
             }
