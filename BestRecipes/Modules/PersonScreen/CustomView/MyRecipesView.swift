@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MyRecipesView: View {
-    @State private var myRecipes: [MyRecipeCD] = []
+    @State private var myRecipes: [Recipe] = []
     @State private var isLoading = false
     @State private var showDeleteAlert = false
-    @State private var recipeToDelete: MyRecipeCD?
+    @State private var recipeToDelete: Recipe?
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -61,7 +61,7 @@ struct MyRecipesView: View {
         }
         .onAppear {
             Task{
-                await CoreDataManager.shared.fetchMyRecipes()
+                myRecipes = await CoreDataManager.shared.fetchMyRecipes()
             }
         }
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FavoriteRecipesCardForPersonView: View{
     
-    let recipe: MyRecipeCD
+    let recipe: Recipe
     
     var body: some View {
         ZStack {
