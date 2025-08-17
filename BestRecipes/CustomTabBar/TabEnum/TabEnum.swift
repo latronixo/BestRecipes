@@ -14,7 +14,7 @@ enum TabEnum: Int, CaseIterable {
     var icon: String {
         switch self {
         case .home: return "home"
-        case .bookmarks: return "bookmark"
+        case .bookmarks: return "bookmarkIcon"
         case .add: return "plus"
         case .notifications: return "bell"
         case .profile: return "person"

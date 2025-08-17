@@ -38,7 +38,7 @@ struct CategoryRecipe: View {
                                 .fill(Color.white)
                                 .frame(width: 30, height: 30)
 
-                            Image(isFav ? "BookmarkActive" : "Bookmark")
+                            Image(isFav ? "BookmarkActive" : "bookmarkIcon")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 22, height: 22)
