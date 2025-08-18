@@ -31,7 +31,7 @@ final class AddRecipeViewModel: ObservableObject {
     }
     
     var cookTimeOptions: [Int] {
-        [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 105, 120]
+        Array(stride(from: 5, through: 120, by: 5))
     }
     
     // MARK: - Initialization
