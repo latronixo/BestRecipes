@@ -65,9 +65,13 @@ struct HomeScreenView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(viewModel.categoryRecipes) {recipe in
-                            CategoryRecipe(recipe: recipe) { selectedRecipe in
-                                Task {
-                                    await viewModel.toggleFavourite(with: selectedRecipe)
+                            Button {
+                                router.goTo(to: .detailScreen(recipeDetails: recipe))
+                            } label: {
+                                CategoryRecipe(recipe: recipe) { selectedRecipe in
+                                    Task {
+                                        await viewModel.toggleFavourite(with: selectedRecipe)
+                                    }
                                 }
                             }
                         }
