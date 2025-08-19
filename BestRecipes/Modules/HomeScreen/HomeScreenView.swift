@@ -45,7 +45,14 @@ struct HomeScreenView: View {
                     .fontWeight(.semibold)
                     .font(.title2)
                 
-                Categories(categories: viewModel.mealTypes)
+                Categories(
+                    categories: RecipeCategory.allCases,
+                    selectedCategory: $viewModel.currentCategory
+                ) { category in
+                    Task {
+                        await viewModel.fetchCategoryRecipes(category: category)
+                    }
+                }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {

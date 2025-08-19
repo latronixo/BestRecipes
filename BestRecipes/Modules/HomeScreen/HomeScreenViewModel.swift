@@ -12,7 +12,7 @@ class HomeScreenViewModel: ObservableObject {
     private var networkService = NetworkServices.shared
     private var dataService = CoreDataManager.shared
     @Published var text: String = ""
-    @Published var currentCategory: CuisineType = .french
+    @Published var currentCategory: RecipeCategory = .mainCourse
     @Published var categoryRecipes: [Recipe] = []
     @Published var trendingRecipes: [Recipe] = []
     @Published var randomRecipes: [Recipe] = []
@@ -26,22 +26,7 @@ class HomeScreenViewModel: ObservableObject {
     
     let cuisineCountry = ["African", "Asian", "American", "British"]
     
-    let mealTypes = [
-        "Main Course",
-        "Side Dish",
-        "Dessert",
-        "Appetizer",
-        "Salad",
-        "Bread",
-        "Breakfast",
-        "Soup",
-        "Beverage",
-        "Sauce",
-        "Marinade",
-        "Fingerfood",
-        "Snack",
-        "Drink"
-    ]
+    let mealTypes = CuisineType.allCases
     
     init() {
         Task {
@@ -54,17 +39,17 @@ class HomeScreenViewModel: ObservableObject {
     func fetchTrendingRecipes() async {
         do {
             let response = try await networkService.fetchRandomRecipes(numberOfRecipes: 10)
-            self.trendingRecipes = response.recipes.unique()
+            self.trendingRecipes = response.unique()
         } catch {
             self.trendingRecipes = recipes.unique()
             print("Ошибка при загрузке рецептов: \(error)")
         }
     }
     
-    func fetchCategoryRecipes() async {
+    func fetchCategoryRecipes(category: RecipeCategory = .mainCourse) async {
         do {
-            let response = try await networkService.searchRecipesByCuisine(currentCategory)
-            self.categoryRecipes = response.results.unique()
+            let response = try await networkService.searchRecipesByCategory(category)
+            self.categoryRecipes = response.unique()
         } catch {
             self.categoryRecipes = recipes.unique()
             print("Ошибка при загрузке рецептов по категории: \(error)")

@@ -27,7 +27,7 @@ class SearchScreenViewModel: ObservableObject {
     func fetchRecipes(query: String) async {
         do {
             let response = try await networkService.searchRecipes(query: "pasta", numberOfResults: 30)
-            self.searchedRecipes = response.results
+            self.searchedRecipes = response
             
             print("self.searchedRecipes")
         } catch {

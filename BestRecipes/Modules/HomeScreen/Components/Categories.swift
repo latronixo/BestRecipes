@@ -8,30 +8,32 @@
 import SwiftUI
 
 struct Categories: View {
-    var categories: [String]
+    var categories: [RecipeCategory]
+    @Binding var selectedCategory: RecipeCategory
+    var onSelect: (RecipeCategory) -> Void
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(Array(categories.enumerated()), id: \.offset) { index, category in
-                    Text(category)
+                ForEach(categories, id: \.self) { category in
+                    Text(category.rawValue.capitalized)
                         .padding(.horizontal)
                         .padding(.vertical, 10)
                         .background(
-                            index == 0
-                            ? Color.red.opacity(1)
+                            selectedCategory == category
+                            ? Color.red
                             : Color.clear
                         )
-                        .foregroundColor(index == 0 ? .white : .red)
-                        .font(.poppinsRegular(size: 12)) 
+                        .foregroundColor(selectedCategory == category ? .white : .red)
+                        .font(.poppinsRegular(size: 12))
                         .cornerRadius(10)
+                        .onTapGesture {
+                            selectedCategory = category
+                            onSelect(category)
+                        }
                 }
             }
             .padding(.trailing)
         }
     }
-}
-
-#Preview {
-    Categories(categories: ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"])
 }
