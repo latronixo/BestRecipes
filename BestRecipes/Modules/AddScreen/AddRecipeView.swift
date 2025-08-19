@@ -33,7 +33,7 @@ struct AddRecipeView: View {
                         .padding(.vertical, 12)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.red, lineWidth: 1)
+                                .stroke(Color(.red), lineWidth: 1)
                         )
                     }
                     
@@ -79,7 +79,7 @@ struct AddRecipeView: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
             }

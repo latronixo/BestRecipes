@@ -36,7 +36,7 @@ struct IngredientsView: View {
             if viewModel.recipe.extendedIngredients.isEmpty {
                 Text("No ingredients added yet")
                     .font(.poppinsRegular(size: 16))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 20)
             } else {

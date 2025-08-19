@@ -28,7 +28,7 @@ struct IngredientRow: View {
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(.systemGray6))
+                    .fill(Color(.secondarySystemBackground))
             )
             
             // MARK: - Quantity Field
@@ -41,7 +41,7 @@ struct IngredientRow: View {
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(.systemGray6))
+                    .fill(Color(.secondarySystemBackground))
             )
             .frame(width: 80)
             

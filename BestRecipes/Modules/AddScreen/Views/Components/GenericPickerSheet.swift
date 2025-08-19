@@ -58,7 +58,7 @@ struct GenericPickerSheet<T: Hashable>: View {
         GenericPickerSheet(
             title: "Select Cook Time",
             selection: .constant(20),
-            options: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 105, 120],
+            options: Array(stride(from: 5, to: 120, by: 5)),
             valueFormatter: { "\($0) min" }
         )
     }

@@ -22,7 +22,7 @@ struct RecipeImageView: View {
             ZStack {
                 // MARK: - Image Container
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemGray6))
+                    .fill(Color(.secondarySystemBackground))
                     .frame(height: 200)
                     .overlay(
                         Group {
@@ -44,11 +44,11 @@ struct RecipeImageView: View {
                                 VStack(spacing: 12) {
                                     Image(systemName: "photo")
                                         .font(.system(size: 40))
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.secondary)
                                     
                                     Text("Add photo")
                                         .font(.poppinsRegular(size: 16))
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.secondary)
                                 }
                             }
                         }
@@ -65,13 +65,13 @@ struct RecipeImageView: View {
                             photoLibrary: .shared()
                         ) {
                             Circle()
-                                .fill(Color.white)
+                                .fill(Color(.systemBackground))
                                 .frame(width: 40, height: 40)
                                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                                 .overlay(
                                     Image(systemName: "pencil")
                                         .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(.primary)
                                 )
                         }
                         .padding(.trailing, 16)

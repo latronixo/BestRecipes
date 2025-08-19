@@ -31,11 +31,11 @@ struct InstructionsView: View {
                 .padding(.vertical, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(.systemGray6))
+                        .fill(Color(.secondarySystemBackground))
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color(.systemGray4), lineWidth: 1)
+                        .stroke(Color(.secondarySystemBackground), lineWidth: 1)
                 )
                 
                 // MARK: - Placeholder
@@ -43,7 +43,7 @@ struct InstructionsView: View {
                     HStack {
                         Text("Describe the cooking process...")
                             .font(.poppinsRegular(size: 16))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
                             .padding(.leading, 16)
                             .padding(.top, 20)
                         Spacer()

@@ -25,31 +25,31 @@ struct GenericPickerView<T: Hashable>: View {
                 // MARK: - Icon
                 Image(systemName: icon)
                     .font(.system(size: 20))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .frame(width: 24)
                 
                 // MARK: - Title
                 Text(title)
                     .font(.poppinsRegular(size: 16))
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                 
                 Spacer()
                 
                 // MARK: - Value
                 Text(valueFormatter(selection.wrappedValue))
                     .font(.poppinsSemibold(size: 16))
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                 
                 // MARK: - Arrow
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
+                    .fill(Color(.secondarySystemBackground))
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -73,7 +73,7 @@ struct GenericPickerView<T: Hashable>: View {
             title: "Cook Time",
             icon: "clock.fill",
             selection: .constant(20),
-            options: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 105, 120],
+            options: Array(stride(from: 5, to: 120, by: 5)),
             valueFormatter: { "\($0) min" },
             action: {}
         )
