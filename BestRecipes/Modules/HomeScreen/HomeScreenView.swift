@@ -57,7 +57,11 @@ struct HomeScreenView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(viewModel.categoryRecipes) {recipe in
-                            CategoryRecipe(recipe: recipe)
+                            CategoryRecipe(recipe: recipe) { selectedRecipe in
+                                Task {
+                                    await viewModel.toggleFavourite(with: selectedRecipe)
+                                }
+                            }
                         }
                         .padding(.top, 70)
                     }

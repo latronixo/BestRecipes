@@ -11,6 +11,8 @@ struct CategoryRecipe: View {
     @State private var isFav: Bool = false
     var recipe: Recipe
     
+    let onSelect: (Recipe) -> Void
+    
     var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 8) {
@@ -26,12 +28,19 @@ struct CategoryRecipe: View {
                     .padding(.horizontal)
 
                 HStack() {
-                    Text("\(recipe.cookingMinutes ?? 0) min")
-                        .font(.poppinsSemibold(size: 12))
+                    if let minutes = recipe.cookingMinutes {
+                        Text("\(minutes) min")
+                            .font(.poppinsSemibold(size: 12))
+                    } else {
+                        Text("- min")
+                            .font(.poppinsSemibold(size: 12))
+                    }
+                   
                     Spacer()
                     
                     Button {
-                        print("Tapped")
+                        onSelect(recipe)
+                        isFav.toggle()
                     } label: {
                         ZStack {
                             Circle()
