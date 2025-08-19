@@ -11,6 +11,7 @@ import SwiftUI
 
 // MARK: - ContentView
 struct HomeScreenView: View {
+    @EnvironmentObject var router: Router
     @ObservedObject var viewModel = HomeScreenViewModel()
     var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
     
@@ -24,17 +25,24 @@ struct HomeScreenView: View {
             SearchBar(text: $viewModel.text)
                 .padding(.trailing)
             
-            Heading(title: "Trending now 🔥")
+            Heading(title: "Trending now 🔥") {
+                router.goTo(to: .seeAllScreen(category: .trending))
+            }
             
             ScrollView(.horizontal, showsIndicators: false){
                 HStack {
                     ForEach(viewModel.trendingRecipes) {recipe in
-                        MainRecipe(recipe: recipe) { selectedRecipe in
-                            Task {
-                                await viewModel.toggleFavourite(with: selectedRecipe)
+                        Button {
+                            router.goTo(to: .detailScreen(recipeDetails: recipe))
+                        } label: {
+                            MainRecipe(recipe: recipe) { selectedRecipe in
+                                Task {
+                                    await viewModel.toggleFavourite(with: selectedRecipe)
+                                }
                             }
                         }
                     }
+                    .padding(.top, 70)
                 }
             }
             
@@ -70,17 +78,25 @@ struct HomeScreenView: View {
             }
             
             // Recent recipe
-            Heading(title: "Recent recipe")
+            Heading(title: "Recent recipe") {
+                router.goTo(to: .seeAllScreen(category: .recent))
+            }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(viewModel.recentRecipes, id: \.id) {recipe in
-                        RecentRecipe(recipe: recipe)
+                        Button {
+                            router.goTo(to: .detailScreen(recipeDetails: recipe))
+                        } label: {
+                            RecentRecipe(recipe: recipe)
+                        }
                     }
                 }
             }
            
-            Heading(title: "Popular cuisine")
+            Heading(title: "Popular cuisine") {
+                router.goTo(to: .seeAllScreen(category: .popularCuisine))
+            }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {

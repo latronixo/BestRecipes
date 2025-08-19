@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Heading: View {
     var title: String
+    var action: () -> Void = {}
     
     var body: some View {
         HStack {
@@ -17,7 +18,7 @@ struct Heading: View {
                 .font(.poppinsSemibold(size: 20))
             Spacer()
             Button {
-                
+                action()
             } label: {
                 HStack {
                     Text("See all")
