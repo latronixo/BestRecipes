@@ -26,13 +26,15 @@ final class NetworkServices {
     /// Поиск рецептов по запросу
     func searchRecipes(query: String, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchRecipes(query: query, number: numberOfResults)
-        return try await fetchData(endpoint, as: [Recipe].self)
+        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
+        return searchResponse.results
     }
     
     /// Поиск рецептов по типу кухни
     func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCuisine(cuisine: cuisine, number: numberOfResults)
-        return try await fetchData(endpoint, as: [Recipe].self)
+        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
+        return searchResponse.results
     }
     
     /// Получает случайные рецепты
@@ -44,7 +46,8 @@ final class NetworkServices {
     /// Поиск рецептов по категориям
     func searchRecipesByCategory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCategory(category: category.rawValue, number: numberOfResults)
-        return try await fetchData(endpoint, as: [Recipe].self)
+        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
+        return searchResponse.results
     }
     
     // MARK: - Image Loading Operations
