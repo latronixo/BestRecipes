@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeTextView: View {
     
     @ObservedObject var detailVM: DetailViewModel
-    @State var instruction: [AnalyzedInstruction]
+    @State var instruction: [AnalyzedInstruction]?
     
     var body: some View {
         VStack {
@@ -34,5 +34,5 @@ struct RecipeTextView: View {
 }
 
 #Preview {
-    RecipeTextView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()), instruction: Recipe.preview.analyzedInstructions)
+    RecipeTextView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()), instruction: Recipe.preview.analyzedInstructions!)
 }

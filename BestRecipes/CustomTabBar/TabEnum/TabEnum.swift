@@ -14,7 +14,7 @@ enum TabEnum: Int, CaseIterable {
     var icon: String {
         switch self {
         case .home: return "home"
-        case .bookmarks: return "bookmark"
+        case .bookmarks: return "bookmarkIconForTabBar"
         case .add: return "plus"
         case .notifications: return "bell"
         case .profile: return "person"
@@ -24,7 +24,7 @@ enum TabEnum: Int, CaseIterable {
     @ViewBuilder
     var screen: some View {
         switch self {
-        case .home: ContentView()
+        case .home: HomeScreenView()
         case .bookmarks: DiscoverView(favorites: Array(repeating: .preview, count: 3))
         case .add: AddRecipeView()
         case .notifications: BellView()

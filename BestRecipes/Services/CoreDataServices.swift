@@ -169,6 +169,7 @@ final class CoreDataManager {
                     print("Ошибка при переключении статуса избранного: \(error)")
                     self.context.rollback()
                 }
+                continuation.resume()
             }
         }
     }
@@ -233,13 +234,13 @@ final class CoreDataManager {
         recipeCD.gaps = recipe.gaps
         recipeCD.preparationMinutes = Int64(recipe.preparationMinutes ?? 0)
         recipeCD.cookingMinutes = Int64(recipe.cookingMinutes ?? 0)
-        recipeCD.aggregateLikes = Int64(recipe.aggregateLikes)
-        recipeCD.healthScore = recipe.healthScore
+        recipeCD.aggregateLikes = Int64(recipe.aggregateLikes ?? 0)
+        recipeCD.healthScore = recipe.healthScore ?? 0.0
         recipeCD.creditsText = recipe.creditsText
         recipeCD.license = recipe.license
         recipeCD.sourceName = recipe.sourceName
         recipeCD.pricePerServing = recipe.pricePerServing ?? 0.0
-        recipeCD.spoonacularScore = recipe.spoonacularScore
+        recipeCD.spoonacularScore = recipe.spoonacularScore ?? 0.0
         recipeCD.spoonacularSourceUrl = recipe.spoonacularSourceUrl
         recipeCD.summary = recipe.summary
         recipeCD.instructions = recipe.instructions
@@ -398,13 +399,13 @@ final class CoreDataManager {
             myRecipe.gaps = recipe.gaps
             myRecipe.preparationMinutes = Int64(recipe.preparationMinutes ?? 0)
             myRecipe.cookingMinutes = Int64(recipe.cookingMinutes ?? 0)
-            myRecipe.aggregateLikes = Int64(recipe.aggregateLikes)
-            myRecipe.healthScore = recipe.healthScore
+            myRecipe.aggregateLikes = Int64(recipe.aggregateLikes ?? 0)
+            myRecipe.healthScore = recipe.healthScore ?? 0.0
             myRecipe.creditsText = recipe.creditsText
             myRecipe.license = recipe.license
             myRecipe.sourceName = recipe.sourceName
             myRecipe.pricePerServing = recipe.pricePerServing ?? 0.0
-            myRecipe.spoonacularScore = recipe.spoonacularScore
+        myRecipe.spoonacularScore = recipe.spoonacularScore ?? 0.0
             myRecipe.spoonacularSourceUrl = recipe.spoonacularSourceUrl
             myRecipe.summary = recipe.summary
             myRecipe.instructions = recipe.instructions
