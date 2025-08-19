@@ -24,7 +24,7 @@ class HomeScreenViewModel: ObservableObject {
         Recipe.preview
     ]
     
-    let cuisineCountry = ["African", "Asian", "American", "British"]
+    let cuisineCountry = CuisineType.allCases
     
     let mealTypes = CuisineType.allCases
     

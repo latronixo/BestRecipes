@@ -88,8 +88,8 @@ struct HomeScreenView: View {
                         Country(country: country)
                     }
                 }
-                
             }
+            .padding(.top)
             
         }
         .padding(.leading)
