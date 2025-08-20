@@ -20,7 +20,7 @@ struct MainView: View {
                     .navigationDestination(for: Routes.self) { route in
                         switch route {
                         case .homeScreen:
-                            ContentView()
+                            CustomTabBar()
                         case .detailScreen(recipeDetails: let recipeDetails):
                             DetailView(detailVM: DetailViewModel(recipe: recipeDetails, router: router))
                         case .seeAllScreen:

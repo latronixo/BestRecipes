@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Routes: Hashable{
+enum Routes: Hashable {
 
     case homeScreen
     case detailScreen(recipeDetails: Recipe)

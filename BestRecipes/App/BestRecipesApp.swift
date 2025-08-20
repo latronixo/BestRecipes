@@ -18,7 +18,7 @@ struct BestRecipesApp: App {
                 OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
                     .transition(.opacity)
             } else {
-                CustomTabBar()
+                MainView()
                     .transition(.opacity)
             }
         }

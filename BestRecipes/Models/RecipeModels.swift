@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Search Response Model
-struct SearchResponse: Codable {
+struct SearchResponse: Codable, Hashable {
     let results: [Recipe]
     let offset: Int
     let number: Int

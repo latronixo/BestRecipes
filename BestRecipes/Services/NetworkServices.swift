@@ -91,7 +91,13 @@ final class NetworkServices {
     func fetchIngredientImageData(_ ingredient: Ingredient) async throws -> Data? {
         guard let imageName = ingredient.image else { return nil }
         let imageURL = APIConfig.imageBaseURL + APIConfig.ImageURLs.ingredient + imageName
-        return try await fetchImageData(from: imageURL)
+        do {
+            print("Image url is: \(imageURL)")
+            return try await fetchImageData(from: imageURL)
+        } catch {
+                print("error loading image: \(error)")
+            return nil
+        }
     }
 
     /// Загружает изображение оборудования

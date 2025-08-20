@@ -11,16 +11,18 @@ struct RecipeView: View {
     
     @ObservedObject var detailVM: DetailViewModel
     
+    @State var isFavorite: Bool = false
+    
     
     
     var body: some View {
         VStack {
             HStack {
-                Spacer(minLength: 20)
-                Text("Recipe name")
+                Spacer(minLength: 15)
+                Text(detailVM.recipe.title)
                     .fontWeight(.semibold)
                     .font(.system(size: 25))
-                Spacer(minLength: 230)
+                Spacer(minLength: 15)
                 
             }
             
@@ -45,6 +47,8 @@ struct RecipeView: View {
                         
                 }
 
+                FavoriteView(recipeID: detailVM.recipe.id)
+                    .offset(x: 140, y: -140)
                 
             }
             
@@ -52,9 +56,9 @@ struct RecipeView: View {
                 Spacer(minLength: 20)
                 Image(systemName: "star.fill")
                 
-                Text("4,5")
-                Text("(300 Reviews)")
-                Spacer(minLength: 210)
+                Text(String(format: "%.1f", (detailVM.recipe.spoonacularScore ?? 0.0) / 20.0))
+                Text(String(detailVM.recipe.aggregateLikes ?? 0))
+                Spacer(minLength: 270)
             }
             
         }

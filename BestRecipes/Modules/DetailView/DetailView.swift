@@ -42,7 +42,11 @@ struct DetailView: View {
                     
                 }
             }
-            .navigationTitle("Recipe Detail")
+            .navigationBarTitle(Text("Recipe Detail").font(.footnote))
+            .navigationBarTitleDisplayMode(.inline) // or .inline
+//            .navigationTitle(Text("Recipe Detail").font(.system(size: 25)).fontWeight(.medium))
+//            .navigationBarTitleDisplayMode(.automatic)
+            
              
         }
  
