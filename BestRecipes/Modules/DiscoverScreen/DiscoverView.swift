@@ -25,20 +25,28 @@ struct DiscoverView: View {
             ZStack {
                 ScrollView {
                     if favorites.isEmpty {
-                        EmptyState()
+                        EmptyStateView()
                             .padding(.all, 16)
                             .padding(.bottom, tabBarHeight)
                     } else {
                         LazyVStack(spacing: 24) {
                             ForEach(favorites) { recipe in
-                                RecipeCardView(recipe: recipe)
+                                RecipeCardView(
+                                    recipe: recipe,
+                                    isBookmarked: true,
+                                    onBookmarkTap: {}
+                                )
                             }
                         }
                         .padding(.vertical, 16)
-                        .padding(.bottom, tabBarHeight)
+                        .padding(.bottom, tabBarHeight + 24)
                     }
                 }
-//                BottomTabBar(selectedTab: $localSelectedTab)
+                .scrollIndicators(.hidden)
+                
+                if isLoading {
+                    ProgressView().controlSize(.large)
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -49,6 +57,11 @@ struct DiscoverView: View {
             }
             .task { if favorites.isEmpty { await loadFavorites() } }
             .refreshable { await loadFavorites() } // pull-to-refresh
+            .safeAreaInset(edge: .bottom) {
+                BottomTabBar(selectedTab: $localSelectedTab)
+                    .frame(height: tabBarHeight)
+                    .background(.clear)
+            }
         }
     }
     
@@ -62,23 +75,6 @@ struct DiscoverView: View {
         }
     }
 }
-
-
-// MARK: - Empty state
-private struct EmptyState: View {
-    var body: some View {
-        HStack(spacing: 12) {
-            Image("BookmarkForCard")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.secondary)
-            Text("No saved recipes yet")
-                .font(.poppinsRegular(size: 14))
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
 
 #Preview {
     DiscoverView(favorites: Array(repeating: .preview, count: 3))

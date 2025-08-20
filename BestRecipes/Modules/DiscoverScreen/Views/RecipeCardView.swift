@@ -15,7 +15,7 @@ struct RecipeCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            ZStack(alignment: .bottomTrailing) {
+            ZStack {
                 // Image
                 AsyncImage(url: URL(string: recipe.image ?? "")) { phase in
                     switch phase {
@@ -28,22 +28,20 @@ struct RecipeCardView: View {
                 .frame(height: 180)
                 .cornerRadius(16)
                 .clipped()
-                
-                Text(formatTime(recipe.readyInMinutes))
-                    .font(.system(size: 12, weight: .regular))
-                    .frame(height: 25)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 10)
-                    .background {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(.ultraThinMaterial.opacity(0.8))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(Color.black.opacity(0.12))
-                            )
-                    }
-                    .cornerRadius(16)
+            }
+            
+            .overlay(alignment: .bottomTrailing) {
+                TimePillView(text: formatTime(recipe.readyInMinutes))
+                    .padding(8)
+            }
+            
+            .overlay(alignment: .topTrailing) {
+                BookmarkButtonView(isBookmarked: isBookmarked, action: onBookmarkTap)
+                    .padding(8)
+            }
+            
+            .overlay(alignment: .topLeading) {
+                RatingBadgeView(rating: formattedRating())
                     .padding(8)
             }
             
@@ -53,43 +51,17 @@ struct RecipeCardView: View {
                 .lineLimit(2)
            
             // Additional info
-            HStack(spacing: 8) {
                 if let source = recipe.sourceName, !source.isEmpty {
-                    // favicon (fallback — SF-иконка)
-                    if let url = faviconURL() {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image.resizable().scaledToFill()
-                            case .empty:
-                                Color.gray.opacity(0.2)
-                            case .failure:
-                                Image(systemName: "person.circle.fill")
-                                    .resizable().scaledToFill()
-                                    .foregroundStyle(.secondary)
-                            @unknown default:
-                                Color.gray.opacity(0.2)
-                            }
-                        }
-                        .frame(width: 32, height: 32)
-                        .clipShape(Circle())
-                    } else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable().scaledToFill()
+                    HStack(spacing: 8) {
+                        AuthorAvatarView(url: faviconURL())
+                        Text("By \(source)")
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
-                            .frame(width: 32, height: 32)
-                    }
-                    
-                    Text("By \(source)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                            .lineLimit(1)
                 }
             }
         }
         .padding(.horizontal, 16)
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
     }
     
     private func formatTime(_ minutes: Int) -> String {
