@@ -19,6 +19,7 @@ final class DetailViewModel: ObservableObject {
     
     private var sourceUrl: URL?
     private let network = NetworkServices.shared
+    private let coreData = CoreDataManager.shared
     
     init(recipeId: Int) {
     }
@@ -33,6 +34,7 @@ final class DetailViewModel: ObservableObject {
             self.recipe = detailedRecipe
             self.isLoading = false
             
+            await coreData.addRecent(recipe: detailedRecipe)
             await fetchLargeImage()
         } catch {
             print("Error fetching recipe details: \(error)")
