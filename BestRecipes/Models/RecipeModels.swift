@@ -1,5 +1,18 @@
 import Foundation
 
+// MARK: - Responses
+struct RecipesResponse: Codable {
+    let results: [Recipe]
+}
+
+struct RandomRecipesResponse: Codable {
+    let recipes: [Recipe]
+}
+
+struct SearchRecipesResponse: Codable {
+    let results: [Recipe]
+}
+
 // MARK: - Recipe Model
 struct Recipe: Codable, Identifiable, Hashable {
   
