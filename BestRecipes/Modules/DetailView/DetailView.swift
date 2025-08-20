@@ -27,10 +27,20 @@ struct DetailView: View {
                         RecipeView(detailVM: detailVM)
                         RecipeTextView(detailVM: detailVM, instruction: recipe.analyzedInstructions)
                         
-                        Text("Ingredients")
-                            .font(.poppinsSemibold(size: 20))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal)
+                        HStack {
+                            Text("Ingredients")
+                                .font(.poppinsSemibold(size: 20))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal)
+                            Spacer()
+                            
+                            let count = recipe.extendedIngredients?.count ?? 0
+                            
+                            Text("\(count) \(count == 1 ? "item" : "items")")
+                                .font(.poppinsRegular(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        .padding([.horizontal, .top])
                         
                         ForEach(recipe.extendedIngredients ?? [], id: \.id) { ingredient in
                             IngredientsViewCell(ingredient: ingredient)
@@ -39,7 +49,19 @@ struct DetailView: View {
                         }
                     }
                 }
-                .navigationTitle("Recipe Detail")
+                .navigationTitle("Recipe detail")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            detailVM.goBack()
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
             } else {
                 Text("Failed to load recipe details")
             }
