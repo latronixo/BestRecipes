@@ -157,17 +157,19 @@ final class CoreDataManager {
                 fetchRequest.predicate = NSPredicate(format: "id == %lld", Int64(recipe.id))
                 
                 do {
-                    if let existingRecipe = try self.context.fetch(fetchRequest).first {
-                        self.context.delete(existingRecipe)
+                    if let existingRecipe = try context.fetch(fetchRequest).first {
+                        context.delete(existingRecipe)
                     } else {
                         let newFavorite = FavoriteRecipeCD(context: context)
                         self.update(recipeCD: newFavorite, with: recipe)
                     }
                     
-                    try self.context.save()
+                    if context.hasChanges {
+                        try context.save()
+                    }
                 } catch {
                     print("Ошибка при переключении статуса избранного: \(error)")
-                    self.context.rollback()
+                    context.rollback()
                 }
                 continuation.resume()
             }

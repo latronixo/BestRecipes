@@ -26,28 +26,29 @@ final class NetworkServices {
     /// Поиск рецептов по запросу
     func searchRecipes(query: String, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchRecipes(query: query, number: numberOfResults)
-        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
-        return searchResponse.results
+        let response = try await fetchData(endpoint, as: RecipesResponse.self)
+        return response.results
     }
     
     /// Поиск рецептов по типу кухни
     func searchRecipesByCuisine(_ cuisine: CuisineType, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCuisine(cuisine: cuisine, number: numberOfResults)
-        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
-        return searchResponse.results
+        let response = try await fetchData(endpoint, as: SearchRecipesResponse.self)
+        return response.results
     }
     
     /// Получает случайные рецепты
     func fetchRandomRecipes(numberOfRecipes: Int = 1) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.randomRecipes(number: numberOfRecipes)
-        return try await fetchData(endpoint, as: [Recipe].self)
+        let response = try await fetchData(endpoint, as: RandomRecipesResponse.self)
+        return response.recipes
     }
     
     /// Поиск рецептов по категориям
     func searchRecipesByCategory(_ category: RecipeCategory, numberOfResults: Int = 10) async throws -> [Recipe] {
         let endpoint = APIConfig.Endpoint.searchByCategory(category: category.rawValue, number: numberOfResults)
-        let searchResponse = try await fetchData(endpoint, as: SearchResponse.self)
-        return searchResponse.results
+        let response = try await fetchData(endpoint, as: SearchRecipesResponse.self)
+        return response.results
     }
     
     // MARK: - Image Loading Operations
