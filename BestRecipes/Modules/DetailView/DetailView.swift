@@ -9,74 +9,47 @@ import SwiftUI
 
 struct DetailView: View {
     
-    @StateObject var detailVM: DetailViewModel
-    @EnvironmentObject private var router: Router
-
-    let recipeId: Int
+    @ObservedObject var detailVM: DetailViewModel
     
-    init(recipeId: Int) {
-        self.recipeId = recipeId
-        _detailVM = StateObject(wrappedValue: DetailViewModel(recipeId: recipeId))
+    
+    
+    init(detailVM: DetailViewModel) {
+        
+        self.detailVM = detailVM
+        
     }
+    
     
     var body: some View {
-        ZStack{
-            if detailVM.isLoading {
-                ProgressView("Loading Recipe...")
-            } else if let recipe = detailVM.recipe {
+            
+            
+            VStack {
                 ScrollView {
-                    VStack {
-                        RecipeView(detailVM: detailVM)
-                        RecipeTextView(detailVM: detailVM, instruction: recipe.analyzedInstructions)
+                    RecipeView(detailVM: detailVM)
+                    RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
+        
+                    ForEach(detailVM.recipe.extendedIngredients ?? [], id: \.id) { ingredient in
                         
-                        HStack {
-                            Text("Ingredients")
-                                .font(.poppinsSemibold(size: 20))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal)
-                            Spacer()
-                            
-                            let count = recipe.extendedIngredients?.count ?? 0
-                            
-                            Text("\(count) \(count == 1 ? "item" : "items")")
-                                .font(.poppinsRegular(size: 14))
-                                .foregroundColor(.secondary)
-                        }
-                        .padding([.horizontal, .top])
+                        IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
+                                            text: ingredient.name,
+                                            weight: ingredient.measures?.metric?.amount ?? 0,
+                                            unitShort: ingredient.measures?.metric?.unitShort ?? "",
+                                            image: detailVM.ingredientsImage)
                         
-                        ForEach(recipe.extendedIngredients ?? [], id: \.id) { ingredient in
-                            IngredientsViewCell(ingredient: ingredient)
-                                .padding(.horizontal)
-                                .padding(.vertical, 4)
-                        }
                     }
+                    
                 }
-                .navigationTitle("Recipe detail")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            router.goBack()
-                        }) {
-                            Image(systemName: "arrow.backward")
-                                .foregroundColor(.primary)
-                        }
-                    }
-                }
-            } else {
-                Text("Failed to load recipe details")
             }
-        }
-        .task {
-            await detailVM.fetchRecipeDetails(id: recipeId)
-        }
+            .navigationTitle("Recipe Detail")
+             
+        
+ 
     }
+    
+  
+    
 }
 
 #Preview {
-    NavigationView {
-        DetailView(recipeId: 716429)
-            .environmentObject(Router())
-    }
+    DetailView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
 }

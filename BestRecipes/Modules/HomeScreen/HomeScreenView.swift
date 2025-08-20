@@ -33,7 +33,7 @@ struct HomeScreenView: View {
                 HStack {
                     ForEach(viewModel.trendingRecipes) {recipe in
                         Button {
-                            router.goTo(to: .detailScreen(recipeId: recipe.id))
+                            router.goTo(to: .detailScreen(recipe: recipe))
                         } label: {
                             MainRecipe(recipe: recipe) { selectedRecipe in
                                 Task {
@@ -65,7 +65,7 @@ struct HomeScreenView: View {
                     HStack {
                         ForEach(viewModel.categoryRecipes) {recipe in
                             Button {
-                                router.goTo(to: .detailScreen(recipeId: recipe.id))
+                                router.goTo(to: .detailScreen(recipe: recipe))
                             } label: {
                                 CategoryRecipe(recipe: recipe) { selectedRecipe in
                                     Task {
@@ -89,7 +89,7 @@ struct HomeScreenView: View {
                 HStack {
                     ForEach(viewModel.recentRecipes, id: \.id) {recipe in
                         Button {
-                            router.goTo(to: .detailScreen(recipeId: recipe.id))
+                            router.goTo(to: .detailScreen(recipe: recipe))
                         } label: {
                             RecentRecipe(recipe: recipe)
                         }

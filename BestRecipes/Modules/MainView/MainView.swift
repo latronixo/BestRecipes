@@ -42,8 +42,8 @@ struct MainView: View {
                 switch route {
                 case .homeScreen:
                     HomeScreenView()
-                case .detailScreen(let recipeId):
-                    DetailView(recipeId: recipeId)
+                case .detailScreen(let recipe):
+                    DetailView(detailVM: DetailViewModel(recipe: recipe, router: router))
                 case .seeAllScreen(let category):
                     SeeAllView(category: category)
                 case .searchScreen:

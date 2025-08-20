@@ -10,19 +10,12 @@ import SwiftUI
 struct FavoriteView: View {
     @State var darkFavIcon = "BookmarkForCard"
     @State var activeFavIcon = "BookmarkActive"
-    @State var isFavor: Bool = false
-    var recipeID: Int
-    
-    private var dataService = CoreDataManager.shared
+    @State var isFavor: Bool
     
     
-    init(recipeID: Int) {
-        self.recipeID = recipeID
-//        Task {
-//            
-//            await self.checkFavorite()
-//            
-//        }
+    init(isFavor: Bool) {
+        self.isFavor = isFavor
+
     }
     
     
@@ -42,14 +35,9 @@ struct FavoriteView: View {
         }
     }
     
-    mutating func checkFavorite() async {
-        
-        
-        isFavor = await CoreDataManager.shared.isFavorite(id: recipeID)
-        
-    }
+
 }
 
 #Preview {
-    FavoriteView(recipeID: Recipe.preview.id)
+    FavoriteView(isFavor: true)
 }

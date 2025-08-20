@@ -9,32 +9,41 @@ import Foundation
 import Combine
 import SwiftUI
 
+enum ImageType {
+    case largeImage
+    case ingredientImage
+}
 @MainActor
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
-    //    @Published var instruction: [AnalyzedInstruction]
+//    @Published var instruction: [AnalyzedInstruction]
     
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
+    @Published var ingredientsImage: UIImage?
+    @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
+    @Published var isFavorite: Bool = false
     
     private var sourceUrl: URL?
+    private let router: Router
     private let network = NetworkServices.shared
-    private var dataService = CoreDataManager.shared
+    private let coreData = CoreDataManager.shared
     
     init(recipe: Recipe, router: Router) {
         
         self.recipe = recipe
         self.router = router
-        //MARK: Debug options!
+//MARK: Debug options!
         //Задержка в 2 секунды для отладки, убрать перед релизом!
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             Task {
-//                await self.getRecipe()
+                
+                await self.checkIfFavourite()
                 await self.fetchIngredients()
                 await self.fetchLargeImage()
             }
-        }
+//        }
         
         
     }
@@ -46,22 +55,19 @@ final class DetailViewModel: ObservableObject {
                 ingredientsTuples.append((ingredient, img))
                 print("image loaded... \(ingredient.name)")
                 print(ingredientsTuples)
-                
+            
             } else { ingredientsTuples.append((ingredient, nil))
                 print("image not loaded... \(ingredient.name)")
                 print(ingredientsTuples) }
             
-            await coreData.addRecent(recipe: detailedRecipe)
-            await fetchLargeImage()
-        } catch {
-            print("Error fetching recipe details: \(error)")
-            self.isLoading = false
         }
     }
-    
+
     func fetchLargeImage() async {
-        guard let img = await fetchImage(imageType: .largeImage) else { return }
-        largeImage = img
+    
+        guard let img = await  fetchImage(imageType: .largeImage) else { return }
+            largeImage = img
+        
     }
     
     func fetchImage(imageType: ImageType,  ingredientExtended: Ingredient? = nil) async -> UIImage? {
@@ -82,8 +88,6 @@ final class DetailViewModel: ObservableObject {
                 ingredientsImage = UIImage(systemName: "fish")
                 return nil
             }
-            
-            
             guard let imgData = try? await network.fetchIngredientImageData(ingredient) else {
                 return nil
             }
@@ -92,11 +96,12 @@ final class DetailViewModel: ObservableObject {
             
         }
         
-        self.largeImage = UIImage(data: imgData)
     }
     
+    
+    
     func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
-        guard let recipe = recipe else { return "" }
+        
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let url = URL(string: recipe.sourceUrl ?? "") {
@@ -114,27 +119,18 @@ final class DetailViewModel: ObservableObject {
         return finalString
     }
     
-    func goBack() {
-        router.goBack()
+    private func checkIfFavourite() async {
+        isFavorite = await coreData.isFavorite(id: recipe.id)
     }
     
-    @MainActor
-    func toggleFavourite(with recipe: Recipe) async {
-        await dataService.toggleFavorite(recipe: recipe)
+    func toggleFavourite() async {
+        await coreData.toggleFavorite(recipe: recipe)
     }
     
-//    func getRecipe() async {
-//        
-//        do {
-//            let response = try await network.searchRecipesByCategory(.salad, numberOfResults: 1)
-//            
-//            self.recipe = response.first!
-//            print(recipe)
-//        } catch {
-//            
-//            print("Ошибка при загрузке рецептов по категории: \(error)")
-//        }
-//        
+//    func goBack() {
+//        router.goBack()
 //    }
+    
+    
     
 }

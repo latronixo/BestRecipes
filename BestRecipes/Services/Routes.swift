@@ -10,7 +10,7 @@ import Foundation
 enum Routes: Hashable {
 
     case homeScreen
-    case detailScreen(recipeId: Int)
+    case detailScreen(recipe: Recipe)
     case seeAllScreen(category: SeeAllCategory)
     case searchScreen
     case createScreen
