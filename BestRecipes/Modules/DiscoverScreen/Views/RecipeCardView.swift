@@ -10,6 +10,8 @@ import SwiftUI
 // MARK: - RecipeCardView
 struct RecipeCardView: View {
     let recipe: Recipe
+    var isBookmarked = false
+    var onBookmarkTap: (() -> Void)? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -17,16 +19,10 @@ struct RecipeCardView: View {
                 // Image
                 AsyncImage(url: URL(string: recipe.image ?? "")) { phase in
                     switch phase {
-                    case .empty:
-                        Color.gray.opacity(0.2)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure:
-                        Color.red.opacity(0.2)
-                    @unknown default:
-                        EmptyView()
+                    case .empty: Color.gray.opacity(0.2)
+                    case .success(let image): image.resizable().scaledToFill()
+                    case .failure: Color.red.opacity(0.2)
+                    @unknown default: EmptyView()
                     }
                 }
                 .frame(height: 180)
@@ -118,6 +114,12 @@ struct RecipeCardView: View {
             }
         }
         return nil
+    }
+    
+    private func formattedRating() -> String {
+        let score = recipe.spoonacularScore ?? 100
+        let fiveScale = max(0, min(5, score / 20.0))
+        return String(format: "%.1f", fiveScale).replacingOccurrences(of: ".", with: ",")
     }
 }
 

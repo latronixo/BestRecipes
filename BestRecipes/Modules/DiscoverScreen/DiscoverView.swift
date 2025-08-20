@@ -22,14 +22,14 @@ struct DiscoverView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            ZStack {
                 ScrollView {
                     if favorites.isEmpty {
                         EmptyState()
                             .padding(.all, 16)
                             .padding(.bottom, tabBarHeight)
                     } else {
-                        VStack(spacing: 24) {
+                        LazyVStack(spacing: 24) {
                             ForEach(favorites) { recipe in
                                 RecipeCardView(recipe: recipe)
                             }
