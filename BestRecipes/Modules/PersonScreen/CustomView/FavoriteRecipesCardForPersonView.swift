@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftUI
 
 struct FavoriteRecipesCardForPersonView: View {
     let recipe: Recipe
+    @State private var loadedImage: UIImage? = nil
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -23,69 +25,81 @@ struct FavoriteRecipesCardForPersonView: View {
             }
             
             // Изображение рецепта
-            recipeImage
+            imageContent
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
             
             // Контент поверх изображения
-            VStack(alignment: .leading) {
-                // Рейтинг
-                HStack {
-                    ratingBadge
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                
-                Spacer()
-                
-                // Информация о рецепте
-                recipeInfo
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            contentOverlay
         }
         .frame(height: 200)
-        .clipped()
+        .onAppear {
+            loadImage()
+        }
     }
     
-    // MARK: - Subviews
+    @ViewBuilder
+    private var imageContent: some View {
+        if let image = loadedImage {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+        } else {
+            placeholderImage
+        }
+    }
     
-    private var recipeImage: some View {
-        Group {
-            if let imagePath = recipe.image {
-                if let uiImage = loadImageFromPath(imagePath) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    placeholderImage
+    private func loadImage() {
+        // Сначала пробуем загрузить из imageData
+        if let imageData = recipe.image {
+            loadedImage = UIImage(named: imageData)
+            return
+        }
+        
+        // Если нет imageData, пробуем загрузить по пути
+        guard let imagePath = recipe.image else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let url = URL(fileURLWithPath: imagePath)
+            
+            // Проверяем, что путь находится в sandbox
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            guard url.path.hasPrefix(documentsURL.path) else {
+                print("Попытка доступа за пределы sandbox: \(imagePath)")
+                return
+            }
+            
+            // Загружаем изображение
+            if FileManager.default.fileExists(atPath: url.path),
+               let imageData = try? Data(contentsOf: url),
+               let image = UIImage(data: imageData) {
+                
+                DispatchQueue.main.async {
+                    self.loadedImage = image
                 }
-            } else {
-                placeholderImage
             }
         }
-    }
-    
-    private func loadImageFromPath(_ path: String) -> UIImage? {
-        // Получаем URL из строки пути
-        let url = URL(fileURLWithPath: path)
-        
-        // Проверяем существование файла
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            print("Файл не существует по пути: \(path)")
-            return nil
-        }
-        
-        // Загружаем изображение
-        if let imageData = try? Data(contentsOf: url) {
-            return UIImage(data: imageData)
-        }
-        
-        return nil
     }
     
     private var placeholderImage: some View {
         Color.gray.opacity(0.3)
+    }
+    
+    // Остальные компоненты без изменений
+    @ViewBuilder
+    private var contentOverlay: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                ratingBadge
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            
+            Spacer()
+            
+            recipeInfo
+        }
     }
     
     private var ratingBadge: some View {
@@ -133,7 +147,3 @@ struct FavoriteRecipesCardForPersonView: View {
         )
     }
 }
-
-//#Preview{
-//    FavoriteRecipesCardForPersonView()
-//}
