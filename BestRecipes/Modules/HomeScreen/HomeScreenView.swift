@@ -42,7 +42,6 @@ struct HomeScreenView: View {
                             }
                         }
                     }
-                    .padding(.top, 70)
                 }
             }
             
@@ -113,8 +112,6 @@ struct HomeScreenView: View {
             
         }
         .padding(.leading)
-        .padding(.top, 70)
-        .padding(.bottom, 80)
     }
 }
        
