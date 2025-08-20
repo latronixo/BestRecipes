@@ -112,9 +112,12 @@ struct HomeScreenView: View {
             
         }
         .padding(.leading)
+        .task {
+            await viewModel.fetchRecentRecipes()
+        }
     }
 }
-       
+
 #Preview {
     HomeScreenView()
 }
