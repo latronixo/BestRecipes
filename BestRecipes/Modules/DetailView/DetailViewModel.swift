@@ -14,9 +14,11 @@ enum ImageType {
     case ingredientImage
 }
 
+@MainActor
 final class DetailViewModel: ObservableObject {
     
-    @Published var recipe: Recipe
+    @Published var recipe: Recipe?
+    @Published var isLoading = true
 //    @Published var instruction: [AnalyzedInstruction]
     
     @Published var isImageLoaded : Bool = false
@@ -25,26 +27,34 @@ final class DetailViewModel: ObservableObject {
     @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
     
     private var sourceUrl: URL?
-    private let router: Router
+    
+    @EnvironmentObject private var router: Router
     private let network = NetworkServices.shared
     
-    init(recipe: Recipe, router: Router) {
-        
-        self.recipe = recipe
-        self.router = router
-//MARK: Debug options!
-        //Задержка в 2 секунды для отладки, убрать перед релизом!
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            Task {
-                await self.fetchIngredients()
-                await self.fetchLargeImage()
-            }
+    init(recipeId: Int) {
+    }
+    
+    func fetchRecipeDetails(id: Int) async {
+        if self.recipe == nil {
+            self .isLoading = true
         }
         
-        
+        do {
+            let detailedRecipe = try await network.fetchRecipeInformation(id: id)
+            self.recipe = detailedRecipe
+            self.isLoading = false
+            
+            //параллельно запускаем загрузку всех картинок
+            await fetchLargeImage()
+            await fetchIngredients()
+        } catch {
+            print("Error fetching recipe details: \(error)")
+            self.isLoading = false
+        }
     }
     
     func fetchIngredients() async {
+        guard let recipe = recipe else { return }
         for ingredient in recipe.extendedIngredients ?? [] {
             
             if let img = await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
@@ -69,7 +79,7 @@ final class DetailViewModel: ObservableObject {
         switch imageType {
             
         case .largeImage:
-            guard let imgData = try? await network.fetchRecipeImageData(recipe) else {
+            guard let recipe = recipe, let imgData = try? await network.fetchRecipeImageData(recipe) else {
                 return nil
             }
             
@@ -95,7 +105,7 @@ final class DetailViewModel: ObservableObject {
     
     
     func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
-        
+        guard let recipe = recipe else { return "" }
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let url = URL(string: recipe.sourceUrl ?? "") {

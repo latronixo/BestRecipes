@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - ContentView
 struct HomeScreenView: View {
     @EnvironmentObject var router: Router
-    @ObservedObject var viewModel = HomeScreenViewModel()
+    @StateObject var viewModel = HomeScreenViewModel()
     var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
     
     var body: some View {
@@ -33,7 +33,7 @@ struct HomeScreenView: View {
                 HStack {
                     ForEach(viewModel.trendingRecipes) {recipe in
                         Button {
-                            router.goTo(to: .detailScreen(recipeDetails: recipe))
+                            router.goTo(to: .detailScreen(recipeId: recipe.id))
                         } label: {
                             MainRecipe(recipe: recipe) { selectedRecipe in
                                 Task {
@@ -66,7 +66,7 @@ struct HomeScreenView: View {
                     HStack {
                         ForEach(viewModel.categoryRecipes) {recipe in
                             Button {
-                                router.goTo(to: .detailScreen(recipeDetails: recipe))
+                                router.goTo(to: .detailScreen(recipeId: recipe.id))
                             } label: {
                                 CategoryRecipe(recipe: recipe) { selectedRecipe in
                                     Task {
@@ -90,7 +90,7 @@ struct HomeScreenView: View {
                 HStack {
                     ForEach(viewModel.recentRecipes, id: \.id) {recipe in
                         Button {
-                            router.goTo(to: .detailScreen(recipeDetails: recipe))
+                            router.goTo(to: .detailScreen(recipeId: recipe.id))
                         } label: {
                             RecentRecipe(recipe: recipe)
                         }
@@ -114,7 +114,7 @@ struct HomeScreenView: View {
         }
         .padding(.leading)
         .padding(.top, 70)
-        .padding(.bottom, 120)
+        .padding(.bottom, 80)
     }
 }
        

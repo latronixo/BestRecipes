@@ -66,5 +66,7 @@ struct RecipeView: View {
 }
 
 #Preview {
-    RecipeView(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()))
+    let viewModel = DetailViewModel(recipeId: Recipe.preview.id)
+    RecipeView(detailVM: viewModel)
+        .environmentObject(Router())
 }
