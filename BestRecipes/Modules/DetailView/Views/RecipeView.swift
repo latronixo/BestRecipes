@@ -17,7 +17,7 @@ struct RecipeView: View {
         VStack {
             HStack {
                 Spacer(minLength: 20)
-                Text("Recipe name")
+                Text(detailVM.recipe?.title ?? "Recipe name")
                     .fontWeight(.semibold)
                     .font(.system(size: 25))
                 Spacer(minLength: 230)
@@ -28,16 +28,16 @@ struct RecipeView: View {
                 if let img = detailVM.largeImage {
                     Image(uiImage: img)
                         .resizable()
+                        .scaledToFill()
                         .frame(width: 350, height: 350)
                         .cornerRadius(40)
-                        .scaledToFit()
                 } else {
                     
                     Image(systemName: "photo.artframe")
                         .resizable()
+                        .scaledToFill()
                         .frame(width: 350, height: 350)
                         .cornerRadius(40)
-                        .scaledToFit()
                         .foregroundStyle(.regularMaterial)
 
                     ProgressView("Loading...")
@@ -66,7 +66,7 @@ struct RecipeView: View {
 }
 
 #Preview {
-    let viewModel = DetailViewModel(recipeId: Recipe.preview.id)
+    let viewModel = DetailViewModel(recipeId: 716429)
     RecipeView(detailVM: viewModel)
         .environmentObject(Router())
 }
