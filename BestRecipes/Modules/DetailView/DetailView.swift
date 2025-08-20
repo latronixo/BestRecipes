@@ -27,15 +27,15 @@ struct DetailView: View {
                         RecipeView(detailVM: detailVM)
                         RecipeTextView(detailVM: detailVM, instruction: recipe.analyzedInstructions)
                         
+                        Text("Ingredients")
+                            .font(.poppinsSemibold(size: 20))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                        
                         ForEach(recipe.extendedIngredients ?? [], id: \.id) { ingredient in
-                            IngredientsViewCell(
-                                detailVM: detailVM,
-                                id: ingredient.id,
-                                text: ingredient.name,
-                                weight: ingredient.measures?.metric?.amount ?? 0,
-                                unitShort: ingredient.measures?.metric?.unitShort ?? "",
-                                image: detailVM.ingredientsImage
-                            )
+                            IngredientsViewCell(ingredient: ingredient)
+                                .padding(.horizontal)
+                                .padding(.vertical, 4)
                         }
                     }
                 }
