@@ -10,6 +10,8 @@ import SwiftUI
 struct DetailView: View {
     
     @StateObject var detailVM: DetailViewModel
+    @EnvironmentObject private var router: Router
+
     let recipeId: Int
     
     init(recipeId: Int) {
@@ -55,7 +57,7 @@ struct DetailView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            detailVM.goBack()
+                            router.goBack()
                         }) {
                             Image(systemName: "arrow.backward")
                                 .foregroundColor(.primary)

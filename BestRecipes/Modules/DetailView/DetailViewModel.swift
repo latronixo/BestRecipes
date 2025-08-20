@@ -17,7 +17,6 @@ final class DetailViewModel: ObservableObject {
     @Published var isImageLoaded: Bool = false
     @Published var largeImage: UIImage?
     
-    @EnvironmentObject private var router: Router
     private var sourceUrl: URL?
     private let network = NetworkServices.shared
     
@@ -67,11 +66,4 @@ final class DetailViewModel: ObservableObject {
         
         return finalString
     }
-    
-    func goBack() {
-        router.goBack()
-    }
-    
-    
-    
 }
