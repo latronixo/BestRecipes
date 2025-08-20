@@ -77,8 +77,8 @@ enum RecipeCategory: String, CaseIterable {
 
 // MARK: - API Configuration
 struct APIConfig {
-    static let baseURL = "https://api.spoonacular.com"
-    static let imageBaseURL = "https://img.spoonacular.com"
+    static let baseURL = "https://api.spoonacular.com/"
+    static let imageBaseURL = "https://img.spoonacular.com/"
     
     enum ImageURLs {
         static let ingredient = "ingredients_100x100/"

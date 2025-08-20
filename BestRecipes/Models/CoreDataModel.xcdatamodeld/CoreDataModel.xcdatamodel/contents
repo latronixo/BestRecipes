@@ -28,7 +28,7 @@
         <attribute name="readyInMinutes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="servings" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sourceName" optional="YES" attributeType="String"/>
-        <attribute name="sourceUrl" attributeType="String"/>
+        <attribute name="sourceUrl" optional="YES" attributeType="String"/>
         <attribute name="spoonacularScore" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="spoonacularSourceUrl" attributeType="String"/>
         <attribute name="summary" optional="YES" attributeType="String"/>

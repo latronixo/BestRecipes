@@ -33,14 +33,14 @@ struct IngredientsView: View {
             }
             
             // MARK: - Ingredients List
-            if viewModel.recipe.extendedIngredients.isEmpty {
+            if viewModel.recipe.extendedIngredients?.isEmpty ?? true {
                 Text("No ingredients added yet")
                     .font(.poppinsRegular(size: 16))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 20)
             } else {
-                ForEach(Array(viewModel.recipe.extendedIngredients.enumerated()), id: \.element.id) { index, ingredient in
+                ForEach(Array((viewModel.recipe.extendedIngredients ?? []).enumerated()), id: \.element.id) { index, ingredient in
                     IngredientRow(
                         ingredient: ingredient,
                         index: index,

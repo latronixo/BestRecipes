@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct SeeAllView: View {
+    @StateObject private var viewModel = SeeAllViewModel()
+    let category: SeeAllCategory
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            Text("Отображение для категории: \(category.title)")
+                .font(.title)
+                .padding()
+            
+        }
+        .navigationTitle(category.title)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    SeeAllView()
+    NavigationView{
+        SeeAllView(category: .trending)
+    }
 }

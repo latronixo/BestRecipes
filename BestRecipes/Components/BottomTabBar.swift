@@ -26,10 +26,11 @@ struct BottomTabBar: View {
         }
         .frame(height: 60)
         .background(
-            Color.white
+            Color(.systemBackground)
                 .clipShape(RectangleTopShape())
                 .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -3)
                 .mask(Rectangle().padding(.top, -20))
+                .ignoresSafeArea(edges: .bottom)
         )
     }
 }
