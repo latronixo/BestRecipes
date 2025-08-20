@@ -13,6 +13,8 @@ struct MyRecipesView: View {
     @State private var showDeleteAlert = false
     @State private var recipeToDelete: Recipe?
     
+    @State private var refreshID = UUID()
+    
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             HStack {
@@ -49,6 +51,7 @@ struct MyRecipesView: View {
                 }
             }
         }
+        .id(refreshID)
         .alert("Delete Recipe", isPresented: $showDeleteAlert, presenting: recipeToDelete) { recipe in
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -57,10 +60,15 @@ struct MyRecipesView: View {
                 }
             }
         } message: { recipe in
-            Text("Are you sure you want to delete \(recipe.title ?? "this recipe")?")
+            Text("Are you sure you want to delete \(recipe.title)?")
         }
         .onAppear {
             Task{
+                myRecipes = await CoreDataManager.shared.fetchMyRecipes()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)) { _ in
+            Task {
                 myRecipes = await CoreDataManager.shared.fetchMyRecipes()
             }
         }

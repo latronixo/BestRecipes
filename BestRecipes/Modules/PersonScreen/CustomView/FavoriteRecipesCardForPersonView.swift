@@ -109,7 +109,7 @@ struct FavoriteRecipesCardForPersonView: View {
                 .frame(width: 14, height: 14)
                 .foregroundColor(.yellow)
             
-            Text(String(format: "%.1f", recipe.spoonacularScore / 20))
+            Text(String(format: "%.1f", (recipe.spoonacularScore ?? 0.0) / 20))
                 .font(.poppinsSemibold(size: 14))
                 .foregroundColor(.white)
         }
@@ -129,7 +129,7 @@ struct FavoriteRecipesCardForPersonView: View {
                 .lineLimit(2)
             
             HStack(spacing: 12) {
-                Text("\(recipe.extendedIngredients.count) ингредиентов")
+                Text("\(recipe.extendedIngredients?.count ?? 4) ингредиентов")
                 Text("•")
                 Text("\(recipe.readyInMinutes) мин")
             }
