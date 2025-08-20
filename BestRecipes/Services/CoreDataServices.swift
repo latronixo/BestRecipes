@@ -90,17 +90,17 @@ final class CoreDataManager {
                 fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
                 
                 do {
-                    if let existingRecipe = try self.context.fetch(fetchRequest).first {
+                    if let existingRecipe = try context.fetch(fetchRequest).first {
                         existingRecipe.dateAdded = Date()
                     } else {
-                        let newRecipe = RecentRecipeCD(context: self.context)
+                        let newRecipe = RecentRecipeCD(context: context)
                         self.update(recipeCD: newRecipe, with: recipe)
                     }
                     
                     try self.cleanupRecentIfNeeded(context: context)
                     
                     if context.hasChanges {
-                        try self.context.save()
+                        try context.save()
                     }
                 } catch {
                     print("Ошибка при добавлении или обновлении рецепта: \(error)")
@@ -137,7 +137,7 @@ final class CoreDataManager {
         fetchRequest.sortDescriptors = [sortDescriptor]
         
         let allRecipes = try context.fetch(fetchRequest)
-        
+        print("в Recent Recipes сохранено \(allRecipes.count) рецептов")
         if allRecipes.count > maxRecentItems {
             let recipesToDelete = allRecipes.prefix(allRecipes.count - maxRecentItems)
             for recipe in recipesToDelete {
@@ -157,17 +157,19 @@ final class CoreDataManager {
                 fetchRequest.predicate = NSPredicate(format: "id == %lld", Int64(recipe.id))
                 
                 do {
-                    if let existingRecipe = try self.context.fetch(fetchRequest).first {
-                        self.context.delete(existingRecipe)
+                    if let existingRecipe = try context.fetch(fetchRequest).first {
+                        context.delete(existingRecipe)
                     } else {
                         let newFavorite = FavoriteRecipeCD(context: context)
                         self.update(recipeCD: newFavorite, with: recipe)
                     }
                     
-                    try self.context.save()
+                    if context.hasChanges {
+                        try context.save()
+                    }
                 } catch {
                     print("Ошибка при переключении статуса избранного: \(error)")
-                    self.context.rollback()
+                    context.rollback()
                 }
                 continuation.resume()
             }

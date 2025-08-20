@@ -20,15 +20,4 @@ enum TabEnum: Int, CaseIterable {
         case .profile: return "person"
         }
     }
-    
-    @ViewBuilder
-    var screen: some View {
-        switch self {
-        case .home: HomeScreenView()
-        case .bookmarks: DiscoverView(favorites: Array(repeating: .preview, count: 3))
-        case .add: AddRecipeView()
-        case .notifications: BellView()
-        case .profile: PersonView()
-        }
-    }
 }

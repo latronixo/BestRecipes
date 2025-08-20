@@ -9,11 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-enum ImageType {
-    case largeImage
-    case ingredientImage
-}
-
+@MainActor
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
@@ -21,11 +17,8 @@ final class DetailViewModel: ObservableObject {
     
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
-    @Published var ingredientsImage: UIImage?
-    @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
     
     private var sourceUrl: URL?
-    private let router: Router
     private let network = NetworkServices.shared
     private var dataService = CoreDataManager.shared
     
@@ -58,6 +51,11 @@ final class DetailViewModel: ObservableObject {
                 print("image not loaded... \(ingredient.name)")
                 print(ingredientsTuples) }
             
+            await coreData.addRecent(recipe: detailedRecipe)
+            await fetchLargeImage()
+        } catch {
+            print("Error fetching recipe details: \(error)")
+            self.isLoading = false
         }
     }
     
@@ -94,12 +92,11 @@ final class DetailViewModel: ObservableObject {
             
         }
         
+        self.largeImage = UIImage(data: imgData)
     }
     
-    
-    
     func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
-        
+        guard let recipe = recipe else { return "" }
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let url = URL(string: recipe.sourceUrl ?? "") {
