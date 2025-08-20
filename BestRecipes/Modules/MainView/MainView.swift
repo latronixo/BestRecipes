@@ -22,7 +22,7 @@ struct MainView: View {
                     HomeScreenView()
                         .tag(TabEnum.home)
                     
-                    DiscoverView(favorites: Array(repeating: .preview, count: 3))
+                    DiscoverView()
                         .tag(TabEnum.bookmarks)
                     
                     AddRecipeView()

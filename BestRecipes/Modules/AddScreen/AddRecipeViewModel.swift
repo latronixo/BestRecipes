@@ -13,6 +13,7 @@ final class AddRecipeViewModel: ObservableObject {
     
     // MARK: - Published Properties
     @Published var recipe: Recipe
+    @Published var ingredient: Ingredient
     @Published var imagePath: String?
     @Published var showingServingsPicker = false
     @Published var showingCookTimePicker = false
@@ -37,6 +38,7 @@ final class AddRecipeViewModel: ObservableObject {
     // MARK: - Initialization
     init() {
         self.recipe = Recipe.createEmpty()
+        self.ingredient = Ingredient.createEmpty()
     }
     
     // MARK: - Recipe Title Management
@@ -119,12 +121,6 @@ final class AddRecipeViewModel: ObservableObject {
         resetForm()
     }
     
-    // MARK: - Form Reset
-    private func resetForm() {
-        recipe = Recipe.createEmpty()
-        imagePath = nil
-    }
-    
     // MARK: - Validation
     func validateForm() -> Bool {
         if recipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -148,5 +144,11 @@ final class AddRecipeViewModel: ObservableObject {
         }
         
         return true
+    }
+    
+    // MARK: - Form Reset
+    private func resetForm() {
+        recipe = Recipe.createEmpty()
+        imagePath = nil
     }
 }
