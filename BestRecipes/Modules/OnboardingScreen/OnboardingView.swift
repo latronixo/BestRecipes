@@ -10,6 +10,7 @@ import SwiftUI
 struct OnboardingView: View {
     
     @Binding var shouldShowOnboarding: Bool
+    @State private var showContent: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -32,6 +33,8 @@ struct OnboardingView: View {
                         Text("100k+ Premium Recipes")
                             .font(.poppinsRegular(size: 18))
                             .foregroundStyle(.white)
+                            .opacity(showContent ? 1.0 : 0.0)
+                            .animation(.easeInOut(duration: 3.0), value: showContent)
                     }
                     
                     Spacer()
@@ -50,6 +53,8 @@ struct OnboardingView: View {
                             .font(.system(size: 16))
                             .foregroundStyle(.white)
                     }
+                    .opacity(showContent ? 1.0 : 0.0)
+                    .animation(.easeInOut(duration: 2.0), value: showContent)
                     
                     NavigationLink(destination: {
                         MainOnboardingPage(shouldShowOnboarding: $shouldShowOnboarding)
@@ -64,6 +69,8 @@ struct OnboardingView: View {
                                     .frame(width: 300, height: 50)
                             }
                             .padding()
+                            .opacity(showContent ? 1.0 : 0.0)
+                            .animation(.easeInOut(duration: 2.0), value: showContent)
                     })
                     
                     
@@ -71,6 +78,11 @@ struct OnboardingView: View {
                 .padding()
             }
             .navigationBarBackButtonHidden()
+            .onAppear {
+                withAnimation {
+                    showContent = true
+                }
+            }
         }
     }
 }
