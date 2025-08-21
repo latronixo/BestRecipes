@@ -50,7 +50,17 @@ struct DetailView: View {
                 }
             }
             .navigationTitle("Recipe Detail")
-            .toolbarRole(.editor)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        detailVM.router.goBack()
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
             
 //            .toolbar {
 //                               ToolbarItem(placement: .navigationBarLeading) {

@@ -26,7 +26,7 @@ final class DetailViewModel: ObservableObject {
     @Published var isFavorite: Bool = false
     
     private var sourceUrl: URL?
-    private let router: Router
+    let router: Router
     private let network = NetworkServices.shared
     private let coreData = CoreDataManager.shared
     
@@ -129,9 +129,9 @@ final class DetailViewModel: ObservableObject {
 //        print("Recipe added to favourites...")
 //    }
     
-//    func goBack() {
-//        router.goBack()
-//    }
+    func goBack() {
+        router.goBack()
+    }
     
     
     
