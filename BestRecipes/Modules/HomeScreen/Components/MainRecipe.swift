@@ -55,7 +55,7 @@ struct MainRecipe: View {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.black)
-                        Text(String(format: "%.2f", recipe.spoonacularScore ?? 0.0))
+                        Text("\((recipe.spoonacularScore ?? 0.0) / 20, specifier: "%.2f")")
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                     }
@@ -89,9 +89,12 @@ struct MainRecipe: View {
                 .padding(.vertical, 8)
             }
             
-            Text(recipe.title)
+            Text(recipe.title.capitalized)
                 .font(.poppinsSemibold(size: 16))
+                .foregroundColor(.primary)
                 .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, minHeight: 50, alignment: .topLeading)
 
             HStack {
                 Image("Chef")
