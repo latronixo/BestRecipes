@@ -8,15 +8,25 @@
 import SwiftUI
 
 struct SeeAllView: View {
+    @EnvironmentObject var router: Router
     @StateObject private var viewModel = SeeAllViewModel()
     let category: SeeAllCategory
+    @State private var recipes: [Recipe] = []
+    private let tabBarHeight: CGFloat = 60
     
     var body: some View {
         ScrollView {
-            Text("Отображение для категории: \(category.title)")
-                .font(.title)
-                .padding()
-            
+            VStack(spacing: 24) {
+                ForEach(viewModel.trendingRecipes) { recipe in
+                    Button {
+                        router.goTo(to: .detailScreen(recipeId: recipe.id))
+                    } label: {
+                        RecipeCardView(recipe: recipe)
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.bottom, tabBarHeight)
         }
         .navigationTitle(category.title)
         .navigationBarTitleDisplayMode(.inline)
