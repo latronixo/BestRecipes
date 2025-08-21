@@ -92,6 +92,7 @@ struct MainRecipe: View {
             Text(recipe.title)
                 .font(.poppinsSemibold(size: 16))
                 .lineLimit(2)
+                .foregroundStyle(.text)
 
             HStack {
                 Image("Chef")

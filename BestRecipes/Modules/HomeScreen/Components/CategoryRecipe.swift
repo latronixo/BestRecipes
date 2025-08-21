@@ -20,6 +20,7 @@ struct CategoryRecipe: View {
 
                 Text(recipe.title)
                     .font(.poppinsSemibold(size: 14))
+                    .foregroundStyle(.text)
 
                 Text("Time")
                     .font(.poppinsRegular(size: 12))
@@ -31,9 +32,11 @@ struct CategoryRecipe: View {
                     if let minutes = recipe.cookingMinutes {
                         Text("\(minutes) min")
                             .font(.poppinsSemibold(size: 12))
+                            .foregroundStyle(.text)
                     } else {
                         Text("- min")
                             .font(.poppinsSemibold(size: 12))
+                            .foregroundStyle(.text)
                     }
                    
                     Spacer()

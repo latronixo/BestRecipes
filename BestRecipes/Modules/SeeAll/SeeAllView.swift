@@ -21,7 +21,13 @@ struct SeeAllView: View {
                     Button {
                         router.goTo(to: .detailScreen(recipeId: recipe.id))
                     } label: {
-                        RecipeCardView(recipe: recipe)
+                        RecipeCardView()
+                            .environmentObject(
+                                RecipeCardViewModel(
+                                    recipe: recipe,
+                                    isBookmarked: false
+                                )
+                            )
                     }
                 }
             }
@@ -30,6 +36,11 @@ struct SeeAllView: View {
         }
         .navigationTitle(category.title)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            Task {
+                await viewModel.fetchTrendingRecipes()
+            }
+        }
     }
 }
 
