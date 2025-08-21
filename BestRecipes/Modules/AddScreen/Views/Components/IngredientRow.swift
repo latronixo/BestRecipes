@@ -11,16 +11,16 @@ import SwiftUI
 struct IngredientRow: View {
     
     // MARK: - Properties
-    let ingredient: Ingredient
-    let index: Int
     @ObservedObject var viewModel: AddRecipeViewModel
+    
+    let index: Int
     
     // MARK: - Body
     var body: some View {
         HStack(spacing: 12) {
             // MARK: - Item Name Field
             TextField("Item name", text: Binding(
-                get: { ingredient.name },
+                get: { viewModel.ingredient.name },
                 set: { viewModel.updateIngredientName(at: index, name: $0) }
             ))
             .font(.poppinsRegular(size: 16))
@@ -33,7 +33,7 @@ struct IngredientRow: View {
             
             // MARK: - Quantity Field
             TextField("Quantity", text: Binding(
-                get: { String(format: "%.1f", ingredient.amount) },
+                get: { String(format: "%.1f", viewModel.ingredient.amount) },
                 set: { viewModel.updateIngredientQuantity(at: index, quantity: $0) }
             ))
             .font(.poppinsRegular(size: 16))
@@ -67,15 +67,13 @@ struct IngredientRow: View {
 #Preview {
     VStack(spacing: 16) {
         IngredientRow(
-            ingredient: Ingredient.createEmpty(),
-            index: 0,
-            viewModel: AddRecipeViewModel()
+            viewModel: AddRecipeViewModel(),
+            index: 0
         )
         
         IngredientRow(
-            ingredient: Ingredient.createEmpty(),
-            index: 1,
-            viewModel: AddRecipeViewModel()
+            viewModel: AddRecipeViewModel(),
+            index: 1
         )
     }
     .padding()

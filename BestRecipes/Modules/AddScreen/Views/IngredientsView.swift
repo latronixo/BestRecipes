@@ -42,9 +42,8 @@ struct IngredientsView: View {
             } else {
                 ForEach(Array((viewModel.recipe.extendedIngredients ?? []).enumerated()), id: \.element.id) { index, ingredient in
                     IngredientRow(
-                        ingredient: ingredient,
-                        index: index,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        index: index
                     )
                 }
             }
