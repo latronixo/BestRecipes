@@ -9,36 +9,41 @@ import SwiftUI
 
 // MARK: - DiscoverView (Saved recipes)
 struct DiscoverView: View {
-    @State private var favorites: [Recipe] = []
-    @State private var isLoading = false
-    @State private var localSelectedTab: TabEnum = .bookmarks
-    
-    private let tabBarHeight: CGFloat = 60
-
-    // allow injection for previews
-    init(favorites: [Recipe] = []) {
-        _favorites = State(initialValue: favorites)
-    }
+    @StateObject private var viewModel = DiscoverViewModel()
     
     var body: some View {
         NavigationStack {
-            VStack {
+            ZStack {
                 ScrollView {
-                    if favorites.isEmpty {
-                        EmptyState()
+                    if viewModel.favorites.isEmpty {
+                        EmptyStateView()
                             .padding(.all, 16)
-                            .padding(.bottom, tabBarHeight)
+                            .padding(.bottom, 60)
                     } else {
-                        VStack(spacing: 24) {
-                            ForEach(favorites) { recipe in
-                                RecipeCardView(recipe: recipe)
+                        LazyVStack(spacing: 24) {
+                            ForEach(viewModel.favorites) { recipe in
+                                let recipeCardVM = RecipeCardViewModel(
+                                    recipe: recipe,
+                                    isBookmarked: true
+                                )
+                                
+                                RecipeCardView(onBookmarkTap: {
+                                    Task {
+                                        await viewModel.removeFromFavorites(recipe)
+                                    }
+                                })
+                                .environmentObject(recipeCardVM)
                             }
                         }
                         .padding(.vertical, 16)
-                        .padding(.bottom, tabBarHeight)
+                        .padding(.bottom, 84)
                     }
                 }
-//                BottomTabBar(selectedTab: $localSelectedTab)
+                .scrollIndicators(.hidden)
+                
+                if viewModel.isLoading {
+                    ProgressView().controlSize(.large)
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -47,39 +52,23 @@ struct DiscoverView: View {
                         .font(.poppinsSemibold(size: 24))
                 }
             }
-            .task { if favorites.isEmpty { await loadFavorites() } }
-            .refreshable { await loadFavorites() } // pull-to-refresh
-        }
-    }
-    
-    // MARK: - Data
-    private func loadFavorites() async {
-        isLoading = true
-        let items = await CoreDataManager.shared.fetchFavoriteRecipes()
-        await MainActor.run {
-            self.favorites = items
-            self.isLoading = false
+            .task {
+                if viewModel.favorites.isEmpty {
+                    await viewModel.loadFavorites()
+                }
+            }
+            .refreshable {
+                await viewModel.loadFavorites()
+            } // pull-to-refresh
+            .safeAreaInset(edge: .bottom) {
+                BottomTabBar(selectedTab: $viewModel.localSelectedTab)
+                    .frame(height: 60)
+                    .background(.clear)
+            }
         }
     }
 }
-
-
-// MARK: - Empty state
-private struct EmptyState: View {
-    var body: some View {
-        HStack(spacing: 12) {
-            Image("BookmarkForCard")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.secondary)
-            Text("No saved recipes yet")
-                .font(.poppinsRegular(size: 14))
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
 
 #Preview {
-    DiscoverView(favorites: Array(repeating: .preview, count: 3))
+    DiscoverView()
 }
