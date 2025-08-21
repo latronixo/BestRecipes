@@ -59,6 +59,8 @@ struct MainView: View {
             }
             
         }
+        .tint(.black)
+        
         .environmentObject(router)
     }
 }

@@ -15,8 +15,10 @@ struct FavoriteView: View {
     private var coreDataManager = CoreDataManager.shared
     
     init(isFavor: Bool, recipe: Recipe) {
+       
         self.isFavor = isFavor
         self.recipe = recipe
+        
     }
     
     
@@ -24,7 +26,7 @@ struct FavoriteView: View {
         ZStack() {
             
             Circle()
-                .foregroundStyle(.ultraThinMaterial)
+                .foregroundStyle(.white)
                 .frame(width: 50, height: 50)
             Image(isFavor ? activeFavIcon : darkFavIcon)
                 .resizable()

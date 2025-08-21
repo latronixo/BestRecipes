@@ -18,6 +18,9 @@ struct RecipeTextView: View {
             HStack {
                 Text("Instruction")
                     .font(.system(size: 25, weight: .bold))
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             Spacer(minLength: 10)

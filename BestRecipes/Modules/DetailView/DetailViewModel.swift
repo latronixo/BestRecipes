@@ -121,6 +121,7 @@ final class DetailViewModel: ObservableObject {
     
     private func checkIfFavourite() async {
         isFavorite = await coreData.isFavorite(id: recipe.id)
+        await coreData.addRecent(recipe: recipe)
     }
     
 //    func toggleFavourite() async {

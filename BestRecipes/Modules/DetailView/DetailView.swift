@@ -27,7 +27,16 @@ struct DetailView: View {
                 ScrollView {
                     RecipeView(detailVM: detailVM)
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
-        
+                    HStack {
+                        Text("Ingredients")
+                            .font(.system(size: 25, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
+                        Text("\(detailVM.recipe.extendedIngredients?.count ?? 0) items")
+                        Spacer(minLength: 15)
+                    }
                     ForEach(detailVM.recipe.extendedIngredients ?? [], id: \.id) { ingredient in
                         
                         IngredientsViewCell(detailVM: detailVM, id: ingredient.id,
@@ -41,7 +50,7 @@ struct DetailView: View {
                 }
             }
             .navigationTitle("Recipe Detail")
-            
+            .toolbarRole(.editor)
             
 //            .toolbar {
 //                               ToolbarItem(placement: .navigationBarLeading) {
