@@ -23,12 +23,12 @@ struct BestRecipesApp: App {
                     } else {
                         MainView()
                     }
-                } else {
+                }
+                else {
                     CookingLaunchScreen()
                 }
             }
             .onAppear {
-                // Через 2.5 секунды переключаем на следующий экран
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                     withAnimation(.easeInOut(duration: 0.5)) {
                         self.isActive = true
