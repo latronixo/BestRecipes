@@ -121,6 +121,7 @@ final class DetailViewModel: ObservableObject {
     
     private func checkIfFavourite() async {
         isFavorite = await coreData.isFavorite(id: recipe.id)
+//        print("Recipe is favourite: \(isFavorite)")
         await coreData.addRecent(recipe: recipe)
     }
     

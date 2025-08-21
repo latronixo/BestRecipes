@@ -7,10 +7,11 @@
 
 import SwiftUI
 
+
 struct DetailView: View {
     
     @ObservedObject var detailVM: DetailViewModel
-    
+    @Environment(\.dismiss) var dismiss
     
     
     init(detailVM: DetailViewModel) {
@@ -54,7 +55,9 @@ struct DetailView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
+                        
                         detailVM.router.goBack()
+                        
                     }) {
                         Image(systemName: "arrow.backward")
                             .foregroundColor(.primary)

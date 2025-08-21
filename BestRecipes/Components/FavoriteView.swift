@@ -42,8 +42,12 @@ struct FavoriteView: View {
         }
     }
     
-
+    mutating func toggleAppearance(setFavor: Bool) {
+        isFavor = setFavor
+    }
 }
+
+
 
 #Preview {
     FavoriteView(isFavor: true, recipe: Recipe.preview)

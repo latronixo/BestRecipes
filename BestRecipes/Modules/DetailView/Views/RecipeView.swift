@@ -10,8 +10,11 @@ import SwiftUI
 struct RecipeView: View {
     
     @ObservedObject var detailVM: DetailViewModel
+    let coreData = CoreDataManager.shared
     
     
+    @State var darkFavIcon = "BookmarkForCard"
+    @State var activeFavIcon = "BookmarkActive"
     
     var body: some View {
         VStack {
@@ -47,8 +50,25 @@ struct RecipeView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 }
 
-                FavoriteView(isFavor: detailVM.isFavorite, recipe: detailVM.recipe)
+                ZStack() {
+                    
+                    Circle()
+                        .foregroundStyle(.white)
+                        .frame(width: 50, height: 50)
+                    Image(detailVM.isFavorite ? activeFavIcon : darkFavIcon)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    
+                }
+                .onTapGesture {
+                    detailVM.isFavorite.toggle()
+                    Task {
+                        await self.coreData.toggleFavorite(recipe: detailVM.recipe)
+                    }
+                    
+                }
                     .offset(x: 130, y:-130)
+                    
                     
                 
             }
@@ -64,10 +84,11 @@ struct RecipeView: View {
             }
             
         }
-        .onAppear() {
-            
-        }
+        
+        
     }
+    
+
     
 }
 
