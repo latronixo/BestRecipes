@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 // MARK: - RecipeCD Protocol
 private protocol RecipeCD: NSManagedObject {
