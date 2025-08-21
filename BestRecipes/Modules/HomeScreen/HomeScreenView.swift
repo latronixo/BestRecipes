@@ -22,8 +22,13 @@ struct HomeScreenView: View {
                 .fontWeight(.semibold)
                 .font(.poppinsSemibold(size: 24))
             
-            SearchBar(text: $viewModel.text)
+            SearchBar(text: .constant(""))
                 .padding(.trailing)
+                .disabled(true)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    router.goTo(to: .searchScreen)
+                }
             
             Heading(title: "Trending now 🔥") {
                 router.goTo(to: .seeAllScreen(category: .trending))
@@ -109,6 +114,7 @@ struct HomeScreenView: View {
                 }
             }
             .padding(.top)
+            .padding(.bottom, 50)
             
         }
         .padding(.leading)

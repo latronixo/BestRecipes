@@ -48,7 +48,10 @@ struct RecentRecipe: View {
 
             Text(recipe.title)
                 .font(.poppinsSemibold(size: 14))
+                .foregroundColor(.primary)
                 .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, minHeight: 50, alignment: .topLeading)
 
             Text("By \(author)")
                 .font(.poppinsRegular(size: 10))
