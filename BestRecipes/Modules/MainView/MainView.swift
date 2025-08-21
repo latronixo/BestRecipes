@@ -37,7 +37,9 @@ struct MainView: View {
                 
                 CustomTabBar(selectedTab: $selectedTab)
             }
+            
             .ignoresSafeArea(.keyboard)
+            
             .navigationDestination(for: Routes.self) { route in
                 switch route {
                 case .homeScreen:
@@ -55,6 +57,7 @@ struct MainView: View {
                 }
                 
             }
+            
         }
         .environmentObject(router)
     }

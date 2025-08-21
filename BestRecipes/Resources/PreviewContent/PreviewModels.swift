@@ -95,7 +95,7 @@ extension Ingredient {
         aisle: "Milk, Eggs, Other Dairy",
         image: "molasses.jpg",
         consistency: "SOLID",
-        name: "vanilla extract",
+        name: "vanilla extract fghfhf fghfg fgh f hfggj f",
         nameClean: "butter",
         original: "1 tbsp butter",
         originalName: "butter",

@@ -123,9 +123,10 @@ final class DetailViewModel: ObservableObject {
         isFavorite = await coreData.isFavorite(id: recipe.id)
     }
     
-    func toggleFavourite() async {
-        await coreData.toggleFavorite(recipe: recipe)
-    }
+//    func toggleFavourite() async {
+//        await coreData.toggleFavorite(recipe: recipe)
+//        print("Recipe added to favourites...")
+//    }
     
 //    func goBack() {
 //        router.goBack()

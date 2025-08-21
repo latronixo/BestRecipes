@@ -11,11 +11,12 @@ struct FavoriteView: View {
     @State var darkFavIcon = "BookmarkForCard"
     @State var activeFavIcon = "BookmarkActive"
     @State var isFavor: Bool
+    @State var recipe: Recipe
+    private var coreDataManager = CoreDataManager.shared
     
-    
-    init(isFavor: Bool) {
+    init(isFavor: Bool, recipe: Recipe) {
         self.isFavor = isFavor
-
+        self.recipe = recipe
     }
     
     
@@ -32,6 +33,10 @@ struct FavoriteView: View {
         }
         .onTapGesture {
             isFavor.toggle()
+            Task {
+                await self.coreDataManager.toggleFavorite(recipe: recipe)
+            }
+            
         }
     }
     
@@ -39,5 +44,5 @@ struct FavoriteView: View {
 }
 
 #Preview {
-    FavoriteView(isFavor: true)
+    FavoriteView(isFavor: true, recipe: Recipe.preview)
 }

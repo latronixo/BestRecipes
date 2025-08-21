@@ -65,7 +65,7 @@ struct IngredientsViewCell: View {
 //            Spacer(minLength: 5)
         }
         .padding([.leading, .trailing], 5)
-        .frame(height: 100)
+        .frame(height: 70)
         .background(
             Rectangle()
                 .fill(Color.gray)
@@ -75,7 +75,7 @@ struct IngredientsViewCell: View {
         )
  
         .padding()
-        Spacer(minLength: 10)
+        Spacer(minLength: 0)
     }
     
     func searchImg() -> UIImage? {

@@ -31,6 +31,8 @@ struct RecipeView: View {
                         .frame(width: 350, height: 350)
                         .cornerRadius(40)
                         .scaledToFit()
+                        .shadow(color: .black, radius: 8, x:-2, y: 2)
+                    
                 } else {
                     
                     Image(systemName: "photo.artframe")
@@ -39,30 +41,26 @@ struct RecipeView: View {
                         .cornerRadius(40)
                         .scaledToFit()
                         .foregroundStyle(.regularMaterial)
+                        .shadow(color: .black, radius: 8, x:-2, y: 2)
 
                     ProgressView("Loading...")
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 }
 
-                FavoriteView(isFavor: detailVM.isFavorite)
+                FavoriteView(isFavor: detailVM.isFavorite, recipe: detailVM.recipe)
                     .offset(x: 130, y:-130)
-                    .onTapGesture {
-                        Task {
-                            
-                           await detailVM.toggleFavourite()
-                            
-                        }
-                    }
+                    
                 
             }
             
+            
             HStack{
-                Spacer(minLength: 20)
+                Spacer(minLength: 15)
                 Image(systemName: "star.fill")
                 
                 Text(String(format: "%.1f", (detailVM.recipe.spoonacularScore ?? 0.0) /  20.0))
                 Text(String(detailVM.recipe.aggregateLikes ?? 0))
-                Spacer(minLength: 210)
+                Spacer(minLength: 280)
             }
             
         }

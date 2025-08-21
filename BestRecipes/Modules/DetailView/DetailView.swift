@@ -41,7 +41,18 @@ struct DetailView: View {
                 }
             }
             .navigationTitle("Recipe Detail")
-             
+            
+            
+//            .toolbar {
+//                               ToolbarItem(placement: .navigationBarLeading) {
+//                                   Button(action: {
+//                                       router.goBack()
+//                                   }) {
+//                                       Image(systemName: "arrow.backward")
+//                                           .foregroundColor(.primary)
+//                                   }
+//                               }
+//                           }
         
  
     }
