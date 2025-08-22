@@ -17,13 +17,12 @@ enum ImageType {
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
-//    @Published var instruction: [AnalyzedInstruction]
-    
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
     @Published var ingredientsImage: UIImage?
     @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
     @Published var isFavorite: Bool = false
+    @Published var tags: [String] = []
     
     private var sourceUrl: URL?
     let router: Router
@@ -34,6 +33,7 @@ final class DetailViewModel: ObservableObject {
         
         self.recipe = recipe
         self.router = router
+        makeTagsArray()
 //MARK: Debug options!
         //Задержка в 2 секунды для отладки, убрать перед релизом!
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -120,15 +120,37 @@ final class DetailViewModel: ObservableObject {
     }
     
     private func checkIfFavourite() async {
+        
         isFavorite = await coreData.isFavorite(id: recipe.id)
-//        print("Recipe is favourite: \(isFavorite)")
         await coreData.addRecent(recipe: recipe)
+        
     }
     
-//    func toggleFavourite() async {
-//        await coreData.toggleFavorite(recipe: recipe)
-//        print("Recipe added to favourites...")
-//    }
+
+    func makeTagsArray() {
+        
+        if let cuisineTags = recipe.cuisines {
+            if cuisineTags.count > 0 {
+                tags += cuisineTags
+            }
+        }
+        if let dishTags = recipe.dishTypes {
+            if dishTags.count > 0 {
+                tags += dishTags
+            }
+        }
+        if let dietTags = recipe.diets {
+            if dietTags.count > 0 {
+                tags += dietTags
+            }
+        }
+        if let occasionTags = recipe.occasions {
+            if occasionTags.count > 0 {
+                tags += occasionTags
+            }
+        }
+        
+    }
     
     func goBack() {
         router.goBack()

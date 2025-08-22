@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A55D9E6F2E58F5D200800A8F /* TagLayoutView in Frameworks */ = {isa = PBXBuildFile; productRef = A55D9E6E2E58F5D200800A8F /* TagLayoutView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		CE3001FB2E487A9E0047E96C /* BestRecipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BestRecipes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A55D9E6F2E58F5D200800A8F /* TagLayoutView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = BestRecipes;
 			packageProductDependencies = (
+				A55D9E6E2E58F5D200800A8F /* TagLayoutView */,
 			);
 			productName = BestRecipes;
 			productReference = CE3001FB2E487A9E0047E96C /* BestRecipes.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = CE3001F22E487A9E0047E96C;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A55D9E6D2E58F5D200800A8F /* XCRemoteSwiftPackageReference "TagLayoutView" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CE3001FC2E487A9E0047E96C /* Products */;
 			projectDirPath = "";
@@ -341,6 +350,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A55D9E6D2E58F5D200800A8F /* XCRemoteSwiftPackageReference "TagLayoutView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yotsu12/TagLayoutView";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A55D9E6E2E58F5D200800A8F /* TagLayoutView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A55D9E6D2E58F5D200800A8F /* XCRemoteSwiftPackageReference "TagLayoutView" */;
+			productName = TagLayoutView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CE3001F32E487A9E0047E96C /* Project object */;
 }

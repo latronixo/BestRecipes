@@ -27,6 +27,7 @@ struct DetailView: View {
             VStack {
                 ScrollView {
                     RecipeView(detailVM: detailVM)
+                    
                     RecipeTextView(detailVM: detailVM, instruction: detailVM.recipe.analyzedInstructions)
                     HStack {
                         Text("Ingredients")
@@ -51,8 +52,10 @@ struct DetailView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
+//            .navigationTitle("Recipe Detail")
+//            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         
                         detailVM.router.goBack()
@@ -60,11 +63,15 @@ struct DetailView: View {
                     }) {
                         Image(systemName: "arrow.backward")
                             .foregroundColor(.primary)
+                        Text("          Recipe detail")
+                            .font(.system(size: 25, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
                     }
                 }
             }
-            .navigationTitle("Recipe Detail")
-            .navigationBarTitleDisplayMode(.large)
             
 //            .toolbar {
 //                               ToolbarItem(placement: .navigationBarLeading) {

@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+}
+
 struct RecipeView: View {
     
     @ObservedObject var detailVM: DetailViewModel
@@ -82,7 +87,24 @@ struct RecipeView: View {
                 Text(String("(\(detailVM.recipe.aggregateLikes ?? 0) Reviews)"))
                 Spacer(minLength: 210)
             }
+            TagListView(tags: detailVM.tags)
+               
             
+            switch detailVM.tags.count {
+            case 0...3 :
+                Spacer(minLength: 50)
+            case 4...7 :
+                Spacer(minLength: 90)
+            case 8...11 :
+                Spacer(minLength: 130)
+            case 12...15 :
+                Spacer(minLength: 170)
+            case 16...19 :
+                Spacer(minLength: 210)
+            default :
+                Spacer(minLength: 30)
+            }
+                
         }
         
         
