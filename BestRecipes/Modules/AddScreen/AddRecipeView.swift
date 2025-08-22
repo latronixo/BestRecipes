@@ -91,6 +91,8 @@ struct AddRecipeView: View {
                 }
             } message: {
                 Text(viewModel.alertMessage)
+                    .font(.poppinsSemibold(size: 16))
+                    .foregroundColor(.secondary)
             }
         }
     }
