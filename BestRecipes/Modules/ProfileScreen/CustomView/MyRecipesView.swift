@@ -12,6 +12,8 @@ struct MyRecipesView: View {
     @State private var isLoading = false
     @State private var showDeleteAlert = false
     @State private var recipeToDelete: Recipe?
+    //@State private var refreshID = UUID()
+    
     @EnvironmentObject private var router: Router
     
     var body: some View {
@@ -35,8 +37,10 @@ struct MyRecipesView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(myRecipes, id: \.id) { recipe in
-                            NavigationLink(destination: DetailView(recipe: recipe)) {
-                                FavoriteRecipesCardForPersonView(
+                            Button {
+                                router.goTo(to: .detailScreen(recipe: recipe))
+                            } label: {
+                                FavoriteRecipesCardForProfileView(
                                     recipe: recipe,
                                     onDelete: {
                                         recipeToDelete = recipe
@@ -51,9 +55,8 @@ struct MyRecipesView: View {
                 }
             }
         }
-        .id(refreshID)
         .alert("Delete Recipe", isPresented: $showDeleteAlert, presenting: recipeToDelete) { recipe in
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}.tint(.secondary)
             Button("Delete", role: .destructive) {
                 Task {
                     await CoreDataManager.shared.deleteMyRecipe(id: Int(Int64(recipeToDelete?.id ?? 0)))

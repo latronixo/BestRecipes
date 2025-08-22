@@ -17,7 +17,7 @@ enum TabEnum: Int, CaseIterable {
         case .bookmarks: return "bookmarkIconForTabBar"
         case .add: return "plus"
         case .notifications: return "bell"
-        case .profile: return "person"
+        case .profile: return "profile"
         }
     }
     

@@ -31,7 +31,7 @@ struct MainView: View {
                     BellView()
                         .tag(TabEnum.notifications)
                     
-                    PersonView()
+                    ProfileView()
                         .tag(TabEnum.profile)
                 }
                 .padding(.top, selectedTab.title.isEmpty ? 0 : 50)
@@ -61,7 +61,7 @@ struct MainView: View {
                 case .createScreen:
                     AddRecipeView()
                 case .profileScreen:
-                    PersonView()
+                    ProfileView()
                 }
                 
             }

@@ -1,5 +1,5 @@
 //
-//  FavoriteRecipesCardForPersonView.swift
+//  FavoriteRecipesCardForProfileView.swift
 //  BestRecipes
 //
 //  Created by Drolllted on 13.08.2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct FavoriteRecipesCardForPersonView: View {
+struct FavoriteRecipesCardForProfileView: View {
     let recipe: Recipe
     var onDelete: () -> Void
     
@@ -118,7 +118,7 @@ struct FavoriteRecipesCardForPersonView: View {
 }
 
 #Preview{
-    FavoriteRecipesCardForPersonView(recipe: Recipe.preview, onDelete: {
+    FavoriteRecipesCardForProfileView(recipe: Recipe.preview, onDelete: {
         print("Delete tapped!")
     })
     .padding()
