@@ -35,10 +35,14 @@ struct GenericPickerSheet<T: Hashable>: View {
                 Spacer()
             }
             .navigationBarItems(
-                trailing: Button("Done") {
-                    dismiss()
-                }
-                .font(.poppinsSemibold(size: 16))
+                trailing:
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Done")
+                            .font(.poppinsSemibold(size: 16))
+                            .foregroundColor(.primary)
+                    }
             )
         }
     }
