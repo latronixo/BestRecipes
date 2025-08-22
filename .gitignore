@@ -4,3 +4,4 @@
 *.xcbkptlist
 Package.resolved
 Secrets.swift
+project.pbxproj
