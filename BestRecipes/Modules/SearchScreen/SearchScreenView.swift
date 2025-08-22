@@ -27,7 +27,7 @@ struct SearchScreenView: View {
                 
                 ForEach(viewModel.searchedRecipes) { recipe in
                     Button {
-                        router.goTo(to: .detailScreen(recipeId: recipe.id))
+                        router.goTo(to: .detailScreen(recipe: recipe))
                     } label: {
                         SearchRecipe(recipe: recipe)
                     }
