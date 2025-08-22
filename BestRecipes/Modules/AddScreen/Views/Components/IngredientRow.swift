@@ -20,7 +20,10 @@ struct IngredientRow: View {
         HStack(spacing: 12) {
             // MARK: - Item Name Field
             TextField("Item name", text: Binding(
-                get: { viewModel.ingredient.name },
+                get: {
+                    guard index < (viewModel.recipe.extendedIngredients?.count ?? 0) else { return ""}
+                    return viewModel.recipe.extendedIngredients?[index].name ?? ""
+                },
                 set: { viewModel.updateIngredientName(at: index, name: $0) }
             ))
             .font(.poppinsRegular(size: 16))
@@ -33,7 +36,10 @@ struct IngredientRow: View {
             
             // MARK: - Quantity Field
             TextField("Quantity", text: Binding(
-                get: { String(format: "%.1f", viewModel.ingredient.amount) },
+                get: {
+                    guard index < (viewModel.recipe.extendedIngredients?.count ?? 0) else { return "" }
+                    return String(format: "%.1f", viewModel.recipe.extendedIngredients?[index].amount ?? 0.0)
+                },
                 set: { viewModel.updateIngredientQuantity(at: index, quantity: $0) }
             ))
             .font(.poppinsRegular(size: 16))
