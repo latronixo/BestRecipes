@@ -37,13 +37,15 @@ struct MainView: View {
                 
                 CustomTabBar(selectedTab: $selectedTab)
             }
+            
             .ignoresSafeArea(.keyboard)
+            
             .navigationDestination(for: Routes.self) { route in
                 switch route {
                 case .homeScreen:
                     HomeScreenView()
-                case .detailScreen(let recipeId):
-                    DetailView(recipeId: recipeId)
+                case .detailScreen(let recipe):
+                    DetailView(detailVM: DetailViewModel(recipe: recipe, router: router))
                 case .seeAllScreen(let category):
                     SeeAllView(category: category)
                 case .searchScreen:
@@ -55,7 +57,10 @@ struct MainView: View {
                 }
                 
             }
+            
         }
+        .tint(.black)
+        
         .environmentObject(router)
     }
 }

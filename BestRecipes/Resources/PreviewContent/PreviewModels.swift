@@ -76,7 +76,7 @@ extension Ingredient {
     static let previewA = Ingredient(
         id: 10719335,
         aisle: "Milk, Eggs, Other Dairy",
-        image: "ыsugar-in-bowl.png",
+        image: "sugar-in-bowl.png",
         consistency: "SOLID",
         name: "granulated sugar",
         nameClean: "butter",
@@ -95,7 +95,7 @@ extension Ingredient {
         aisle: "Milk, Eggs, Other Dairy",
         image: "molasses.jpg",
         consistency: "SOLID",
-        name: "vanilla extract",
+        name: "vanilla extract fghfhf fghfg fgh f hfggj f",
         nameClean: "butter",
         original: "1 tbsp butter",
         originalName: "butter",

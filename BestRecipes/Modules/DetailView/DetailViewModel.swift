@@ -9,49 +9,99 @@ import Foundation
 import Combine
 import SwiftUI
 
+enum ImageType {
+    case largeImage
+    case ingredientImage
+}
 @MainActor
 final class DetailViewModel: ObservableObject {
     
-    @Published var recipe: Recipe?
-    @Published var isLoading = true
-    @Published var isImageLoaded: Bool = false
+    @Published var recipe: Recipe
+//    @Published var instruction: [AnalyzedInstruction]
+    
+    @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
+    @Published var ingredientsImage: UIImage?
+    @Published var ingredientsTuples: [(Ingredient, UIImage?)] = []
+    @Published var isFavorite: Bool = false
     
     private var sourceUrl: URL?
+    let router: Router
     private let network = NetworkServices.shared
     private let coreData = CoreDataManager.shared
     
-    init(recipeId: Int) {
+    init(recipe: Recipe, router: Router) {
+        
+        self.recipe = recipe
+        self.router = router
+//MARK: Debug options!
+        //Задержка в 2 секунды для отладки, убрать перед релизом!
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            Task {
+                
+                await self.checkIfFavourite()
+                await self.fetchIngredients()
+                await self.fetchLargeImage()
+            }
+//        }
+        
+        
     }
     
-    func fetchRecipeDetails(id: Int) async {
-        if self.recipe == nil {
-            self.isLoading = true
-        }
-        
-        do {
-            let detailedRecipe = try await network.fetchRecipeInformation(id: id)
-            self.recipe = detailedRecipe
-            self.isLoading = false
+    func fetchIngredients() async {
+        for ingredient in recipe.extendedIngredients ?? [] {
             
-            await coreData.addRecent(recipe: detailedRecipe)
-            await fetchLargeImage()
-        } catch {
-            print("Error fetching recipe details: \(error)")
-            self.isLoading = false
+            if let img = await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
+                ingredientsTuples.append((ingredient, img))
+                print("image loaded... \(ingredient.name)")
+                print(ingredientsTuples)
+            
+            } else { ingredientsTuples.append((ingredient, nil))
+                print("image not loaded... \(ingredient.name)")
+                print(ingredientsTuples) }
+            
         }
+    }
+
+    func fetchLargeImage() async {
+    
+        guard let img = await  fetchImage(imageType: .largeImage) else { return }
+            largeImage = img
+        
     }
     
-    func fetchLargeImage() async {
-        guard let recipe = recipe, let imgData = try? await network.fetchRecipeImageData(recipe) else {
-            return
+    func fetchImage(imageType: ImageType,  ingredientExtended: Ingredient? = nil) async -> UIImage? {
+        
+        switch imageType {
+            
+        case .largeImage:
+            guard let imgData = try? await network.fetchRecipeImageData(recipe) else {
+                return nil
+            }
+            
+            self.largeImage = UIImage(data: imgData)
+            return UIImage(data: imgData)
+            
+        case .ingredientImage:
+            
+            guard let ingredient = ingredientExtended else {
+                ingredientsImage = UIImage(systemName: "fish")
+                return nil
+            }
+            guard let imgData = try? await network.fetchIngredientImageData(ingredient) else {
+                return nil
+            }
+            
+            return UIImage(data: imgData)
+            
         }
         
-        self.largeImage = UIImage(data: imgData)
     }
+    
+    
     
     func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
-        guard let recipe = recipe else { return "" }
+        
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let url = URL(string: recipe.sourceUrl ?? "") {
@@ -68,4 +118,22 @@ final class DetailViewModel: ObservableObject {
         
         return finalString
     }
+    
+    private func checkIfFavourite() async {
+        isFavorite = await coreData.isFavorite(id: recipe.id)
+//        print("Recipe is favourite: \(isFavorite)")
+        await coreData.addRecent(recipe: recipe)
+    }
+    
+//    func toggleFavourite() async {
+//        await coreData.toggleFavorite(recipe: recipe)
+//        print("Recipe added to favourites...")
+//    }
+    
+    func goBack() {
+        router.goBack()
+    }
+    
+    
+    
 }

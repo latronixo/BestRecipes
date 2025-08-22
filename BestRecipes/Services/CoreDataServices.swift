@@ -325,7 +325,7 @@ final class CoreDataManager {
                 do {
                     if let existingRecipe = try context.fetch(fetchRequest).first {
                         self.update(recipeCD: existingRecipe, with: recipe)
-                    } else  {
+                    }  else  {
                         let newRecipe = MyRecipeCD(context: context)
                         self.update(recipeCD: newRecipe, with: recipe)
                     }
