@@ -50,7 +50,6 @@ struct DetailView: View {
                     
                 }
             }
-            .navigationTitle("Recipe Detail")
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -64,6 +63,8 @@ struct DetailView: View {
                     }
                 }
             }
+            .navigationTitle("Recipe Detail")
+            .navigationBarTitleDisplayMode(.large)
             
 //            .toolbar {
 //                               ToolbarItem(placement: .navigationBarLeading) {

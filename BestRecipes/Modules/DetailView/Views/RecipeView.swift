@@ -79,8 +79,8 @@ struct RecipeView: View {
                 Image(systemName: "star.fill")
                 
                 Text(String(format: "%.1f", (detailVM.recipe.spoonacularScore ?? 0.0) /  20.0))
-                Text(String(detailVM.recipe.aggregateLikes ?? 0))
-                Spacer(minLength: 280)
+                Text(String("(\(detailVM.recipe.aggregateLikes ?? 0) Reviews)"))
+                Spacer(minLength: 210)
             }
             
         }
