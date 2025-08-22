@@ -9,29 +9,38 @@ import SwiftUI
 
 
 struct SearchScreenView: View {
+    @EnvironmentObject var router: Router
     @StateObject private var viewModel = SearchScreenViewModel()
-    
-    let recipes = [
-        Recipe.preview,
-        Recipe.preview
-    ]
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 
-                SearchBar(text: $viewModel.searchQuery)
-                    .zIndex(1)
+                SearchBar(
+                    text: $viewModel.searchQuery,
+                    onClose: {
+                        dismiss()
+                    }
+                )
+                .zIndex(1)
                 
-                ForEach(recipes, id: \.id) { recipe in
-                    SearchRecipe(recipe: recipe)
+                ForEach(viewModel.searchedRecipes) { recipe in
+                    Button {
+                        router.goTo(to: .detailScreen(recipeId: recipe.id))
+                    } label: {
+                        SearchRecipe(recipe: recipe)
+                    }
                 }
             }
             .padding(.horizontal)
-            .padding(.top, 70)
+            .padding(.top, 16)
+            .toolbar(.hidden)
         }
     }
 }
+
+
 
 
 #Preview {
