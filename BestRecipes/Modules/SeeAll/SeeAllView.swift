@@ -19,7 +19,7 @@ struct SeeAllView: View {
             VStack(spacing: 24) {
                 ForEach(viewModel.trendingRecipes) { recipe in
                     Button {
-                        router.goTo(to: .detailScreen(recipeId: recipe.id))
+                        router.goTo(to: .detailScreen(recipe: recipe))
                     } label: {
                         RecipeCardView()
                             .environmentObject(
