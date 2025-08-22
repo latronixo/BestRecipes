@@ -21,10 +21,10 @@ struct Categories: View {
                         .padding(.vertical, 10)
                         .background(
                             selectedCategory == category
-                            ? Color.red
+                            ? Color.accentColor
                             : Color.clear
                         )
-                        .foregroundColor(selectedCategory == category ? .white : .red)
+                        .foregroundColor(selectedCategory == category ? .white : .accentColor)
                         .font(.poppinsRegular(size: 12))
                         .cornerRadius(10)
                         .onTapGesture {

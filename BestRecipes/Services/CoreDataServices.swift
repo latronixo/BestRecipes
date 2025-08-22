@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 // MARK: - RecipeCD Protocol
 private protocol RecipeCD: NSManagedObject {
@@ -316,25 +317,35 @@ final class CoreDataManager {
     
     func addMyRecipe(recipe: Recipe) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            container.performBackgroundTask { context in
-                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            container.performBackgroundTask { backgroundContext in
+                backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 
                 let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
                 
                 do {
-                    if let existingRecipe = try context.fetch(fetchRequest).first {
+                    // Ищем рецепт в том же контексте
+                    let existingRecipes = try backgroundContext.fetch(fetchRequest)
+                    
+                    if let existingRecipe = existingRecipes.first {
                         self.update(recipeCD: existingRecipe, with: recipe)
-                    }  else  {
-                        let newRecipe = MyRecipeCD(context: context)
+                    } else {
+                        let newRecipe = MyRecipeCD(context: backgroundContext)
                         self.update(recipeCD: newRecipe, with: recipe)
                     }
                     
-                    if context.hasChanges {
-                        try context.save()
+                    // Сохраняем изменения в фоновом контексте
+                    try backgroundContext.save()
+                    
+                    // Синхронизируем с главным контекстом
+                    if self.context.hasChanges {
+                        try self.context.save()
                     }
+                    
+                    print("Successfully saved recipe: \(recipe.title)")
                 } catch {
                     print("Ошибка при добавлении или обновлении своего рецепта: \(error)")
+                    backgroundContext.rollback()
                 }
                 continuation.resume()
             }
@@ -343,13 +354,15 @@ final class CoreDataManager {
     
     func fetchMyRecipes() async -> [Recipe] {
         return await withCheckedContinuation { continuation in
-            container.performBackgroundTask { context in
+            let context = container.viewContext
+            context.perform {
                 let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
                 let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
                 fetchRequest.sortDescriptors = [sortDescriptor]
                 
                 do {
                     let coreDataRecipes = try context.fetch(fetchRequest)
+                    print("Found \(coreDataRecipes.count) recipes in CoreData")
                     let recipes = coreDataRecipes.compactMap { self.convert(from: $0) }
                     continuation.resume(returning: recipes)
                 } catch {
@@ -362,17 +375,26 @@ final class CoreDataManager {
     
     func deleteMyRecipe(id: Int) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            container.performBackgroundTask { container in
+            container.performBackgroundTask { backgroundContext in
                 let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "id == %d", id)
                 
                 do {
-                    if let recipeToDelete = try self.context.fetch(fetchRequest).first {
-                        self.context.delete(recipeToDelete)
+                    let recipes = try backgroundContext.fetch(fetchRequest)
+                    for recipe in recipes {
+                        backgroundContext.delete(recipe)
+                    }
+                    try backgroundContext.save()
+                    
+                    // Синхронизируем с главным контекстом
+                    if self.context.hasChanges {
                         try self.context.save()
                     }
+                    
+                    print("Successfully deleted recipe with id: \(id)")
                 } catch {
                     print("Ошибка при удалении своего рецепта: \(error)")
+                    backgroundContext.rollback()
                 }
                 continuation.resume()
             }
@@ -387,7 +409,7 @@ final class CoreDataManager {
             myRecipe.title = recipe.title
             myRecipe.readyInMinutes = Int64(recipe.readyInMinutes)
             myRecipe.servings = Int64(recipe.servings)
-            myRecipe.sourceUrl = recipe.sourceUrl
+            myRecipe.sourceUrl = recipe.sourceUrl ?? "user_created_recipe \(UUID().uuidString)"
             myRecipe.vegetarian = recipe.vegetarian
             myRecipe.vegan = recipe.vegan
             myRecipe.glutenFree = recipe.glutenFree

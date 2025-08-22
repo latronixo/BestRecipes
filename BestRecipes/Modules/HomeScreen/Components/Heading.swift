@@ -23,8 +23,9 @@ struct Heading: View {
                 HStack {
                     Text("See all")
                         .font(.poppinsSemibold(size: 14))
-                        .foregroundStyle(.red)
-                    Image("Arrow-Right")
+                        .foregroundStyle(Color.accentColor)
+                    Image(systemName: "arrow.right")
+                        .foregroundColor(.primary)
                 }
             }
         }
