@@ -16,11 +16,6 @@ struct HomeScreenView: View {
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            Text("Get amazing recipes for cooking")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fontWeight(.semibold)
-                .font(.poppinsSemibold(size: 24))
-            
             SearchBar(text: .constant(""))
                 .padding(.trailing)
                 .disabled(true)

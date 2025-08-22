@@ -34,12 +34,20 @@ struct MainView: View {
                     PersonView()
                         .tag(TabEnum.profile)
                 }
+                .padding(.top, selectedTab.title.isEmpty ? 0 : 50)
+                
+                if !selectedTab.title.isEmpty {
+                    VStack {
+                        CustomNavBar(title: selectedTab.title)
+                        Spacer()
+                    }
+                }
                 
                 CustomTabBar(selectedTab: $selectedTab)
             }
             
+            .navigationBarHidden(true)
             .ignoresSafeArea(.keyboard)
-            
             .navigationDestination(for: Routes.self) { route in
                 switch route {
                 case .homeScreen:

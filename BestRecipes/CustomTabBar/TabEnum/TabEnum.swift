@@ -20,4 +20,19 @@ enum TabEnum: Int, CaseIterable {
         case .profile: return "person"
         }
     }
+    
+    var title: String {
+        switch self {
+        case .home:
+            return "Get amazing recipes for cooking"
+        case .bookmarks:
+            return "Saved recipes"
+        case .add:
+            return "Create recipe"
+        case .notifications:
+            return "Notifications"
+        case .profile:
+            return "My profile"
+        }
+    }
 }

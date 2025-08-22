@@ -12,52 +12,39 @@ struct DiscoverView: View {
     @StateObject private var viewModel = DiscoverViewModel()
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                ScrollView {
-                    if viewModel.favorites.isEmpty {
-                        EmptyStateView()
-                            .padding(.all, 16)
-                            .padding(.bottom, 60)
-                    } else {
-                        LazyVStack(spacing: 24) {
-                            ForEach(viewModel.favorites) { recipe in
-                                let recipeCardVM = RecipeCardViewModel(
-                                    recipe: recipe,
-                                    isBookmarked: true
-                                )
-                                
-                                RecipeCardView(onBookmarkTap: {
-                                    Task {
-                                        await viewModel.removeFromFavorites(recipe)
-                                    }
-                                })
-                                .environmentObject(recipeCardVM)
-                            }
-                        }
-                        .padding(.vertical, 16)
-                        .padding(.bottom, 84)
-                    }
-                }
-                .scrollIndicators(.hidden)
-                
-                if viewModel.isLoading {
-                    ProgressView().controlSize(.large)
-                }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Saved recipes")
-                        .font(.poppinsSemibold(size: 24))
-                }
-            }
-            .task {
+        ZStack {
+            ScrollView {
                 if viewModel.favorites.isEmpty {
-                    await viewModel.loadFavorites()
+                    EmptyStateView()
+                        .padding(.all, 16)
+                        .padding(.bottom, 60)
+                } else {
+                    LazyVStack(spacing: 24) {
+                        ForEach(viewModel.favorites) { recipe in
+                            let recipeCardVM = RecipeCardViewModel(
+                                recipe: recipe,
+                                isBookmarked: true
+                            )
+                            
+                            RecipeCardView(onBookmarkTap: {
+                                Task {
+                                    await viewModel.removeFromFavorites(recipe)
+                                }
+                            })
+                            .environmentObject(recipeCardVM)
+                        }
+                    }
+                    .padding(.vertical, 16)
+                    .padding(.bottom, 84)
                 }
             }
-            .refreshable {
+            .scrollIndicators(.hidden)
+            if viewModel.isLoading {
+                ProgressView().controlSize(.large)
+            }
+        }
+        .task {
+            if viewModel.favorites.isEmpty {
                 await viewModel.loadFavorites()
             } // pull-to-refresh
             .safeAreaInset(edge: .bottom) {
@@ -65,6 +52,9 @@ struct DiscoverView: View {
                     .frame(height: 60)
                     .background(.clear)
             }
+        }
+        .refreshable {
+            await viewModel.loadFavorites()
         }
     }
 }
