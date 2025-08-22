@@ -12,55 +12,47 @@ struct ProfileView: View {
     @State private var showImagePicker = false
     
     var body: some View {
-        NavigationStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Avatar Section
-                    HStack {
-                        if let avatarImage = avatarImage {
-                            Image(uiImage: avatarImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 100, height: 100)
-                                .clipShape(Circle())
-                                .onTapGesture {
-                                    showImagePicker = true
-                                }
-                        } else {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 100, height: 100)
-                                .foregroundColor(.gray)
-                                .onTapGesture {
-                                    showImagePicker = true
-                                }
-                        }
-                        
-                        Spacer()
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 20) {
+                // Avatar Section
+                HStack {
+                    if let avatarImage = avatarImage {
+                        Image(uiImage: avatarImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                            .onTapGesture {
+                                showImagePicker = true
+                            }
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.gray)
+                            .onTapGesture {
+                                showImagePicker = true
+                            }
                     }
-                    .padding()
-                    
-                    MyRecipesView()
                     
                     Spacer()
                 }
+                .padding()
+                
+                MyRecipesView()
+                
+                Spacer()
             }
-            .toolbar {
-                Text("My Profile")
-                    .font(.poppinsSemibold(size: 24))
-                    .foregroundStyle(.black)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showImagePicker) {
-                ImagePicker(selectedImage: $avatarImage)
-            }
-            .onAppear {
-                loadAvatar()
-            }
-            .onChange(of: avatarImage) { newImage in
-                saveAvatar(newImage)
-            }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(selectedImage: $avatarImage)
+        }
+        .onAppear {
+            loadAvatar()
+        }
+        .onChange(of: avatarImage) { newImage in
+            saveAvatar(newImage)
         }
     }
     
