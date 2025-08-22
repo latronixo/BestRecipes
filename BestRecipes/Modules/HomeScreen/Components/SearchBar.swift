@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var text: String
     @FocusState private var isFocused: Bool
+    var onClose: (() -> Void)? = nil
     
     var body: some View {
         HStack {
@@ -21,12 +22,10 @@ struct SearchBar: View {
                 .focused($isFocused)
                 .disableAutocorrection(true)
                 .autocapitalization(.none)
-                .focused($isFocused)
             
             if !text.isEmpty {
                 Button(action: {
-                    text = ""
-                    isFocused = false
+                    onClose?()
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
