@@ -15,6 +15,7 @@ struct RecipeTextView: View {
     var body: some View {
         VStack {
             Spacer(minLength: 20)
+            
             HStack {
                 Text("Instruction")
                     .font(.system(size: 25, weight: .bold))

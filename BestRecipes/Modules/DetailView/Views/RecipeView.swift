@@ -87,6 +87,21 @@ struct RecipeView: View {
                 Text(String("(\(detailVM.recipe.aggregateLikes ?? 0) Reviews)"))
                 Spacer(minLength: 210)
             }
+            HStack {
+                Spacer(minLength: 200)
+                Image(systemName: "person.2")
+                    .resizable()
+                    .frame(width: 35, height: 30)
+                Text("  \(detailVM.recipe.servings)")
+                    .font(.system(size: 20,weight: .semibold))
+                Spacer(minLength: 1)
+                Image(systemName: "alarm")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                Text("  \(detailVM.recipe.readyInMinutes) min")
+                    .font(.system(size: 20,weight: .semibold))
+                Spacer(minLength: 15)
+            }
             TagListView(tags: detailVM.tags)
                
             
