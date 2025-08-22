@@ -38,9 +38,8 @@ struct DiscoverView: View {
                     .padding(.bottom, 84)
                 }
             }
-            .scrollIndicators(.hidden)
-            if viewModel.isLoading {
-                ProgressView().controlSize(.large)
+            .refreshable {
+                await viewModel.loadFavorites()
             }
         }
         .task {
@@ -51,11 +50,6 @@ struct DiscoverView: View {
         .refreshable {
             await viewModel.loadFavorites()
         } // pull-to-refresh
-        .safeAreaInset(edge: .bottom) {
-            BottomTabBar(selectedTab: $viewModel.localSelectedTab)
-                .frame(height: 60)
-                .background(.clear)
-        }
     }
 }
 
