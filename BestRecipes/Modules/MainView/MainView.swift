@@ -47,7 +47,7 @@ struct MainView: View {
                 case .seeAllScreen(let category):
                     SeeAllView(category: category)
                 case .searchScreen:
-                    SearchView()
+                    SearchScreenView()
                 case .createScreen:
                     AddRecipeView()
                 case .profileScreen:

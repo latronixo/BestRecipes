@@ -13,7 +13,6 @@ import SwiftUI
 struct HomeScreenView: View {
     @EnvironmentObject var router: Router
     @StateObject var viewModel = HomeScreenViewModel()
-    var categories = ["Salad", "Breakfast", "Appetizer", "Noodle", "Lunch"]
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
