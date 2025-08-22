@@ -40,6 +40,7 @@ struct CategoryRecipe: View {
                     } else {
                         Text(" ")
                             .font(.poppinsSemibold(size: 12))
+                            .foregroundStyle(.text)
                     }
                    
                     Spacer()

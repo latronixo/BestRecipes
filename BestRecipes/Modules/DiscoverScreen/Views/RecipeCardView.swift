@@ -54,6 +54,7 @@ struct RecipeCardView: View {
             Text(viewModel.title)
                 .font(.headline)
                 .lineLimit(2)
+                .foregroundStyle(.text)
            
             // Additional info
             if let source = viewModel.sourceName, !source.isEmpty {
