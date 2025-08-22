@@ -100,9 +100,7 @@ struct RecipeImageView: View {
         guard let image = image else { return }
         
         // Save image to app documents
-        if let imagePath = saveImageToDocuments(image) {
-            viewModel.selectImage(path: imagePath)
-        }
+        viewModel.selectImage(image)
     }
     
     private func saveImageToDocuments(_ image: UIImage) -> String? {

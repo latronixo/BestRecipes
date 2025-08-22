@@ -12,15 +12,14 @@ struct MyRecipesView: View {
     @State private var isLoading = false
     @State private var showDeleteAlert = false
     @State private var recipeToDelete: Recipe?
-    
-    @State private var refreshID = UUID()
+    @EnvironmentObject private var router: Router
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             HStack {
                 Text("My Recipes")
                     .font(.poppinsSemibold(size: 24))
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                 Spacer()
             }
             .padding(.horizontal)
@@ -34,17 +33,18 @@ struct MyRecipesView: View {
                     .padding()
             } else {
                 ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(myRecipes, id: \.self) { recipe in
-                            FavoriteRecipesCardForPersonView(recipe: recipe)
-                                .contextMenu {
-                                    Button(role: .destructive) {
+                    LazyVStack(spacing: 16) {
+                        ForEach(myRecipes, id: \.id) { recipe in
+                            NavigationLink(destination: DetailView(recipe: recipe)) {
+                                FavoriteRecipesCardForPersonView(
+                                    recipe: recipe,
+                                    onDelete: {
                                         recipeToDelete = recipe
                                         showDeleteAlert = true
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
                                     }
-                                }
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding()
@@ -72,5 +72,12 @@ struct MyRecipesView: View {
                 myRecipes = await CoreDataManager.shared.fetchMyRecipes()
             }
         }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        MyRecipesView()
+            .environmentObject(Router())
     }
 }

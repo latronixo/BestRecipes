@@ -6,37 +6,36 @@
 //
 
 import SwiftUI
-import SwiftUI
+import UIKit
 
 struct FavoriteRecipesCardForPersonView: View {
     let recipe: Recipe
-    @State private var loadedImage: UIImage? = nil
+    var onDelete: () -> Void
+    
+    @State private var loadedImage: UIImage?
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // Фон карточки
-            if #available(iOS 17.0, *) {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.gray.opacity(0.1))
-                    .stroke(Color.black, lineWidth: 1)
-                    .frame(height: 200)
-            } else {
-                // Fallback on earlier versions
-            }
-            
-            // Изображение рецепта
+        ZStack{
             imageContent
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-            
-            // Контент поверх изображения
-            contentOverlay
+
+            VStack {
+                HStack {
+                    Spacer()
+                    deleteButton
+                }
+                Spacer()
+                recipeInfo
+            }
+            .padding(12)
         }
-        .frame(height: 200)
+        .frame(height: 180)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
         .onAppear {
             loadImage()
         }
     }
+    
+    // MARK: UI Components
     
     @ViewBuilder
     private var imageContent: some View {
@@ -45,63 +44,59 @@ struct FavoriteRecipesCardForPersonView: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            placeholderImage
+            //placeholderImage
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color(UIColor.systemGray4))
         }
     }
     
+    private var deleteButton: some View {
+        Button(action: onDelete) {
+            Image(systemName: "trash")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.red)
+                .padding(10)
+                .background(Color.black.opacity(0.6))
+                .clipShape(Circle())
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    private var recipeInfo: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(recipe.title)
+                .font(.poppinsSemibold(size: 16))
+                .foregroundColor(.primary)
+                .lineLimit(2)
+            
+            HStack(spacing: 12) {
+                let textIngredients = recipe.extendedIngredients?.count ?? 4 == 1 ? "ingredient" : "ingredients"
+                Text("\(recipe.extendedIngredients?.count ?? 4) \(textIngredients)")
+                Text("|")
+                Text("\(recipe.readyInMinutes) min")
+            }
+            .font(.poppinsRegular(size: 12))
+            .foregroundColor(.secondary)
+            .shadow(radius: 5)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
     private func loadImage() {
-        // Сначала пробуем загрузить из imageData
-        if let imageData = recipe.image {
-            loadedImage = UIImage(named: imageData)
-            return
-        }
-        
-        // Если нет imageData, пробуем загрузить по пути
-        guard let imagePath = recipe.image else { return }
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            let url = URL(fileURLWithPath: imagePath)
-            
-            // Проверяем, что путь находится в sandbox
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            guard url.path.hasPrefix(documentsURL.path) else {
-                print("Попытка доступа за пределы sandbox: \(imagePath)")
-                return
-            }
-            
-            // Загружаем изображение
-            if FileManager.default.fileExists(atPath: url.path),
-               let imageData = try? Data(contentsOf: url),
-               let image = UIImage(data: imageData) {
-                
-                DispatchQueue.main.async {
-                    self.loadedImage = image
-                }
-            }
-        }
+        guard let imageName = recipe.image else { return }
+        self.loadedImage = FileManagerHelper.shared.loadImage(from: imageName)
     }
     
     private var placeholderImage: some View {
         Color.gray.opacity(0.3)
     }
-    
-    // Остальные компоненты без изменений
-    @ViewBuilder
-    private var contentOverlay: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                ratingBadge
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            
-            Spacer()
-            
-            recipeInfo
-        }
-    }
-    
+
     private var ratingBadge: some View {
         HStack(spacing: 4) {
             Image(systemName: "star.fill")
@@ -120,30 +115,11 @@ struct FavoriteRecipesCardForPersonView: View {
                 .fill(Color.black.opacity(0.5))
         )
     }
-    
-    private var recipeInfo: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(recipe.title)
-                .font(.poppinsSemibold(size: 16))
-                .foregroundColor(.white)
-                .lineLimit(2)
-            
-            HStack(spacing: 12) {
-                Text("\(recipe.extendedIngredients?.count ?? 4) ингредиентов")
-                Text("•")
-                Text("\(recipe.readyInMinutes) мин")
-            }
-            .font(.poppinsRegular(size: 12))
-            .foregroundColor(.white.opacity(0.9))
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
-    }
+}
+
+#Preview{
+    FavoriteRecipesCardForPersonView(recipe: Recipe.preview, onDelete: {
+        print("Delete tapped!")
+    })
+    .padding()
 }
