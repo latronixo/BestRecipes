@@ -5,7 +5,7 @@
 //  Created by Наташа Спиридонова on 11.08.2025.
 //
 
-import Foundation
+import UIKit
 
 // MARK: - Add Recipe View Model
 @MainActor
@@ -19,7 +19,8 @@ final class AddRecipeViewModel: ObservableObject {
     @Published var showingCookTimePicker = false
     @Published var showingAlert = false
     @Published var alertMessage = ""
-    
+    @Published var selectedImage: UIImage?
+
     // MARK: - Computed Properties
     var isFormValid: Bool {
         !recipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
@@ -47,16 +48,18 @@ final class AddRecipeViewModel: ObservableObject {
     }
     
     // MARK: - Image Management
-    func selectImage(path: String?) {
-        imagePath = path
-        recipe.image = path
-        recipe.imageType = path?.components(separatedBy: ".").last
+    func selectImage(_ image: UIImage) {
+        self.selectedImage = image
+        if let savedImageName = FileManagerHelper.shared.saveImage(image) {
+            recipe.image = savedImageName
+        }
     }
     
     func removeImage() {
-        imagePath = nil
+        //imagePath = nil
+        selectedImage = nil
         recipe.image = nil
-        recipe.imageType = nil
+        //recipe.imageType = nil
     }
     
     // MARK: - Servings Management
