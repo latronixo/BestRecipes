@@ -10,8 +10,10 @@ import SwiftUI
 struct SeeAllView: View {
     @EnvironmentObject var router: Router
     @StateObject private var viewModel = SeeAllViewModel()
-    let category: SeeAllCategory
+    @Environment(\.dismiss) private var dismiss
+
     @State private var recipes: [Recipe] = []
+    let category: SeeAllCategory
     private let tabBarHeight: CGFloat = 60
     
     var body: some View {
@@ -36,6 +38,17 @@ struct SeeAllView: View {
         }
         .navigationTitle(category.title)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "arrow.backward")
+                        .foregroundStyle(.text)
+                }
+            }
+        }
         .onAppear {
             Task {
                 await viewModel.fetchTrendingRecipes()
