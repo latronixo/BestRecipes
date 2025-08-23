@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct SeeAllView: View {
     @EnvironmentObject var router: Router
     @StateObject private var viewModel = SeeAllViewModel()
@@ -38,7 +39,7 @@ struct SeeAllView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Task {
-                await viewModel.fetchTrendingRecipes()
+                await viewModel.fetch(by: category)
             }
         }
     }

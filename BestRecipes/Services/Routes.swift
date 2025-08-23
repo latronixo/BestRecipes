@@ -22,6 +22,7 @@ enum SeeAllCategory: Hashable {
     case trending
     case recent
     case popularCuisine
+    case byPopularCuisine(CuisineType)
     
     var title: String {
         switch self {
@@ -30,6 +31,8 @@ enum SeeAllCategory: Hashable {
         case .recent:
             return "Recent recipe"
         case .popularCuisine:
+            return "Popular cuisine"
+        case .byPopularCuisine(_):
             return "Popular cuisine"
         }
     }
