@@ -16,17 +16,19 @@ struct BestRecipesApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack{
-                if isActive {
+                
+                //MARK: - Раскомментировать эти строки, когда будем показывать в понедельник(LaunchScreen)
+//                if isActive {
                     if shouldOnboardingFinal {
                         OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
                             .transition(.opacity)
                     } else {
                         MainView()
                     }
-                }
-                else {
-                    CookingLaunchScreen()
-                }
+//                }
+//                else {
+//                    CookingLaunchScreen()
+//                }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
