@@ -103,7 +103,11 @@ struct HomeScreenView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(viewModel.cuisineCountry, id: \.self) {country in
-                        Country(country: country)
+                        Button {
+                            router.goTo(to: .seeAllScreen(category: .byPopularCuisine(country)))
+                        } label: {
+                            Country(country: country)
+                        }
                     }
                 }
             }
