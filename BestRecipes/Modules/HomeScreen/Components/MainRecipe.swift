@@ -55,7 +55,7 @@ struct MainRecipe: View {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.black)
-                        Text("\((recipe.spoonacularScore ?? 0.0) / 20, specifier: "%.2f")")
+                        Text("\((recipe.spoonacularScore ?? 0.0) / 20, specifier: "%.1f")")
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                     }
