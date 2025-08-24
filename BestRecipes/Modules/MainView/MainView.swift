@@ -18,21 +18,19 @@ struct MainView: View {
         
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom) {
-                TabView(selection: $selectedTab) {
-                    HomeScreenView()
-                        .tag(TabEnum.home)
-                    
-                    DiscoverView()
-                        .tag(TabEnum.bookmarks)
-                    
-                    AddRecipeView()
-                        .tag(TabEnum.add)
-                    
-                    BellView()
-                        .tag(TabEnum.notifications)
-                    
-                    PersonView()
-                        .tag(TabEnum.profile)
+                Group {
+                    switch selectedTab {
+                    case .home:
+                        HomeScreenView()
+                    case .bookmarks:
+                        DiscoverView()
+                    case .add:
+                        AddRecipeView()
+                    case .notifications:
+                        BellView()
+                    case .profile:
+                        PersonView()
+                    }
                 }
                 .padding(.top, selectedTab.title.isEmpty ? 0 : 50)
                 
