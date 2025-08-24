@@ -11,19 +11,40 @@ import UIKit
 struct FavoriteRecipesCardForPersonView: View {
     let recipe: Recipe
     @State private var loadedImage: UIImage? = nil
+    @State private var isLoading = false
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack {
             // Фон карточки
-            if #available(iOS 17.0, *) {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.gray.opacity(0.1))
-                    .stroke(Color.black, lineWidth: 1)
-                    .frame(height: 200)
-            } else {
-                // Fallback on earlier versions
-            }
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.gray.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.black.opacity(0.2), lineWidth: 1)
+                )
             
+            // Основное содержимое
+            if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                content
+            }
+        }
+        .frame(height: 200)
+        .clipped() // Важно: обрезаем все, что выходит за границы
+        .onAppear {
+            loadImage()
+        }
+        .onChange(of: recipe) { _ in
+            // Сбрасываем состояние при изменении рецепта
+            loadedImage = nil
+            loadImage()
+        }
+    }
+    
+    private var content: some View {
+        ZStack(alignment: .bottom) {
             // Изображение рецепта
             imageContent
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -32,10 +53,6 @@ struct FavoriteRecipesCardForPersonView: View {
             // Контент поверх изображения
             contentOverlay
         }
-        .frame(height: 200)
-        .onAppear {
-            loadImage()
-        }
     }
     
     @ViewBuilder
@@ -43,21 +60,30 @@ struct FavoriteRecipesCardForPersonView: View {
         if let image = loadedImage {
             Image(uiImage: image)
                 .resizable()
-                .scaledToFill()
+                .aspectRatio(contentMode: .fill)
+                .transition(.opacity)// Анимация появления
+                .clipped()
         } else {
             placeholderImage
         }
     }
     
     private func loadImage() {
+        guard loadedImage == nil else { return }
+        isLoading = true
+        
         // Сначала пробуем загрузить из imageData
         if let imageData = recipe.image {
             loadedImage = FileManagerHelper.shared.loadImage(from: imageData)
+            isLoading = false
             return
         }
         
         // Если нет imageData, пробуем загрузить по пути
-        guard let imagePath = recipe.image else { return }
+        guard let imagePath = recipe.image else {
+            isLoading = false
+            return
+        }
         
         DispatchQueue.global(qos: .userInitiated).async {
             let url = URL(fileURLWithPath: imagePath)
@@ -66,6 +92,9 @@ struct FavoriteRecipesCardForPersonView: View {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             guard url.path.hasPrefix(documentsURL.path) else {
                 print("Попытка доступа за пределы sandbox: \(imagePath)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
             
@@ -76,6 +105,11 @@ struct FavoriteRecipesCardForPersonView: View {
                 
                 DispatchQueue.main.async {
                     self.loadedImage = image
+                    self.isLoading = false
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
             }
         }
@@ -85,13 +119,9 @@ struct FavoriteRecipesCardForPersonView: View {
         Color.gray.opacity(0.3)
     }
     
-    // Остальные компоненты без изменений
-    @ViewBuilder
     private var contentOverlay: some View {
         VStack(alignment: .leading) {
-            
             Spacer()
-            
             recipeInfo
         }
     }
@@ -118,6 +148,12 @@ struct FavoriteRecipesCardForPersonView: View {
                 gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
                 startPoint: .top,
                 endPoint: .bottom
+            )
+        )
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
             )
         )
     }
