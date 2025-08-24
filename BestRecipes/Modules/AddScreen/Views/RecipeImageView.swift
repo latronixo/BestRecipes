@@ -99,26 +99,7 @@ struct RecipeImageView: View {
     private func handleImageSelection(_ image: UIImage?) {
         guard let image = image else { return }
         
-        // Save image to app documents
-        if let imagePath = saveImageToDocuments(image) {
-            viewModel.selectImage(path: imagePath)
-        }
-    }
-    
-    private func saveImageToDocuments(_ image: UIImage) -> String? {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return nil }
-        
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileName = "recipe_image_\(UUID().uuidString).jpg"
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        
-        do {
-            try imageData.write(to: fileURL)
-            return fileURL.path
-        } catch {
-            print("Error saving image: \(error)")
-            return nil
-        }
+        viewModel.selectImage(image)
     }
     
     private func loadImage(from path: String) -> UIImage? {

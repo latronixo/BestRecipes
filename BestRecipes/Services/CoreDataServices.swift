@@ -317,35 +317,20 @@ final class CoreDataManager {
     
     func addMyRecipe(recipe: Recipe) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            container.performBackgroundTask { backgroundContext in
-                backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-                
-                let fetchRequest: NSFetchRequest<MyRecipeCD> = MyRecipeCD.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "id == %d", recipe.id)
+            container.performBackgroundTask { сontext in
+                сontext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 
                 do {
-                    // Ищем рецепт в том же контексте
-                    let existingRecipes = try backgroundContext.fetch(fetchRequest)
+                    let newRecipe = MyRecipeCD(context: сontext)
+                    self.update(recipeCD: newRecipe, with: recipe)
                     
-                    if let existingRecipe = existingRecipes.first {
-                        self.update(recipeCD: existingRecipe, with: recipe)
-                    } else {
-                        let newRecipe = MyRecipeCD(context: backgroundContext)
-                        self.update(recipeCD: newRecipe, with: recipe)
+                    if сontext.hasChanges {
+                        try сontext.save()
                     }
-                    
-                    // Сохраняем изменения в фоновом контексте
-                    try backgroundContext.save()
-                    
-                    // Синхронизируем с главным контекстом
-                    if self.context.hasChanges {
-                        try self.context.save()
-                    }
-                    
                     print("Successfully saved recipe: \(recipe.title)")
                 } catch {
+                    сontext.rollback()
                     print("Ошибка при добавлении или обновлении своего рецепта: \(error)")
-                    backgroundContext.rollback()
                 }
                 continuation.resume()
             }

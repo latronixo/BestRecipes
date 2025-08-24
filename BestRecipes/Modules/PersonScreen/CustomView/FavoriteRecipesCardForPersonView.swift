@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SwiftUI
+import UIKit
 
 struct FavoriteRecipesCardForPersonView: View {
     let recipe: Recipe
@@ -52,7 +52,7 @@ struct FavoriteRecipesCardForPersonView: View {
     private func loadImage() {
         // Сначала пробуем загрузить из imageData
         if let imageData = recipe.image {
-            loadedImage = UIImage(named: imageData)
+            loadedImage = FileManagerHelper.shared.loadImage(from: imageData)
             return
         }
         
