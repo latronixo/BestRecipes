@@ -102,7 +102,10 @@ struct MeasureUnit: Codable, Hashable {
 
 // MARK: - Nutrition Model
 struct Nutrition: Codable, Hashable {
-
+    let calories: String
+    let carbs: String
+    let fat: String
+    let protein: String
     let nutrients: [Nutrient]               // Список питательных веществ
     let caloricBreakdown: CaloricBreakdown? // Распределение калорий по БЖУ
     let weightPerServing: WeightPerServing? // Вес одной порции

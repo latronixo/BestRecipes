@@ -17,6 +17,7 @@ enum ImageType {
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
+    @Published var recipeNutrition: Nutrition?
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
     @Published var ingredientsImage: UIImage?
