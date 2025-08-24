@@ -89,36 +89,11 @@ struct FavoriteRecipesCardForPersonView: View {
     @ViewBuilder
     private var contentOverlay: some View {
         VStack(alignment: .leading) {
-            HStack {
-                ratingBadge
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
             
             Spacer()
             
             recipeInfo
         }
-    }
-    
-    private var ratingBadge: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "star.fill")
-                .resizable()
-                .frame(width: 14, height: 14)
-                .foregroundColor(.yellow)
-            
-            Text(String(format: "%.1f", (recipe.spoonacularScore ?? 0.0) / 20))
-                .font(.poppinsSemibold(size: 14))
-                .foregroundColor(.white)
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(
-            Capsule()
-                .fill(Color.black.opacity(0.5))
-        )
     }
     
     private var recipeInfo: some View {
