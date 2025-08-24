@@ -32,7 +32,7 @@ struct FavoriteRecipesCardForPersonView: View {
             }
         }
         .frame(height: 200)
-        .clipped() // Важно: обрезаем все, что выходит за границы
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .onAppear {
             loadImage()
         }
@@ -47,8 +47,6 @@ struct FavoriteRecipesCardForPersonView: View {
         ZStack(alignment: .bottom) {
             // Изображение рецепта
             imageContent
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
             
             // Контент поверх изображения
             contentOverlay
@@ -62,7 +60,6 @@ struct FavoriteRecipesCardForPersonView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .transition(.opacity)// Анимация появления
-                .clipped()
         } else {
             placeholderImage
         }
@@ -142,6 +139,7 @@ struct FavoriteRecipesCardForPersonView: View {
             .foregroundColor(.white.opacity(0.9))
         }
         .padding(16)
+        .padding(.vertical, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             LinearGradient(
