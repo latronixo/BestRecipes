@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - RecipeCardView
 struct RecipeCardView: View {
+    @EnvironmentObject var router: Router
     @EnvironmentObject var viewModel: RecipeCardViewModel
     var onBookmarkTap: (() -> Void)? = nil
     
@@ -16,17 +17,21 @@ struct RecipeCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             ZStack {
                 // Image
-                AsyncImage(url: viewModel.imageURL) { phase in
-                    switch phase {
-                    case .empty: Color.gray.opacity(0.2)
-                    case .success(let image): image.resizable().scaledToFill()
-                    case .failure: Color.red.opacity(0.2)
-                    @unknown default: EmptyView()
+                Button {
+                    router.goTo(to: .detailScreen(recipe: viewModel.recipe))
+                } label: {
+                    AsyncImage(url: viewModel.imageURL) { phase in
+                        switch phase {
+                        case .empty: Color.gray.opacity(0.2)
+                        case .success(let image): image.resizable().scaledToFill()
+                        case .failure: Color.red.opacity(0.2)
+                        @unknown default: EmptyView()
+                        }
                     }
+                    .frame(height: 180)
+                    .cornerRadius(16)
+                    .clipped()
                 }
-                .frame(height: 180)
-                .cornerRadius(16)
-                .clipped()
             }
             
             .overlay(alignment: .bottomTrailing) {
