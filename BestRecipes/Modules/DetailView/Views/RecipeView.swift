@@ -130,7 +130,7 @@ struct RecipeView: View {
             case 12...15 :
                 Spacer(minLength: 170)
             case 16...19 :
-                Spacer(minLength: 210)
+                Spacer(minLength: 230)
             default :
                 Spacer(minLength: 30)
             }
