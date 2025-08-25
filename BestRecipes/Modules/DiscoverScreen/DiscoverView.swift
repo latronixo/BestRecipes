@@ -44,10 +44,8 @@ struct DiscoverView: View {
         }
         .onAppear {
             Task{
-                if viewModel.favorites.isEmpty {
-                    await viewModel.loadFavorites()
-                }
-            }
+                await viewModel.loadFavorites()
+           }
         }
         .refreshable {
             await viewModel.loadFavorites()
