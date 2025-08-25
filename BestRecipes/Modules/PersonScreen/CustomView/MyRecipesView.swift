@@ -13,6 +13,8 @@ struct MyRecipesView: View {
     @State private var showDeleteAlert = false
     @State private var recipeToDelete: Recipe?
     
+    @EnvironmentObject var router: Router
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("My Recipes")
@@ -34,9 +36,13 @@ struct MyRecipesView: View {
                                     Button(role: .destructive) {
                                         recipeToDelete = recipe
                                         showDeleteAlert = true
+                                        
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
+                                }
+                                .onTapGesture {
+                                    router.goTo(to: .detailScreen(recipe: recipe))
                                 }
                         }
                     }

@@ -118,6 +118,10 @@ extension Measures {
 // MARK: - Nutrition Preview
 extension Nutrition {
     static let preview = Nutrition(
+        calories: "",
+        carbs: "",
+        fat: "",
+        protein: "",
         nutrients: [
             Nutrient(name: "Calories", amount: 543.36, unit: "kcal", percentOfDailyNeeds: 27.17)
         ],
