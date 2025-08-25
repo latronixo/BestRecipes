@@ -52,8 +52,6 @@ struct DetailView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-//            .navigationTitle("Recipe Detail")
-//            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
@@ -73,18 +71,6 @@ struct DetailView: View {
                 }
             }
             
-//            .toolbar {
-//                               ToolbarItem(placement: .navigationBarLeading) {
-//                                   Button(action: {
-//                                       router.goBack()
-//                                   }) {
-//                                       Image(systemName: "arrow.backward")
-//                                           .foregroundColor(.primary)
-//                                   }
-//                               }
-//                           }
-        
- 
     }
     
   

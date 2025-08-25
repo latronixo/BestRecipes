@@ -1,5 +1,5 @@
 //
-//  FavoriteRecipesCardForPersonView.swift
+//  MyRecipesRow.swift
 //  BestRecipes
 //
 //  Created by Drolllted on 13.08.2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct FavoriteRecipesCardForPersonView: View {
+struct MyRecipesRow: View {
     let recipe: Recipe
     @State private var loadedImage: UIImage? = nil
     @State private var isLoading = false
@@ -131,9 +131,10 @@ struct FavoriteRecipesCardForPersonView: View {
                 .lineLimit(2)
             
             HStack(spacing: 12) {
-                Text("\(recipe.extendedIngredients?.count ?? 4) ингредиентов")
-                Text("•")
-                Text("\(recipe.readyInMinutes) мин")
+                let count = recipe.extendedIngredients?.count ?? 4
+                Text("\(count) \(count == 1 ? "ingredient" : "ingredietnts")")
+                Text("|")
+                Text("\(recipe.readyInMinutes) min")
             }
             .font(.poppinsRegular(size: 12))
             .foregroundColor(.white.opacity(0.9))

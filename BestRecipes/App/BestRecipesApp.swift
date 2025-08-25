@@ -11,15 +11,29 @@ import SwiftUI
 struct BestRecipesApp: App {
     
     @State private var shouldOnboardingFinal = !OnboardingManager.onboardingFlag
+    @State private var isActive: Bool = false
     
     var body: some Scene {
         WindowGroup {
-            if shouldOnboardingFinal {
-                OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
-                    .transition(.opacity)
-            } else {
-                MainView()
-                    .transition(.opacity)
+            ZStack {
+                if isActive {
+                    if shouldOnboardingFinal {
+                        OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
+                            .transition(.opacity)
+                    } else {
+                        MainView()
+                            .transition(.opacity)
+                    }
+                } else {
+                    AnimationLaunchScreen()
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        isActive = true
+                    }
+                }
             }
         }
     }

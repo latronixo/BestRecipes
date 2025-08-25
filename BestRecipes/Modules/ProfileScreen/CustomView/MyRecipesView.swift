@@ -20,17 +20,18 @@ struct MyRecipesView: View {
             Text("My Recipes")
                 .font(.poppinsSemibold(size: 24))
                 .foregroundStyle(.black)
-                .padding(.horizontal)
+                .padding(.horizontal, 30)
             
             if isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if myRecipes.isEmpty {
                 Text("Not recipes add")
+                    .padding(.horizontal, 30)
             } else {
                     VStack(spacing: 20) {
                         ForEach(myRecipes, id: \.id) { recipe in // Используем явный id
-                            FavoriteRecipesCardForPersonView(recipe: recipe)
+                            MyRecipesRow(recipe: recipe)
                                 .padding(.horizontal, 4)
                                 .contextMenu {
                                     Button(role: .destructive) {

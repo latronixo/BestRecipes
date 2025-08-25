@@ -35,7 +35,7 @@ struct MainView: View {
                         .tag(TabEnum.notifications)
                         .toolbar(.hidden, for: .tabBar)
                         
-                    PersonView()
+                    ProfileView()
                         .tag(TabEnum.profile)
                         .toolbar(.hidden, for: .tabBar)
                 }
@@ -66,7 +66,7 @@ struct MainView: View {
                 case .createScreen:
                     AddRecipeView()
                 case .profileScreen:
-                    PersonView()
+                    ProfileView()
                 }
                 
             }
