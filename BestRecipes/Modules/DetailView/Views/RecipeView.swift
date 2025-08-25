@@ -24,10 +24,12 @@ struct RecipeView: View {
     var body: some View {
         VStack {
             HStack {
-                Spacer(minLength: 20)
+                Spacer(minLength: 15)
                 Text(detailVM.recipe.title)
-                    .fontWeight(.semibold)
-                    .font(.system(size: 25))
+                    .font(.system(size: 25, weight: .bold))
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer(minLength: 15)
                 
             }
@@ -36,8 +38,8 @@ struct RecipeView: View {
                 if let img = detailVM.largeImage {
                     Image(uiImage: img)
                         .resizable()
-                        .frame(width: 350, height: 350)
-                        .cornerRadius(40)
+                        .frame(width: 350, height: 250)
+                        .cornerRadius(20)
                         .scaledToFit()
                         .shadow(color: .black, radius: 8, x:-2, y: 2)
                     
@@ -72,7 +74,7 @@ struct RecipeView: View {
                     }
                     
                 }
-                    .offset(x: 130, y:-130)
+                    .offset(x: 140, y:-90)
                     
                     
                 
