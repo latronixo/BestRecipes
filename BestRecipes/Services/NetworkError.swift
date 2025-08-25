@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum Secrets {
+    static let apiKey: String = ""
+}
+
 // MARK: - Network Error Types
 enum NetworkError: LocalizedError {
     case invalidURL

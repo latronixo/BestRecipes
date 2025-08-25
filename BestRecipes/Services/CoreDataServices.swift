@@ -322,7 +322,7 @@ final class CoreDataManager {
                 
                 do {
                     let newRecipe = MyRecipeCD(context: сontext)
-                    self.update(recipeCD: newRecipe, with: recipe)
+                    self.updateMyRecipe(myRecipe: newRecipe, with: recipe)
                     
                     if сontext.hasChanges {
                         try сontext.save()
