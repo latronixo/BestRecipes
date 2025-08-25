@@ -32,8 +32,8 @@ enum SeeAllCategory: Hashable {
             return "Recent recipe"
         case .popularCuisine:
             return "Popular cuisine"
-        case .byPopularCuisine(_):
-            return "Popular cuisine"
+        case .byPopularCuisine(let cuisine):
+            return "Popular \(cuisine.rawValue.capitalized) cuisine"
         }
     }
 }
