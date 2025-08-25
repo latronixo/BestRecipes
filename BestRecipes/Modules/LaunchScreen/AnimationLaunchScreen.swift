@@ -24,7 +24,7 @@ struct AnimationLaunchScreen: View {
             
             VStack(alignment: .center, spacing: 30) {
                 LottieView(animation: .named("cooking-animation"))
-                    .playbackMode(.playing(.toProgress(1, loopMode: .playOnce)))
+                    //.playbackMode(.playing(.toProgress(1, loopMode: .playOnce)))
                     .frame(width: 200, height: 200)
                 
                 if showText {
