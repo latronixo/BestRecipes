@@ -138,7 +138,7 @@ final class CoreDataManager {
         fetchRequest.sortDescriptors = [sortDescriptor]
         
         let allRecipes = try context.fetch(fetchRequest)
-        print("в Recent Recipes сохранено \(allRecipes.count) рецептов")
+        
         if allRecipes.count > maxRecentItems {
             let recipesToDelete = allRecipes.prefix(allRecipes.count - maxRecentItems)
             for recipe in recipesToDelete {
