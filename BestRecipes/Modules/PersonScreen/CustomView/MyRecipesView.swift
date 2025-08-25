@@ -15,6 +15,8 @@ struct MyRecipesView: View {
     
     @State private var refreshID = UUID()
     
+    @EnvironmentObject var router: Router
+    
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             HStack {
@@ -44,6 +46,9 @@ struct MyRecipesView: View {
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
+                                }
+                                .onTapGesture {
+                                    router.goTo(to: .detailScreen(recipe: recipe))
                                 }
                         }
                     }
