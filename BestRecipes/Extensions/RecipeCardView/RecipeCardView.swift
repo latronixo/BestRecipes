@@ -24,7 +24,14 @@ struct RecipeCardView: View {
                         switch phase {
                         case .empty: Color.gray.opacity(0.2)
                         case .success(let image): image.resizable().scaledToFill()
-                        case .failure: Color.red.opacity(0.2)
+                        case .failure:
+                            if viewModel.localImage != nil {
+                                Image(uiImage: viewModel.localImage!)
+                                    .resizable()
+                                    .scaledToFill()
+                            } else {
+                                Color.red.opacity(0.2)
+                            }
                         @unknown default: EmptyView()
                         }
                     }
