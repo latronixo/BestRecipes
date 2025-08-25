@@ -31,7 +31,7 @@ struct MyRecipesView: View {
             } else {
                     VStack(spacing: 20) {
                         ForEach(myRecipes, id: \.id) { recipe in // Используем явный id
-                            FavoriteRecipesCardForPersonView(recipe: recipe)
+                            MyRecipesRow(recipe: recipe)
                                 .padding(.horizontal, 4)
                                 .contextMenu {
                                     Button(role: .destructive) {

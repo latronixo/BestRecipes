@@ -104,19 +104,6 @@ struct RecipeView: View {
                     .font(.system(size: 20,weight: .semibold))
                 Spacer(minLength: 15)
             }
-//            HStack {
-//                
-//                Image(systemName: "flame.fill")
-//                Text(": \(detailVM.recipe.nutrition?.nutrients.)")
-//                    .frame(height: 40)
-//                    .background(
-//                        Rectangle()
-//                            .fill(Color.gray)
-//                            .cornerRadius(20)
-//                            .opacity(0.3)
-//                            .shadow(color: .black, radius: 8, x:-2, y: 2)
-//                        )
-//            }
             TagListView(tags: detailVM.tags)
                
             

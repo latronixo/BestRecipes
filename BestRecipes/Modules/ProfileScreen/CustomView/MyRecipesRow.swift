@@ -1,5 +1,5 @@
 //
-//  FavoriteRecipesCardForPersonView.swift
+//  MyRecipesRow.swift
 //  BestRecipes
 //
 //  Created by Drolllted on 13.08.2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct FavoriteRecipesCardForPersonView: View {
+struct MyRecipesRow: View {
     let recipe: Recipe
     @State private var loadedImage: UIImage? = nil
     @State private var isLoading = false

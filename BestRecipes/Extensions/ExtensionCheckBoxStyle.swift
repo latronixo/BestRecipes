@@ -12,7 +12,6 @@ struct CheckboxToggleStyle: ToggleStyle {
   func makeBody(configuration: Self.Configuration) -> some View {
     HStack {
       configuration.label
-//      Spacer()
         Image(systemName: "checkmark.circle.fill")
             .resizable()
             .frame(width: 30,height: 30)

@@ -1,5 +1,5 @@
 //
-//  PersonView.swift
+//  ProfileView.swift
 //  BestRecipes
 //
 //  Created by Drolllted on 11.08.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PersonView: View {
+struct ProfileView: View {
     @State private var avatarImage: UIImage?
     @State private var showImagePicker = false
     
@@ -82,5 +82,5 @@ struct PersonView: View {
 }
 
 #Preview {
-    PersonView()
+    ProfileView()
 }
