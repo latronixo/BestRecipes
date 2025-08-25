@@ -90,7 +90,7 @@ struct HomeScreenView: View {
                         Button {
                             router.goTo(to: .detailScreen(recipe: recipe))
                         } label: {
-                            RecentRecipe(recipe: recipe)
+                            RecentRecipe(recentVM: RecentViewModel(recipe: recipe), recipe: recipe)
                         }
                     }
                 }

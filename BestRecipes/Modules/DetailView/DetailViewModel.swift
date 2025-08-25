@@ -54,12 +54,14 @@ final class DetailViewModel: ObservableObject {
             
             if let img = await fetchImage(imageType: .ingredientImage, ingredientExtended: ingredient){
                 ingredientsTuples.append((ingredient, img))
-                print("image loaded... \(ingredient.name)")
-                print(ingredientsTuples)
+//                print("image loaded... \(ingredient.name)")
+//                print(ingredientsTuples)
             
-            } else { ingredientsTuples.append((ingredient, nil))
-                print("image not loaded... \(ingredient.name)")
-                print(ingredientsTuples) }
+            } else {
+                ingredientsTuples.append((ingredient, nil))
+//                print("image not loaded... \(ingredient.name)")
+//                print(ingredientsTuples)
+            }
             
         }
     }
@@ -134,12 +136,14 @@ final class DetailViewModel: ObservableObject {
     
     
     func makeInstructionsText(with instructions: [AnalyzedInstruction]?) -> String {
-        
+        print(recipe)
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
             if let instrText = recipe.instructions {
                 return instrText
-            } else  {
+            } else if recipe.summary != nil{
+                return recipe.summary!
+            } else {
                 return ""
             }
         }

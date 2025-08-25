@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @MainActor
 class HomeScreenViewModel: ObservableObject {
@@ -17,6 +18,7 @@ class HomeScreenViewModel: ObservableObject {
     @Published var trendingRecipes: [Recipe] = []
     @Published var randomRecipes: [Recipe] = []
     @Published var recentRecipes: [Recipe] = []
+    @Published var largeImage: UIImage?
     
     let recipes = [
         Recipe.preview,
@@ -69,6 +71,8 @@ class HomeScreenViewModel: ObservableObject {
     func toggleFavourite(with recipe: Recipe) async {
         await dataService.toggleFavorite(recipe: recipe)
     }
+    
+    
 }
 
 //расширение, добавляющее к массивам функцию unique, которая удаляет дублирующиеся элементы массива

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RecentRecipe: View {
+    @ObservedObject var recentVM: RecentViewModel
+    
     var recipe: Recipe
     var author: String {
         if recipe.creditsText?.localizedCaseInsensitiveContains("Foodista") == true {
@@ -15,6 +17,11 @@ struct RecentRecipe: View {
         } else {
             return recipe.creditsText ?? ""
         }
+    }
+    
+    init(recentVM: RecentViewModel, recipe: Recipe) {
+        self.recentVM = recentVM
+        self.recipe = recipe
     }
     
     var body: some View {
@@ -34,12 +41,24 @@ struct RecentRecipe: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .clipped()
                     case .failure:
-                        Image("DishMock")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 120, height: 120)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .clipped()
+                        
+                                                
+                        if recentVM.localImage != nil {
+                            Image(uiImage: recentVM.localImage!)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 120, height: 120)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .clipped()
+                        } else {
+                            Image("DishMock")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 120, height: 120)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .clipped()
+                            
+                        }
                     @unknown default:
                         EmptyView()
                     }
@@ -62,5 +81,7 @@ struct RecentRecipe: View {
         .frame(width: 120)
         .padding(.trailing, 10)
     }
+    
+    
 }
 
