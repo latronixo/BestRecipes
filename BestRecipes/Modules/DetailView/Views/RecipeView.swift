@@ -90,18 +90,21 @@ struct RecipeView: View {
                 Spacer(minLength: 210)
             }
             HStack {
-                Spacer(minLength: 200)
+                Spacer(minLength: 15)
                 Image(systemName: "person.2")
                     .resizable()
-                    .frame(width: 35, height: 30)
+                    .frame(width: 25, height: 20)
                 Text("  \(detailVM.recipe.servings)")
                     .font(.system(size: 20,weight: .semibold))
-                Spacer(minLength: 1)
+                    .offset(x: -5, y: 1)
+                Spacer(minLength: 20)
                 Image(systemName: "alarm")
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 20, height: 20)
+                
                 Text("  \(detailVM.recipe.readyInMinutes) min")
                     .font(.system(size: 20,weight: .semibold))
+                    .offset(x: -5, y: 1)
                 Spacer(minLength: 15)
             }
 //            HStack {
