@@ -17,6 +17,7 @@ enum ImageType {
 final class DetailViewModel: ObservableObject {
     
     @Published var recipe: Recipe
+    @Published var recipeNutrition: Nutrition?
     @Published var isImageLoaded : Bool = false
     @Published var largeImage: UIImage?
     @Published var ingredientsImage: UIImage?
@@ -65,7 +66,39 @@ final class DetailViewModel: ObservableObject {
 
     func fetchLargeImage() async {
     
-        guard let img = await  fetchImage(imageType: .largeImage) else { return }
+        guard let img = await  fetchImage(imageType: .largeImage) else {
+            
+            // Сначала пробуем загрузить из imageData
+            if let imageData = recipe.image {
+                largeImage = FileManagerHelper.shared.loadImage(from: imageData)
+                return
+            }
+            
+            // Если нет imageData, пробуем загрузить по пути
+            guard let imagePath = recipe.image else { return }
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                let url = URL(fileURLWithPath: imagePath)
+                
+                // Проверяем, что путь находится в sandbox
+                let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                guard url.path.hasPrefix(documentsURL.path) else {
+                    print("Попытка доступа за пределы sandbox: \(imagePath)")
+                    return
+                }
+                
+                // Загружаем изображение
+                if FileManager.default.fileExists(atPath: url.path),
+                   let imageData = try? Data(contentsOf: url),
+                   let image = UIImage(data: imageData) {
+                    
+                    DispatchQueue.main.async {
+                        self.largeImage = image
+                    }
+                }
+            }
+            
+            return }
             largeImage = img
         
     }
@@ -104,11 +137,11 @@ final class DetailViewModel: ObservableObject {
         
         guard let instruction = instructions?.first, instruction.steps?.capacity != 1
         else {
-            if let url = URL(string: recipe.sourceUrl ?? "") {
-                sourceUrl = url
+            if let instrText = recipe.instructions {
+                return instrText
+            } else  {
+                return ""
             }
-            print("sourceUrl")
-            return ""
         }
         
         var finalString = ""

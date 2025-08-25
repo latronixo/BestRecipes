@@ -24,10 +24,12 @@ struct RecipeView: View {
     var body: some View {
         VStack {
             HStack {
-                Spacer(minLength: 20)
+                Spacer(minLength: 15)
                 Text(detailVM.recipe.title)
-                    .fontWeight(.semibold)
-                    .font(.system(size: 25))
+                    .font(.system(size: 25, weight: .bold))
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer(minLength: 15)
                 
             }
@@ -36,8 +38,8 @@ struct RecipeView: View {
                 if let img = detailVM.largeImage {
                     Image(uiImage: img)
                         .resizable()
-                        .frame(width: 350, height: 350)
-                        .cornerRadius(40)
+                        .frame(width: 350, height: 250)
+                        .cornerRadius(20)
                         .scaledToFit()
                         .shadow(color: .black, radius: 8, x:-2, y: 2)
                     
@@ -72,7 +74,7 @@ struct RecipeView: View {
                     }
                     
                 }
-                    .offset(x: 130, y:-130)
+                    .offset(x: 140, y:-90)
                     
                     
                 
@@ -102,6 +104,19 @@ struct RecipeView: View {
                     .font(.system(size: 20,weight: .semibold))
                 Spacer(minLength: 15)
             }
+//            HStack {
+//                
+//                Image(systemName: "flame.fill")
+//                Text(": \(detailVM.recipe.nutrition?.nutrients.)")
+//                    .frame(height: 40)
+//                    .background(
+//                        Rectangle()
+//                            .fill(Color.gray)
+//                            .cornerRadius(20)
+//                            .opacity(0.3)
+//                            .shadow(color: .black, radius: 8, x:-2, y: 2)
+//                        )
+//            }
             TagListView(tags: detailVM.tags)
                
             
@@ -115,7 +130,7 @@ struct RecipeView: View {
             case 12...15 :
                 Spacer(minLength: 170)
             case 16...19 :
-                Spacer(minLength: 210)
+                Spacer(minLength: 230)
             default :
                 Spacer(minLength: 30)
             }

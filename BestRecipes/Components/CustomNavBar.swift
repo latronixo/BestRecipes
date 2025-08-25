@@ -13,7 +13,7 @@ struct CustomNavBar: View {
     var body: some View {
         VStack {
             Text(title)
-                .font(.poppinsSemibold(size: 24))
+                .font(.poppinsSemibold(size: 22))
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.horizontal)
