@@ -47,6 +47,13 @@ struct DiscoverView: View {
                 await viewModel.loadFavorites()
             }
         }
+        
+        .onAppear {
+            Task{
+                await viewModel.loadFavorites()
+            }
+        }
+        
         .refreshable {
             await viewModel.loadFavorites()
         } // pull-to-refresh
