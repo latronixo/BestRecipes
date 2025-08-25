@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A55D9E6F2E58F5D200800A8F /* TagLayoutView in Frameworks */ = {isa = PBXBuildFile; productRef = A55D9E6E2E58F5D200800A8F /* TagLayoutView */; };
-		CE1A4B522E5CA804005371C0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE1A4B512E5CA804005371C0 /* Lottie */; };
+		DDF348552E5CB11100AFCEA2 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = DDF348542E5CB11100AFCEA2 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A55D9E6F2E58F5D200800A8F /* TagLayoutView in Frameworks */,
-				CE1A4B522E5CA804005371C0 /* Lottie in Frameworks */,
+				DDF348552E5CB11100AFCEA2 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 			name = BestRecipes;
 			packageProductDependencies = (
 				A55D9E6E2E58F5D200800A8F /* TagLayoutView */,
-				CE1A4B512E5CA804005371C0 /* Lottie */,
+				DDF348542E5CB11100AFCEA2 /* Lottie */,
 			);
 			productName = BestRecipes;
 			productReference = CE3001FB2E487A9E0047E96C /* BestRecipes.app */;
@@ -118,7 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A55D9E6D2E58F5D200800A8F /* XCRemoteSwiftPackageReference "TagLayoutView" */,
-				CE1A4B502E5CA804005371C0 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				DDF348532E5CB11100AFCEA2 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CE3001FC2E487A9E0047E96C /* Products */;
@@ -364,7 +364,7 @@
 				kind = branch;
 			};
 		};
-		CE1A4B502E5CA804005371C0 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+		DDF348532E5CB11100AFCEA2 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
@@ -380,9 +380,9 @@
 			package = A55D9E6D2E58F5D200800A8F /* XCRemoteSwiftPackageReference "TagLayoutView" */;
 			productName = TagLayoutView;
 		};
-		CE1A4B512E5CA804005371C0 /* Lottie */ = {
+		DDF348542E5CB11100AFCEA2 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE1A4B502E5CA804005371C0 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = DDF348532E5CB11100AFCEA2 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
