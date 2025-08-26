@@ -47,7 +47,7 @@ struct RecipeView: View {
                     
                     Image(systemName: "photo.artframe")
                         .resizable()
-                        .frame(width: 350, height: 350)
+                        .frame(width: 350, height: 250)
                         .cornerRadius(40)
                         .scaledToFit()
                         .foregroundStyle(.regularMaterial)
@@ -80,7 +80,7 @@ struct RecipeView: View {
                 
             }
             
-            
+            Spacer(minLength: 25)
             HStack{
                 Spacer(minLength: 15)
                 Image(systemName: "star.fill")
@@ -90,18 +90,21 @@ struct RecipeView: View {
                 Spacer(minLength: 210)
             }
             HStack {
-                Spacer(minLength: 200)
+                Spacer(minLength: 85)
                 Image(systemName: "person.2")
                     .resizable()
-                    .frame(width: 35, height: 30)
+                    .frame(width: 25, height: 20)
                 Text("  \(detailVM.recipe.servings)")
                     .font(.system(size: 20,weight: .semibold))
-                Spacer(minLength: 1)
+                    .offset(x: -5, y: 1)
+                Spacer(minLength: 125)
                 Image(systemName: "alarm")
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 20, height: 20)
+                
                 Text("  \(detailVM.recipe.readyInMinutes) min")
                     .font(.system(size: 20,weight: .semibold))
+                    .offset(x: -5, y: 1)
                 Spacer(minLength: 15)
             }
             TagListView(tags: detailVM.tags)
