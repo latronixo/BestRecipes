@@ -91,6 +91,8 @@ struct IngredientsViewCell: View {
 
 
 
+
+
 #Preview {
     IngredientsViewCell(detailVM: DetailViewModel(recipe: Recipe.preview, router: Router()),
                         id: Recipe.preview.extendedIngredients?.first?.id ?? 0,
